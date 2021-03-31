@@ -91,7 +91,7 @@ net.Receive("tttwr_decoy", function(len, ply)
 end)
 
 hook.Add("TTTPrepareRound", "tttwr_decoy_TTTPrepareRound", function()
-	local players = player.GetHumans()
+	local players = player.GetAll() --player.GetHumans()
 
 	for i = 1, #players do
 		updatedecoys(players[i], true)
@@ -128,6 +128,9 @@ function SWEP:DecoyStick()
 	end
 end
 
+local placed = setmetatable({}, TTTWR.weakkeys)
+local placed_n = 0
+
 function SWEP:PlacedDecoy(decoy)
 	local owner = self:GetOwner()
 
@@ -136,6 +139,9 @@ function SWEP:PlacedDecoy(decoy)
 	decoy:SetOwner()
 
 	decoy.FakeSignalPos = owner:WorldSpaceCenter()
+
+	placed[decoy] = true
+	placed_n = placed_n + 1
 
 	self:TakePrimaryAmmo(1)
 
@@ -161,9 +167,7 @@ function ENT:UseOverride(user)
 	end
 
 	if user:CanCarryType(self.WeaponKind or WEAPON_EQUIP2) then
-		user:Give("weapon_ttt_decoy")
-
-		local decoy = user:GetWeapon("weapon_ttt_decoy")
+		local decoy = user:Give("weapon_ttt_decoy")
 
 		if IsValid(decoy) then
 			decoy:SetClip1(1)
@@ -188,6 +192,9 @@ function ENT:UseOverride(user)
 end
 
 function ENT:OnRemove()
+	placed[self] = nil
+	placed_n = placed_n - 1
+
 	local owner = self.DecoyOwner
 
 	if not IsValid(owner) then
@@ -356,27 +363,36 @@ concommand.Add("ttt_radar_scan", function(ply)
 
 	net.WriteUInt(ply:EntIndex() - 1, maxplayers_bits)
 
-	local decoys = ents.FindByClass("ttt_decoy")
-
 	local sendnum, senddecoys = 0
 
-	if #decoys > 0 then
-		for i = 1, #decoys do
-			local ent = decoys[i]
+	if placed_n > 0 then
+		local n = 0
 
-			if IsValid(ent)
-				and not ent.NoRadarSignal
-				and ent.DecoyOwner ~= ply
-			then
-				sendnum = sendnum + 1
+		for ent in pairs(placed) do
+			if not IsValid(ent) then
+				placed[ent] = nil
 
-				if not senddecoys then
-					senddecoys = {}
-				end
-
-				senddecoys[sendnum] = ent
+				goto cont
 			end
+
+			n = n + 1
+
+			if ent.NoRadarSignal or ent.DecoyOwner == ply then
+				goto cont
+			end
+
+			sendnum = sendnum + 1
+
+			if not senddecoys then
+				senddecoys = {}
+			end
+
+			senddecoys[sendnum] = ent
+
+			::cont::
 		end
+
+		placed_n = n
 	end
 
 	net.WriteBool(senddecoys and true or false)
