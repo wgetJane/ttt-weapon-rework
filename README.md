@@ -35,6 +35,13 @@ arms and legs will no longer block hits to the head or body
 
 similar behaviour in csgo: https://youtu.be/CbftQTBHSlA
 
+**no lucky headshots**:\
+"lucky headshots" will no longer deal extra damage
+
+a headshot is considered to be lucky if you weren't aiming for the head
+
+set the cvar `ttt_noluckyheadshots` to 1 to enable or 0 to disable this feature
+
 **fixed shotgun spread pattern**:\
 shotguns now have a fixed spread pattern: 1 pellet at the centre, 7 pellets in a circle\
 (each pellet will still have a bit of inaccuracy)

@@ -49,6 +49,7 @@ function TTTWR:MakeWeapon(
 	self.Deploy = Deploy
 
 	if SERVER then
+		self.NoLuckyHeadshots = true
 		self.ShootThroughLimbs = true
 
 		return

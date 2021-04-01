@@ -16,6 +16,8 @@ function TTTWR:MakeShotgun(class, model, ...)
 	self.NoSetInsertingOnReload = true
 
 	if SERVER then
+		self.NoLuckyHeadshots = false
+
 		self.OnEntityTakeDamage = OnEntityTakeDamage
 		self.GetHeadshotMultiplier = GetHeadshotMultiplier
 	end

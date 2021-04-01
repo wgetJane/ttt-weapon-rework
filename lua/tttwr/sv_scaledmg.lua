@@ -1,3 +1,9 @@
+local noluckyheadshots = CreateConVar("ttt_noluckyheadshots", "1", FCVAR_ARCHIVE + FCVAR_NOTIFY):GetBool()
+
+cvars.AddChangeCallback("ttt_noluckyheadshots", function(_,_, new)
+	noluckyheadshots = tonumber(new) == 1
+end, "ttt_noluckyheadshots")
+
 local hboxmodels = {} -- cache hitbox info (bone, bounds, etc)
 
 local function gethitboxes(ply)
@@ -23,6 +29,7 @@ local function gethitboxes(ply)
 		mins = {},
 		maxs = {},
 		hitgroups = {},
+		headboxes = {n = 0},
 	}
 	sets[set] = boxes
 
@@ -45,12 +52,42 @@ local function gethitboxes(ply)
 
 		boxes.hitgroups[i] = hg
 
+		if hg == HITGROUP_HEAD then
+			local heads = boxes.headboxes
+
+			heads.n = heads.n + 1
+
+			heads[heads.n] = i
+		end
+
 		::cont::
 	end
 
 	boxes.n = i
 
 	return boxes
+end
+
+local function raytracehitbox(ply, boxes, i, start, delta, scale)
+	local pos, ang = ply:GetBonePosition(boxes.bones[i])
+
+	if not (pos and ang) then -- probably unnecessary
+		local m = ply:GetBoneMatrix(boxes.bones[i])
+		pos = pos or m:GetTranslation()
+		ang = ang or m:GetAngles()
+	end
+
+	local mins, maxs = boxes.mins[i], boxes.maxs[i]
+
+	if scale ~= 1 then
+		mins, maxs = mins * scale, maxs * scale
+	end
+
+	return util.IntersectRayWithOBB(
+		start, delta,
+		pos, ang,
+		mins, maxs
+	)
 end
 
 local dmgtypes = bit.bor(DMG_DIRECT, DMG_BLAST, DMG_FALL, DMG_PHYSGUN)
@@ -89,14 +126,23 @@ function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 		dmginfo:ScaleDamage(scale)
 	end
 
-	if isbul
-		and hitgroup > HITGROUP_STOMACH
+	local hastrace = isbul
 		and wep
-		and wep.ShootThroughLimbs
 		and ply.hit_trace
 		and ply.hit_trace.Entity == ply
+		or false
+
+	if hastrace
+		and hitgroup > HITGROUP_STOMACH
+		and wep.ShootThroughLimbs
 	then
 		local boxes = gethitboxes(ply)
+
+		local i = boxes.n
+
+		if i == 0 then
+			goto done
+		end
 
 		local start = ply.hit_trace.HitPos
 		local dir = ply.hit_trace.Normal
@@ -110,24 +156,14 @@ function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 			vec[i] = dir[i] * len
 		end
 
-		local minfrac, newhg = 1
+		local scale = ply:GetModelScale()
 
-		local i = boxes.n
+		local minfrac, newhg = 1
 
 		::loop::
 
-		local pos, ang = ply:GetBonePosition(boxes.bones[i])
-
-		if not (pos and ang) then -- probably unnecessary
-			local m = ply:GetBoneMatrix(boxes.bones[i])
-			pos = pos or m:GetTranslation()
-			ang = ang or m:GetAngles()
-		end
-
-		local _, _, frac = util.IntersectRayWithOBB(
-			start, vec,
-			pos, ang,
-			boxes.mins[i], boxes.maxs[i] -- should i care about model scale?
+		local _, _, frac = raytracehitbox(
+			ply, boxes, i, start, vec, scale
 		)
 
 		if frac and frac < minfrac then
@@ -156,6 +192,57 @@ function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 				hitgroup = newhg
 			end
 		end
+
+		::done::
+	end
+
+	if hastrace
+		and hitgroup == HITGROUP_HEAD
+		and wep.NoLuckyHeadshots
+		and noluckyheadshots
+	then
+		local boxes = gethitboxes(ply)
+
+		local i = boxes.headboxes.n
+
+		if i == 0 then
+			goto done
+		end
+
+		local owner = wep:GetOwner()
+
+		if not (IsValid(owner) and owner.GetAimVector) then
+			goto done
+		end
+
+		local start = ply.hit_trace.StartPos
+		local dir = owner:GetAimVector()
+
+		local len = wep.BulletDistance or 8192
+
+		local vec = vec
+		for i = 1, 3 do
+			vec[i] = dir[i] * len
+		end
+
+		local scale = ply:GetModelScale()
+
+		::loop::
+
+		if raytracehitbox(
+			ply, boxes, boxes.headboxes[i], start, vec, scale
+		) then
+			goto done
+		end
+
+		i = i - 1
+		if i ~= 0 then
+			goto loop
+		end
+
+		hitgroup = HITGROUP_GENERIC
+
+		::done::
 	end
 
 	ply.was_headshot = false
