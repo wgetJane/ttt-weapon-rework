@@ -81,6 +81,10 @@ function OnThink(self)
 			clip = clip + 1
 			self:SetClip1(clip)
 		end
+
+		if self.OnInsertClip then
+			self:OnInsertClip()
+		end
 	end
 
 	local fin

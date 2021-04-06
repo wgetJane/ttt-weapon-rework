@@ -360,19 +360,29 @@ function Reload(self)
 
 	if owner then
 		if SERVER or owner:ShouldDrawLocalPlayer() then
-			owner:SetAnimation(PLAYER_RELOAD)
+			if self.Do3rdPersonReloadAnim then
+				self:Do3rdPersonReloadAnim(owner)
+			else
+				owner:SetAnimation(PLAYER_RELOAD)
+			end
 		end
 
-		self:SetVMSpeed(
-			self.ReloadAnimSpeed
-			or self:SequenceDuration() / self.ReloadTime,
-			owner
-		)
+		local vm = owner:GetViewModel()
+
+		if IsValid(vm) then
+			if self.ReloadSequence then
+				vm:SendViewModelMatchingSequence(self.ReloadSequence)
+			end
+
+			vm:SetPlaybackRate(
+				self.ReloadAnimSpeed
+				or self:SequenceDuration() / self.ReloadTime,
+				owner
+			)
+		end
 	end
 
-	if not self.NoSetInsertingOnReload then
-		self:SetInserting(true)
-	end
+	self:SetInserting(not self.NoSetInsertingOnReload)
 
 	local relfin = curtime + self.ReloadTime
 
@@ -380,6 +390,10 @@ function Reload(self)
 
 	self:SetNextPrimaryFire(relfin)
 	self:SetNextSecondaryFire(relfin)
+
+	if self.OnStartReload then
+		self:OnStartReload()
+	end
 
 	return true
 end
@@ -444,6 +458,10 @@ function Think(self)
 	end
 
 	self:SetClip1(clip + add)
+
+	if self.OnInsertClip then
+		self:OnInsertClip()
+	end
 end
 
 -- deploy speed needs to be set when the deploy animation duration can be accessed
