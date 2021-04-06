@@ -21,6 +21,7 @@ local totttwr = {
 		"weapon_tttwr_mp5",
 		"weapon_tttwr_ump",
 		"weapon_tttwr_p90",
+		--"weapon_tttwr_mp7",
 	},
 	weapon_zm_mac10 = {--weapon_ttt_m16 = {
 		ammo = "item_ammo_smg1_ttt",
@@ -42,6 +43,13 @@ local totttwr = {
 		ammo = "item_box_buckshot_ttt",
 		"weapon_tttwr_m3",
 		"weapon_tttwr_xm",
+		"weapon_tttwr_spas",
+	},
+	weapon_zm_revolver = {
+		ammo = "item_ammo_revolver_ttt",
+		checkactive = true,
+		"weapon_tttwr_deagle",
+		"weapon_tttwr_python",
 	},
 }
 totttwr.weapon_ttt_glock = totttwr.weapon_zm_pistol
@@ -57,11 +65,10 @@ for k, v in pairs(totttwr) do
 	function SWEP:Initialize()
 		self.BaseClass.Initialize(self)
 
-		if GetRoundState == ROUND_ACTIVE then
-			return
-		end
-
-		if not IsValid(self) then
+		if (v.checkactive and GetRoundState() == ROUND_ACTIVE)
+			or not IsValid(self)
+			or self._tttwr_dontreplace
+		then
 			return
 		end
 
@@ -71,11 +78,13 @@ for k, v in pairs(totttwr) do
 			v.n = #v
 		end
 
-		local ent = ents.Create(v[v.n])
+		local new = v[v.n]
 
 		v.n = v.n - 1
 
-		if not IsValid(ent) then
+		local ent = new and ents.Create(new)
+
+		if not (ent and IsValid(ent)) then
 			return
 		end
 
