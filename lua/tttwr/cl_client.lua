@@ -16,6 +16,7 @@ for k, v in pairs({
 	mp5 = "MP5",
 	ump = "UMP",
 	p90 = "P90",
+	mp7 = "MP7",
 
 	m16 = "M16",
 	ak47 = "AK-47",
@@ -29,14 +30,17 @@ for k, v in pairs({
 	g3 = "G3",
 	sg = "SG 550",
 
-	m3 = "Pump Shotgun",
-	xm = "Auto Shotgun",
+	m3 = "M3",
+	xm = "XM", --"M4",
+	spas = "SPAS-12",
+
+	deagle = "Deagle",
+	python = "Revolver",
 
 	huge = "H.U.G.E-249",
 
 	sim16 = "Silenced M16",
 
-	deagle = "Deagle",
 	sipist = "Silenced USP",
 	tmp = "TMP Prototype",
 }) do
@@ -46,6 +50,7 @@ end
 add("ammo_pistol", "Pistol ammo")
 add("ammo_smg1", "Rifle ammo")
 add("ammo_357", "Sniper ammo")
+add("ammo_alyxgun", "Magnum ammo")
 add("ammo_airboatgun", "LMG ammo")
 
 add("sim16_desc", [[
@@ -87,10 +92,10 @@ local matdata = {
 }
 
 for y, v in ipairs({
-	{"fn57", "glock", "usp", "p228", "elites", "deagle",},
-	{"mac10", "mp5", "ump", "p90", "tmp",},
+	{"fn57", "glock", "usp", "p228", "elites", "deagle", "python",},
+	{"mac10", "mp5", "ump", "p90", "tmp", "mp7",},
 	{"m16", "ak47", "famas", "galil", "aug", "krieg", "sim16",},
-	{"scout", "awp", "g3", "sg", "m3", "xm",},
+	{"scout", "awp", "g3", "sg", "m3", "xm", "spas",},
 }) do
 	for x, v in ipairs(v) do
 		matdata["$basetexturetransform"] = (
