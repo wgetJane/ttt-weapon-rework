@@ -18,6 +18,8 @@ SWEP.ReloadTime = 2.5
 SWEP.DeployTime = 0.7
 SWEP.DeployAnimSpeed = 1
 
+SWEP.BulletTracer = 1
+
 SWEP.Primary.ClipMax = 36
 SWEP.Primary.Ammo = "AlyxGun"
 
