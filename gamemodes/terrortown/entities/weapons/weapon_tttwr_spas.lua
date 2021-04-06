@@ -7,8 +7,8 @@ TTTWR.MakeShotgun(SWEP,
 	0.085,
 	7,
 	6,
-	-8.096, -8, 4.22,
-	0, 0.98, -0.3
+	-8.08, -8, 2,
+	1, 1.03, 0.1
 )
 
 
@@ -54,7 +54,7 @@ function SWEP:GetViewModelPosition(pos, ang)
 	local fwd, rgt = ang:Forward(), ang:Right()
 
 	for i = 1, 3 do
-		pos[i] = pos[i] - rgt[i] * 1 + fwd[i] * 2
+		pos[i] = pos[i] + fwd[i] * 2 - rgt[i]
 	end
 
 	ang:RotateAroundAxis(ang:Up(), -1)
