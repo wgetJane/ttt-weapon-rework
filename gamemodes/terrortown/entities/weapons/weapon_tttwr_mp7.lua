@@ -7,12 +7,16 @@ TTTWR.MakeSMG(SWEP,
 	0.03,
 	1.15,
 	30,
-	-6.42, -4.8, 0.84,
-	0.9, 0, 0
+	-5.88, -6.8, 1.83,
+	0.9, 0.9, 0
 )
 
 
+SWEP.HoldType = "smg"
+
 SWEP.AutoSpawnable = false -- not spawnable for now, since it feels like it doesn't fit in
+
+SWEP.DeployTime = 0.5
 
 SWEP.ViewModel = "models/weapons/c_smg1.mdl"
 SWEP.WorldModel = "models/weapons/w_smg1.mdl"
@@ -21,8 +25,6 @@ if SERVER then
 	return
 end
 
-SWEP.ViewModelFOV = 58
-
 function SWEP:OnThink()
 	if self.PlayReloadSound
 		and CurTime() > self.PlayReloadSound
@@ -30,11 +32,25 @@ function SWEP:OnThink()
 		self.PlayReloadSound = nil
 
 		if self:GetActivity() == ACT_VM_RELOAD then
-			self:EmitSound("Weapon_SMG1.Reload")
+			self:EmitSound("weapons/smg1/smg1_reload.wav")
 		end
 	end
 end
 
 function SWEP:OnStartReload()
 	self.PlayReloadSound = CurTime() + 1
+end
+
+function SWEP:GetViewModelPosition(pos, ang)
+	pos, ang = self.BaseClass.GetViewModelPosition(self, pos, ang)
+
+	local fwd, rgt, up = ang:Forward(), ang:Right(), ang:Up()
+
+	for i = 1, 3 do
+		pos[i] = pos[i] + fwd[i] * 2 - rgt[i] * 0.6 - up[i] * 1
+	end
+
+	ang:RotateAroundAxis(up, -0.9)
+
+	return pos, ang
 end
