@@ -20,8 +20,11 @@ instead there are now instead various weapons for each weapon type: pistols, smg
 SMG ammo is renamed to "Rifle ammo", and its reserve size is still 60\
 \- rifle ammo is used by assault rifles
 
-Rifle ammo is renamed to "Sniper ammo", and its reserve is still 20\
+Rifle ammo is renamed to "Sniper ammo", and its reserve size is still 20\
 \- sniper ammo is used by sniper rifles
+
+Deagle ammo is renamed to "Magnum ammo", and its reserve size is still 36\
+\- magnum ammo is used by deagle and revolver
 
 information about new weapons is at the "new weapons" section below
 
@@ -102,7 +105,7 @@ and the main point of that point is to make it easier to cross sniper sightlines
 
 **deagle**:\
 \- increased fire rate to 150 rpm from 100 rpm\
-\- accuracy and headshot damage becomes very low immediately after shooting, but eventually recovers in 1.5 seconds\
+\- accuracy and headshot damage become very low immediately after shooting, but eventually recover in 1.5 seconds\
 \- base damage: 33\
 \- minimum headshot damage (<0.83 secs): 50\
 \- headshot damage at >1.33 secs: 100\
@@ -354,7 +357,7 @@ AWP\
 G3\
 45 dmg, 90 hs dmg, 10-round clip, 100 rpm, 3.5-sec reload time
 
-SG\
+SG 550\
 29 dmg, 72.5 hs dmg, 20-round clip, 160 rpm, 3.5-sec reload time
 
 **shotguns**:\
@@ -362,22 +365,42 @@ great burst damage at close-range, but becomes completely useless outside of clo
 
 these have a headshot multiplier of 310% which rapidly drops off to 100% from 140 units to 402 units
 
-they all have a deploy time of 0.75 seconds
-
 it takes 0.5 seconds to begin reloading, 0.6 seconds to reload a shell, and 0.5 seconds to finish reloading\
 this means reloading 8 shells takes 5.8 seconds (0.5 + 0.6 * 8 + 0.5 = 5.8)
 
 all shotguns shoot 8 pellets in a fixed spread pattern
 
-M3 (Pump Shotgun)\
+M3\
 1 pellet: 11 dmg, 34.1 max hs dmg\
-8 pellets: 88 dmg, 180 max hs dmg\
-70 rpm, 8-round clip
+8 pellets: 88 dmg, 180.4 max hs dmg\
+65 rpm, 8-round clip, 0.75-sec deploy time
 
-XM (Auto Shotgun)\
+XM\
 1 pellet: 6 dmg, 18.6 max hs dmg\
 8 pellets: 48 dmg, 98.4 max hs dmg\
-240 rpm, 8-round clip
+240 rpm, 8-round clip, 0.75-sec deploy time
+
+SPAS-12\
+1 pellet: 9 dmg, 27.9 max hs dmg\
+8 pellets: 72 dmg, 147.6 max hs dmg\
+75 rpm, 6-round clip, 0.5-sec deploy time\
+takes 0.5 secs to reload a shell instead of 0.6 secs
+
+**deagle and revolver**:\
+the deagle is obviously not a new weapon, but a new weapon, the revolver, spawns with the same "weapon type" as the deagle
+
+the deagle and revolver have the same base damage, headshot damage, accuracy, and rate of fire:\
+33 dmg, 50 - 150 hs dmg, 150 rpm
+
+their accuracy and headshot damage both significantly drop down after shooting, but the revolver recovers slightly faster:\
+deagle: 50 hs dmg until 0.83 secs, 100 hs dmg at 1.33 secs, 150 hs dmg after 1.5 secs\
+revolver: 50 hs dmg until 0.67 secs, 100 hs dmg at 1.17 sec, 150 hs dmg after 1.33 secs
+
+the deagle has an 8-round clip, 0.7-sec deploy time, and 2.5-sec reload time
+
+the revolver has a 6-round clip, 0.5-sec deploy time, and reloads each round one by one\
+it takes 1.7 seconds to reload the first round, 0.7 seconds to reload each following round, and 0.4 seconds to finish reloading\
+this means reloading 6 rounds takes 5.6 seconds (1.7 + 0.7 * 5 + 0.4 = 5.6)
 
 ## bug fixes
 
