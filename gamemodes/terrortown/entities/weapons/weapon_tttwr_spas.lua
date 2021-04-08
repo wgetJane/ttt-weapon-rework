@@ -24,20 +24,13 @@ SWEP.WorldModel = "models/weapons/w_shotgun.mdl"
 
 -- pump animation can look fucky at really high ping, need to figure out why
 function SWEP:ShotgunThink()
-	if self:GetInserting()
-		and self:GetActivity() == ACT_VM_PRIMARYATTACK
+	if self:GetActivity() == ACT_VM_PRIMARYATTACK
 		and CurTime() > self:GetNextPrimaryFire() - self.Primary.Delay + self.PumpTime
 	then
-		self:SetInserting(false)
-
 		self:SendWeaponAnim(ACT_SHOTGUN_PUMP)
 
 		self:EmitSound(self.PumpSound, 50)
 	end
-end
-
-function SWEP:OnPostShoot()
-	self:SetInserting(true) -- hijack this dtvar
 end
 
 if SERVER then
