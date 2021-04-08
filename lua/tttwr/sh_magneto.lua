@@ -176,13 +176,15 @@ function SWEP:Pickup()
 
 	local ent = self.EntHolding
 
-	self._magnetoowner = owner
+	if not ent:IsWeapon() then
+		self._magnetoowner = owner
 
-	net.Start("tttwr_magneto")
-	net.WriteFloat(CurTime())
-	net.WriteBool(true)
-	net.WriteEntity(ent)
-	net.Send(owner)
+		net.Start("tttwr_magneto")
+		net.WriteFloat(CurTime())
+		net.WriteBool(true)
+		net.WriteEntity(ent)
+		net.Send(owner)
+	end
 
 	if ent.MagnetoPickUpMass then
 		ent:GetPhysicsObject():SetMass(ent.MagnetoPickUpMass)
