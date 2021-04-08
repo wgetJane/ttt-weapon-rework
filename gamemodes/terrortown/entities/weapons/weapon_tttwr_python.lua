@@ -142,8 +142,12 @@ function SWEP:OnThink()
 	return true
 end
 
-function SWEP:Do3rdPersonReloadAnim(owner)
-	owner:DoAnimationEvent(ACT_HL2MP_GESTURE_RELOAD_REVOLVER)
+function SWEP:TranslateActivity(act)
+	if act == ACT_MP_RELOAD_STAND or act == ACT_MP_RELOAD_CROUCH then
+		return ACT_HL2MP_GESTURE_RELOAD_REVOLVER
+	end
+
+	return self.BaseClass.TranslateActivity(self, act)
 end
 
 local remap, clamp, ease = TTTWR.RemapClamp, math.Clamp, math.EaseInOut
@@ -225,4 +229,22 @@ function SWEP:GetViewModelPosition(pos, ang)
 	pos:Sub(ang:Up())
 
 	return pos, ang
+end
+
+function SWEP:FireAnimationEvent(pos, ang, event, options)
+	if event == 21 then
+		event = 5001
+	elseif event == 22 then
+		if options == "PISTOL muzzle" then
+			local data = EffectData()
+			data:SetEntity(self)
+			data:SetFlags(2)
+
+			util.Effect("MuzzleFlash", data)
+		end
+
+		return true
+	end
+
+	return self.BaseClass.FireAnimationEvent(self, pos, ang, event, options)
 end

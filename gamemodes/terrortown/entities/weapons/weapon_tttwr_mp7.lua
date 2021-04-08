@@ -54,3 +54,37 @@ function SWEP:GetViewModelPosition(pos, ang)
 
 	return pos, ang
 end
+
+function SWEP:FireAnimationEvent(pos, ang, event, options)
+	if event == 21 then
+		event = 5001
+	elseif event == 6001 then
+		local data = EffectData()
+		data:SetFlags(90)
+
+		local owner = self:GetOwner()
+		local vm = IsValid(owner) and owner:GetViewModel()
+
+		local att = vm
+			and IsValid(vm)
+			and vm:GetAttachment(2)
+			or self:GetAttachment(2)
+
+		data:SetOrigin(att and att.Pos or pos)
+		data:SetAngles(att and att.Ang or ang)
+
+		util.Effect("EjectBrass_57", data)
+
+		return true
+	elseif event == 22 then
+		local data = EffectData()
+		data:SetEntity(self)
+		data:SetFlags(2)
+
+		util.Effect("MuzzleFlash", data)
+
+		return true
+	end
+
+	return self.BaseClass.FireAnimationEvent(self, pos, ang, event, options)
+end
