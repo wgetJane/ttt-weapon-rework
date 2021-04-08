@@ -12,17 +12,11 @@ TTTWR.MakeRifle(SWEP,
 )
 
 
-function SWEP:OnPostShoot()
-	self.SetIdleAnimTime = CurTime() + self:SequenceDuration() - 0.25
-end
-
 function SWEP:OnThink()
-	if self.SetIdleAnimTime and CurTime() > self.SetIdleAnimTime then
-		self.SetIdleAnimTime = nil
-
-		-- the m4a1's attack animation ends with a weird angle
-		if self:GetActivity() == ACT_VM_PRIMARYATTACK then
-			self:SendWeaponAnim(ACT_VM_IDLE)
-		end
+	-- the m4a1's attack animation ends with a weird angle
+	if self:GetActivity() == ACT_VM_PRIMARYATTACK
+		and CurTime() > self:GetLastPrimaryFire() + 0.25
+	then
+		self:SendWeaponAnim(ACT_VM_IDLE)
 	end
 end
