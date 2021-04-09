@@ -68,6 +68,8 @@ local function PostDrawTranslucentRenderables(depth, sky)
 
 	local col = col
 
+	local eyepos = EyePos()
+
 	local r, g, b = GetColorModulation()
 	SetColorModulation(1, 1, 1)
 
@@ -77,10 +79,11 @@ local function PostDrawTranslucentRenderables(depth, sky)
 	SetMaterial(dot)
 
 	for ent in pairs(snipers) do
-		local owner = IsValid(ent) and ent:GetOwner() or nil
+		local owner = IsValid(ent) and ent:GetOwner()
 
 		if not (
-			IsValid(owner)
+			owner
+			and IsValid(owner)
 			and ent == owner:GetActiveWeapon()
 		) then
 			snipers[ent] = nil
@@ -110,18 +113,29 @@ local function PostDrawTranslucentRenderables(depth, sky)
 
 		local offset = -remap(size, 2, 10, 0.25, 4)
 
+		local isworld = not IsValid(tr.Entity)
+		local isplayer = not isworld and tr.Entity:IsPlayer()
+
+		if isplayer and tr.HitGroup == HITGROUP_CHEST then
+			offset = offset - 1
+		end
+
 		for i = 1, 3 do
 			vec[i] = tr.HitPos[i] + aimvec[i] * offset
 		end
 
 		size = size * (0.875 + random() * 0.25)
 
-		DepthRange(
-			0,
-			not IsValid(tr.Entity) and 0.9999
-			or tr.Entity:IsPlayer() and 0.996
-			or 0.999
-		)
+		if eyepos:DistToSqr(tr.HitPos) > eyepos:DistToSqr(vec) then
+			-- this is needed because bits of playermodels stick out of their hitboxes
+			-- like pouches, vests, etc that would obscure the laser dot
+			DepthRange(
+				0,
+				isworld and 0.9999
+				or isplayer and 0.996
+				or 0.999
+			)
+		end
 
 		DrawSprite(vec, size, size, col)
 
