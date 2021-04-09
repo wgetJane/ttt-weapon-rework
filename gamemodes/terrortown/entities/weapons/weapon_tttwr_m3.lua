@@ -26,6 +26,21 @@ function SWEP:ShotgunThink()
 
 		if self:GetActivity() == ACT_VM_PRIMARYATTACK then
 			self:EmitSound(self.PumpSound, 50)
+
+			return
+		end
+	end
+
+	if self:GetActivity() == ACT_SHOTGUN_RELOAD_START
+		and self:GetInserting()
+	then
+		local owner = self:GetOwner()
+		local vm = IsValid(owner) and owner:GetViewModel()
+
+		if vm and IsValid(vm) and vm:IsSequenceFinished() then
+			self:SetInserting(false)
+
+			self:SendWeaponAnim(ACT_SHOTGUN_RELOAD_FINISH)
 		end
 	end
 end
@@ -34,25 +49,12 @@ function SWEP:OnPostShoot()
 	self.PlayPumpSound = CurTime() + 0.4
 end
 
--- this fucked up code is here to make an animation glitch with the m3 less noticeable
+-- this fucked up code is here to fix an animation glitch with the m3
+-- this is really annoying, and glitches like these aren't present in the original viewmodels
+-- path to m3's original viewmodel: "models/weapons/v_shot_m3super90.mdl"
 function SWEP:ShotgunFinishReloadAnim()
-	if CLIENT then
-		self.m3_preddiff = CurTime() - UnPredictedCurTime()
+	self:SendWeaponAnim(ACT_SHOTGUN_RELOAD_START)
+	self:SetVMSpeed(12)
 
-		if IsFirstTimePredicted() then
-			self.m3_firstpreddiff = self.m3_preddiff > 0.125
-				and self.m3_preddiff
-				or nil
-		end
-	end
-
-	if SERVER
-		or self.m3_firstpreddiff
-		and self.m3_preddiff < self.m3_firstpreddiff * 0.6
-	then
-		self:SendWeaponAnim(ACT_SHOTGUN_RELOAD_FINISH)
-	else
-		self:SendWeaponAnim(ACT_SHOTGUN_RELOAD_START)
-		self:SetVMSpeed(-0.01)
-	end
+	self:SetInserting(true)
 end
