@@ -81,14 +81,14 @@ function AdjustMouseSensitivity(self)
 	return self:GetIronsights() and self.ZoomSensitivity or nil
 end
 
-local scope = surface.GetTextureID("sprites/scope")
+local scope = Material("sprites/scope")
 local dot = surface.GetTextureID("sprites/redglow_mp1")
 
 local random = math.random
 
-local SetDrawColor, DrawRect, DrawLine, SetTexture, DrawTexturedRectRotated =
+local SetDrawColor, DrawRect, DrawLine, SetTexture, SetMaterial, DrawTexturedRectRotated =
 	surface.SetDrawColor, surface.DrawRect, surface.DrawLine,
-	surface.SetTexture, surface.DrawTexturedRectRotated
+	surface.SetTexture, surface.SetMaterial, surface.DrawTexturedRectRotated
 
 function DrawHUD(self)
 	if not self:GetIronsights() then
@@ -131,7 +131,7 @@ function DrawHUD(self)
 		DrawLine(x, y, x + 1, y + 1)
 	end
 
-	SetTexture(scope)
+	SetMaterial(scope)
 	SetDrawColor(255, 255, 255, 255)
 
 	scrh = scrh + 2
