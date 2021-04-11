@@ -73,8 +73,8 @@ this is similar to how tf2's sniper rifle casts a laser dot
 
 the purpose of this change is to make snipers easier to avoid and react to
 
-**more accurate fire rates**:\
-guns will now attempt to shoot at a more accurate fire rate
+**accurate fire rates**:\
+guns now have accurate fire rates, which means that they will shoot as fast as they should
 
 without this change, a gun's fire rate can be slower depending on the server's framerate
 
@@ -85,7 +85,7 @@ for example, this is what 900 rpm will actually be on certain tickrates:\
 20 tickrate = 600 rpm\
 16 tickrate = 480 rpm
 
-this change fixes this issue, so that 900 rpm is actually 900 rpm on average
+this change fixes this issue, so that 900 rpm is actually 900 rpm
 
 ## weapon changes
 
