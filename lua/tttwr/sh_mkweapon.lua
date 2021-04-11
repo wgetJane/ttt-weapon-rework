@@ -188,31 +188,22 @@ function PrimaryAttack(self, worldsnd)
 		receiverecoil(recoil, self.RecoilTime)
 	end
 
-	local delay = pri.Delay
+	local curatt = self:GetNextPrimaryFire()
+	local diff = curtime - curatt
 
-	if delay < 0.2 then
-		-- let fast-firing guns sometimes shoot a frame earlier
-		-- so their fire rate is more accurate on average
-
-		local ft = frametime
-
-		local frames = delay / ft
-		local ffloor = floor(frames)
-
-		local rand = self:GetRandomFloat()
-
-		delay = ffloor * ft + (
-				rand < frames - ffloor and ft or 0
-			)
+	if diff > frametime or diff < 0 then
+		curatt = curtime
 	end
 
+	local delay = pri.Delay
+
 	self:SetNextSecondaryFire(
-		curtime + (
-			delay > 0.1 and sights and 0.1 or delay
+		curatt + (
+			sights and delay > 0.1 and 0.1 or delay
 		)
 	)
 
-	self:SetNextPrimaryFire(curtime + delay)
+	self:SetNextPrimaryFire(curatt + delay)
 
 	if owner then
 		-- prevent players from skipping slow attack delays by switching to a new weapon
@@ -220,7 +211,7 @@ function PrimaryAttack(self, worldsnd)
 	end
 
 	if self.OnPostShoot then
-		return self:OnPostShoot()
+		return self:OnPostShoot(curatt)
 	end
 end
 
