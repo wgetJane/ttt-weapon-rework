@@ -392,8 +392,7 @@ net.Receive("TTT_Radar", function()
 
 			RADAR.targets[i] = {
 				role = net.ReadUInt(2),
-				--pos = net.ReadBool() and ent:WorldSpaceCenter() or net.ReadVector(),
-				pos = ent:WorldSpaceCenter(),
+				pos = net.ReadBool() and ent:WorldSpaceCenter() or net.ReadVector(),
 			}
 		end
 

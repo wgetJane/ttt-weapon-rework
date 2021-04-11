@@ -337,7 +337,7 @@ concommand.Add("ttt_radar_scan", function(ply)
 
 		if ent == ply
 			or not (IsValid(ply) and ent:IsTerror())
-			or (ent:GetNWBool("disguised", false) and not istraitor)
+			or (not istraitor and ent:GetNWBool("disguised", false))
 		then
 			goto cont
 		end
@@ -348,7 +348,6 @@ concommand.Add("ttt_radar_scan", function(ply)
 			ent:GetTraitor() == istraitor and ent:GetRole() or ROLE_INNOCENT, 2
 		)
 
---[[
 		local inpvs = ply:TestPVS(ent)
 
 		net.WriteBool(inpvs)
@@ -356,7 +355,6 @@ concommand.Add("ttt_radar_scan", function(ply)
 		if not inpvs then
 			net.WriteVector(ent:WorldSpaceCenter())
 		end
---]]
 
 		::cont::
 	end
