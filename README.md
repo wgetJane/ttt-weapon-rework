@@ -270,6 +270,21 @@ as much as possible, the game will try to avoid assigning the same target to dif
 
 this mechanic can be disabled by setting the cvar `ttt_prioritytargets` from 2 to 0
 
+**fixed dying shot**:\
+the experimental [dying shot](https://www.troubleinterroristtown.com/config/settings/#other-gameplay-settings) mechanic that's disabled by default is reworked
+
+to trigger a dying shot, the following conditions must be met on a player's death:\
+\- the killer must be a player\
+\- the killer must not be behind the victim\
+\- the killer's weapon must be a hitscan weapon\
+\- the victim must be sighting their weapon\
+\- the victim's weapon can be normally fired (has ammo, etc)
+
+also, the shot is no longer very inaccurate
+
+the dying shot mechanic is still disabled by default\
+you can enable it by setting the cvar `ttt_dyingshot_enabled` to 1
+
 ## new weapons
 
 these new weapons replace the vanilla weapons, so they'll get spawned in their place
