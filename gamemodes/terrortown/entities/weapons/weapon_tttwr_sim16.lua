@@ -40,9 +40,9 @@ end
 
 function SWEP:OnThink()
 	-- the m4a1's attack animation ends with a weird angle
-	if self:GetActivity() == ACT_VM_PRIMARYATTACK
+	if self:GetActivity() == self.PrimaryAnim
 		and CurTime() > self:GetLastPrimaryFire() + 0.25
 	then
-		self:SendWeaponAnim(ACT_VM_IDLE)
+		self:SendWeaponAnim(self.IdleAnim)
 	end
 end
