@@ -193,9 +193,13 @@ function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 
 		local i
 
-		repeat
+		for _ = 1, 2 do
 			i = math.random(#deathsounds)
-		until i ~= lastdeathsound
+
+			if i ~= lastdeathsound then
+				break
+			end
+		end
 
 		lastdeathsound = i
 
