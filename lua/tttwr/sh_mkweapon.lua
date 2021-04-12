@@ -1,4 +1,4 @@
-local SetupDataTables, PrimaryAttack, ShootBullet, GetRandomFloat, DryFire, SetVMSpeed, Reload, Think, Deploy
+local SetupDataTables, PrimaryAttack, ShootBullet, GetRandomFloat, DryFire, CanDyingShot, DyingShot, SetVMSpeed, Reload, Think, Deploy
 
 function TTTWR:MakeWeapon(
 	class, sound,
@@ -43,6 +43,8 @@ function TTTWR:MakeWeapon(
 	self.ShootBullet = ShootBullet
 	self.GetRandomFloat = GetRandomFloat
 	self.DryFire = DryFire
+	self.CanDyingShot = CanDyingShot
+	self.DyingShot = DyingShot
 	self.SetVMSpeed = SetVMSpeed
 	self.Reload = Reload
 	self.Think = Think
@@ -248,6 +250,12 @@ function ShootBullet(self, dmg, recoil, numbul, cone)
 	bul.Tracer = self.BulletTracer or (self.IsSilent and 0) or 4
 	bul.TracerName = self.Tracer or "Tracer"
 
+	if self.ForceTracer and bul.Tracer > 0 then
+		self.ForceTracer = nil
+
+		bul.Tracer = 1
+	end
+
 	bul.AmmoType = nil
 
 	bul.IgnoreEntity = nil
@@ -288,6 +296,36 @@ function DryFire(self, setnext)
 				and self.Secondary
 				or self.Primary
 		).Delay))
+end
+
+function CanDyingShot(self, curtime)
+	if self:GetNextPrimaryFire() > (curtime or CurTime()) then
+		return false
+	end
+
+	local owner = self:GetOwner()
+
+	return self:GetIronsights()
+		or (
+			IsValid(owner)
+			and owner.KeyDown
+			and owner:KeyDown(IN_ATTACK)
+		)
+		or false
+end
+
+function DyingShot(self)
+	self.ForceTracer = true
+
+	local data = EffectData()
+	data:SetEntity(self)
+	data:SetFlags(2)
+
+	util.Effect("MuzzleFlash", data)
+
+	self:PrimaryAttack(true)
+
+	return true
 end
 
 function SetVMSpeed(self, speed, owner)

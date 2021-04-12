@@ -9,6 +9,11 @@ hook.Add("EntityTakeDamage", "tttwr_EntityTakeDamage", function(victim, dmginfo)
 		return
 	end
 
+	if victim.DyingShotTime and CurTime() == victim.DyingShotTime then
+		-- this is probably only necessary in PlayerTraceAttack
+		return true
+	end
+
 	local wep = wepfromdmg(dmginfo)
 
 	if not wep then
@@ -51,10 +56,14 @@ hook.Add("PostEntityTakeDamage", "tttwr_PostEntityTakeDamage", function(victim, 
 end)
 --]]
 
---[[
 hook.Add("PlayerTraceAttack", "tttwr_PlayerTraceAttack", function(victim, dmginfo, dir, trace)
 	if not IsValid(victim) then
 		return
+	end
+
+	if victim.DyingShotTime and CurTime() == victim.DyingShotTime then
+		-- for some reason, trace attacks will repeat when players fire a dying shot
+		return true
 	end
 
 	local wep = wepfromdmg(dmginfo)
@@ -66,7 +75,6 @@ hook.Add("PlayerTraceAttack", "tttwr_PlayerTraceAttack", function(victim, dmginf
 		return true
 	end
 end)
---]]
 
 --[[
 hook.Add("ScalePlayerDamage", "tttwr_ScalePlayerDamage", function(victim, hitgroup, dmginfo)

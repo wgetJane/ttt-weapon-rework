@@ -70,6 +70,9 @@ local ttt_credits_detectivekill = GetConVar("ttt_credits_detectivekill")
 local ttt_det_credits_traitorkill = GetConVar("ttt_det_credits_traitorkill")
 local ttt_det_credits_traitordead = GetConVar("ttt_det_credits_traitordead")
 
+local ttt_dyingshot = GetConVar("ttt_dyingshot")
+local ttt_dyingshot_enabled = CreateConVar("ttt_dyingshot_enabled", "0", FCVAR_ARCHIVE + FCVAR_NOTIFY)
+
 hook.Add("TTTBodyFound", "tttwr_TTTBodyFound", function(ply, deadply, rag)
 	if rag.was_role ~= ROLE_TRAITOR then
 		return
@@ -129,10 +132,92 @@ local CheckPriorityKill, CheckCreditAward
 
 -- having to overwrite all of this sucks, but there's no other way
 
--- also, i removed the dyingshot part because it's really buggy, i'll consider rewriting the dyingshot mechanic
 function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 	if ply:IsSpec() then
 		return
+	end
+
+	local wep = ply:GetActiveWeapon()
+	wep = IsValid(wep) and wep
+
+	if ttt_dyingshot_enabled:GetBool() or ttt_dyingshot:GetBool() then
+		local curtime = CurTime()
+
+		if ply.DyingShotTime and curtime == ply.DyingShotTime then
+			return
+		end
+
+		if not (wep
+			and wep.DyingShot
+			and wep.CanDyingShot
+			and IsValid(attacker)
+			and attacker:IsPlayer()
+			and dmginfo:IsDamageType(DMG_BULLET + DMG_CLUB + DMG_SLASH)
+			and wep:CanDyingShot(curtime)
+		) then
+			goto done
+		end
+
+		ply:LagCompensation(true) -- i wish i could unlag only a single entity
+
+		local vec = ply:GetShootPos()
+		vec:Sub(attacker:WorldSpaceCenter())
+		vec:Normalize()
+
+		ply:LagCompensation(false)
+
+		if vec:Dot(ply:GetAimVector()) > 0 then
+			goto done
+		end
+
+		ply.dying_wep = wep
+
+		ply.DyingShotTime = curtime
+
+		wep:DyingShot()
+
+		print((
+			"%s (%s) fired their DYING SHOT"
+		):format(
+			ply:Nick(), ply:SteamID()
+		))
+
+		::done::
+	end
+
+	if wep then
+		WEPS.DropNotifiedWeapon(ply, wep, true)
+		wep:DampenDrop()
+
+		local att = ply:LookupAttachment("anim_attachment_RH")
+
+		if att == -1 then
+			goto done
+		end
+
+		att = ply:GetAttachment(att)
+
+		if not att then
+			goto done
+		end
+
+		local pos = att.Pos
+
+		local td = {
+			start = pos,
+			endpos = pos,
+			filter = self,
+			collisiongroup = COLLISION_GROUP_WEAPON,
+		}
+
+		if util.TraceLine(td).Hit then
+			goto done
+		end
+
+		wep:SetPos(pos)
+		wep:SetAngles(att.Ang)
+
+		::done::
 	end
 
 	local dropweps = ply:GetWeapons()
