@@ -68,7 +68,6 @@ end
 
 function Holster(self)
 	self:SetZoom(false)
-	self:SetIronsights(false)
 
 	return true
 end

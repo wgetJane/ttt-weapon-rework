@@ -499,6 +499,10 @@ function Deploy(self)
 
 	self:SetVMSpeed(self.DeployAnimSpeed)
 
+	-- prevent ironsight viewmodel position calculation while deploying
+	-- since SWEP:Think does not get called during the deploy animation
+	self.bIron = nil
+
 	return self.BaseClass.Deploy(self)
 end
 
