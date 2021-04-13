@@ -74,7 +74,7 @@ local ttt_dyingshot = GetConVar("ttt_dyingshot")
 local ttt_dyingshot_enabled = CreateConVar("ttt_dyingshot_enabled", "0", FCVAR_ARCHIVE + FCVAR_NOTIFY)
 
 hook.Add("TTTBodyFound", "tttwr_TTTBodyFound", function(ply, deadply, rag)
-	if rag.was_role ~= ROLE_TRAITOR then
+	if not (IsValid(rag) and rag.was_role == ROLE_TRAITOR) then
 		return
 	end
 
@@ -137,16 +137,32 @@ function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 		return
 	end
 
+	local curtime = CurTime()
+
+	if ply.DyingShotTime and curtime == ply.DyingShotTime then
+		return
+	end
+
+	if GetRoundState() == ROUND_ACTIVE then
+		SCORE:HandleKill(ply, attacker, dmginfo)
+
+		if IsValid(attacker) and attacker:IsPlayer() then
+			attacker:RecordKill(ply)
+
+			DamageLog(Format("KILL:\t %s [%s] killed %s [%s]", attacker:Nick(), attacker:GetRoleString(), ply:Nick(), ply:GetRoleString()))
+		else
+			DamageLog(Format("KILL:\t <something/world> killed %s [%s]", ply:Nick(), ply:GetRoleString()))
+		end
+
+		KARMA.Killed(attacker, ply, dmginfo)
+	end
+
 	local wep = ply:GetActiveWeapon()
 	wep = IsValid(wep) and wep
 
+	local killerscene
+
 	if ttt_dyingshot_enabled:GetBool() or ttt_dyingshot:GetBool() then
-		local curtime = CurTime()
-
-		if ply.DyingShotTime and curtime == ply.DyingShotTime then
-			return
-		end
-
 		if not (wep
 			and wep.DyingShot
 			and wep.CanDyingShot
@@ -169,6 +185,16 @@ function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 		if vec:Dot(ply:GetAimVector()) > 0 then
 			goto done
 		end
+
+		killerscene = {
+			pos = attacker:GetPos(),
+			ang = attacker:GetAngles(),
+			sequence = attacker:GetSequence(),
+			cycle = attacker:GetCycle(),
+			aim_yaw = attacker:GetPoseParameter("aim_yaw"),
+			move_yaw = attacker:GetPoseParameter("move_yaw"),
+			aim_pitch = attacker:GetPoseParameter("aim_pitch"),
+		}
 
 		ply.dying_wep = wep
 
@@ -206,7 +232,7 @@ function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 		local td = {
 			start = pos,
 			endpos = pos,
-			filter = self,
+			filter = wep,
 			collisiongroup = COLLISION_GROUP_WEAPON,
 		}
 
@@ -236,25 +262,17 @@ function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 	local rag = CORPSE.Create(ply, attacker, dmginfo)
 	ply.server_ragdoll = rag
 
-	util.PaintDown(
-		ply:GetPos() + Vector(math.Rand(-35, 35), math.Rand(-35, 35), 20),
-		"Blood", ply
-	)
+	if IsValid(rag) then
+		util.PaintDown(
+			ply:GetPos() + Vector(math.Rand(-35, 35), math.Rand(-35, 35), 20),
+			"Blood", ply
+		)
 
-	util.StartBleeding(rag, dmginfo:GetDamage(), 15)
+		util.StartBleeding(rag, dmginfo:GetDamage(), 15)
 
-	if GetRoundState() == ROUND_ACTIVE then
-		SCORE:HandleKill(ply, attacker, dmginfo)
-
-		if IsValid(attacker) and attacker:IsPlayer() then
-			attacker:RecordKill(ply)
-
-			DamageLog(Format("KILL:\t %s [%s] killed %s [%s]", attacker:Nick(), attacker:GetRoleString(), ply:Nick(), ply:GetRoleString()))
-		else
-			DamageLog(Format("KILL:\t <something/world> killed %s [%s]", ply:Nick(), ply:GetRoleString()))
+		if killerscene and rag.scene and not attacker:Alive() then
+			rag.scene.killer = killerscene
 		end
-
-		KARMA.Killed(attacker, ply, dmginfo)
 	end
 
 	if ttt_prioritytargets:GetInt() > 0 then
