@@ -154,7 +154,30 @@ function PrimaryAttack(self, worldsnd)
 		owner:SetAnimation(PLAYER_ATTACK1)
 	end
 
+
+	local curatt = self:GetNextPrimaryFire()
+	local diff = curtime - curatt
+
+	if diff > frametime or diff < 0 then
+		curatt = curtime
+	end
+
 	local sights = self:GetIronsights()
+
+	local delay = pri.Delay
+
+	self:SetNextSecondaryFire(
+		curatt + (
+			sights and delay > 0.1 and 0.1 or delay
+		)
+	)
+
+	self:SetNextPrimaryFire(curatt + delay)
+
+	if owner then
+		-- prevent players from skipping slow attack delays by switching to a new weapon
+		owner.NextWepPrimaryFire = self:GetNextPrimaryFire()
+	end
 
 	local recoil = (
 			self.GetRecoil and self:GetRecoil() or pri.Recoil
@@ -188,28 +211,6 @@ function PrimaryAttack(self, worldsnd)
 
 	if CLIENT and IsFirstTimePredicted() and owner == LocalPlayer() then
 		receiverecoil(recoil, self.RecoilTime)
-	end
-
-	local curatt = self:GetNextPrimaryFire()
-	local diff = curtime - curatt
-
-	if diff > frametime or diff < 0 then
-		curatt = curtime
-	end
-
-	local delay = pri.Delay
-
-	self:SetNextSecondaryFire(
-		curatt + (
-			sights and delay > 0.1 and 0.1 or delay
-		)
-	)
-
-	self:SetNextPrimaryFire(curatt + delay)
-
-	if owner then
-		-- prevent players from skipping slow attack delays by switching to a new weapon
-		owner.NextWepPrimaryFire = self:GetNextPrimaryFire()
 	end
 
 	if self.OnPostShoot then
