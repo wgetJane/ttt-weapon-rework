@@ -160,6 +160,8 @@ function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 	local wep = ply:GetActiveWeapon()
 	wep = IsValid(wep) and wep
 
+	local killwep = util.WeaponFromDamage(dmginfo)
+
 	local killerscene
 
 	if ttt_dyingshot_enabled:GetBool() or ttt_dyingshot:GetBool() then
@@ -215,33 +217,57 @@ function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 		WEPS.DropNotifiedWeapon(ply, wep, true)
 		wep:DampenDrop()
 
-		local att = ply:LookupAttachment("anim_attachment_RH")
+		local pos, ang
 
-		if att == -1 then
-			goto done
+		local bone = ply:LookupBone("ValveBiped.Bip01_R_Hand")
+
+		if bone then
+			pos, ang = ply:GetBonePosition(bone)
 		end
 
-		att = ply:GetAttachment(att)
+		local bpos, bang
 
-		if not att then
-			goto done
+		if pos and ang then
+			bone = wep:LookupBone("ValveBiped.Bip01_R_Hand")
+
+			if bone then
+				bpos, bang = wep:GetBonePosition(bone)
+			end
 		end
 
-		local pos = att.Pos
+		if bpos and bang then
+			pos:Sub(bpos)
+			ang:Sub(bang)
 
-		local td = {
+			pos:Add(wep:GetPos())
+			ang:Add(wep:GetAngles())
+		else
+			local att = ply:LookupAttachment("anim_attachment_RH")
+
+			if att == -1 then
+				goto done
+			end
+
+			att = ply:GetAttachment(att)
+
+			if not att then
+				goto done
+			end
+
+			pos, ang = att.Pos, att.Ang
+		end
+
+		if util.TraceLine({
 			start = pos,
 			endpos = pos,
 			filter = wep,
 			collisiongroup = COLLISION_GROUP_WEAPON,
-		}
-
-		if util.TraceLine(td).Hit then
+		}).Hit then
 			goto done
 		end
 
 		wep:SetPos(pos)
-		wep:SetAngles(att.Ang)
+		wep:SetAngles(ang)
 
 		::done::
 	end
@@ -270,8 +296,12 @@ function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 
 		util.StartBleeding(rag, dmginfo:GetDamage(), 15)
 
-		if killerscene and rag.scene and not attacker:Alive() then
-			rag.scene.killer = killerscene
+		if killerscene and not attacker:Alive() then
+			rag.dmgwep = IsValid(killwep) and killwep:GetClass() or ""
+
+			if rag.scene then
+				rag.scene.killer = killerscene
+			end
 		end
 	end
 
@@ -284,8 +314,6 @@ function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 	ply:StripAll()
 
 	ply:SendLastWords(dmginfo)
-
-	local killwep = util.WeaponFromDamage(dmginfo)
 
 	if not (
 		ply.was_headshot
