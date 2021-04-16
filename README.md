@@ -10,7 +10,7 @@ also, this is a work-in-progress, but it should be in a well playable state righ
 
 ## general gunplay changes
 
-**new weapons**:\
+#### new weapons
 the glock, pistol, mac10, m16, rifle, and shotgun have been replaced\
 instead there are now instead various weapons for each weapon type: pistols, smgs, rifles, snipers, and shotguns
 
@@ -28,24 +28,24 @@ Deagle ammo is renamed to "Magnum ammo", and its reserve size is still 36\
 
 information about new weapons is at the "new weapons" section below
 
-**interpolated recoil**:\
+#### interpolated recoil
 recoil is smoothed over 0.067 seconds instead of instantly teleporting your crosshair upwards
 
 this should prevent eyestrain with shooting guns so they feel a lot nicer to shoot
 
-**hitgroup priority**:\
+#### hitgroup priority
 arms and legs will no longer block hits to the head or body
 
 similar behaviour in csgo: https://youtu.be/CbftQTBHSlA
 
-**no lucky headshots**:\
+#### no lucky headshots
 "lucky headshots" will no longer deal extra damage
 
 a headshot is considered to be lucky if you weren't aiming for the head
 
 set the cvar `ttt_noluckyheadshots` to 1 to enable or 0 to disable this feature
 
-**fixed shotgun spread pattern**:\
+#### fixed shotgun spread pattern
 shotguns now have a fixed spread pattern: 1 pellet at the centre, 7 pellets in a circle\
 (each pellet will still have a bit of inaccuracy)
 
@@ -53,7 +53,7 @@ it's silly how a close-range shot can randomly deal 60 damage, or how a medium-r
 
 a fixed spread pattern gives shotguns a consistent reliable range, so it's no longer based on luck
 
-**shotguns no longer use hull traces**:\
+#### shotguns no longer use hull traces
 all of a shotgun's pellets now use line traces
 
 in vanilla, half of the shotgun shots use 6x6x6 hull traces (very big bullets)\
@@ -62,18 +62,18 @@ https://github.com/ValveSoftware/source-sdk-2013/blob/0d8dceea4310fde5706b3ce1c7
 
 this change means you'd actually have to hit your target with the pellets, instead of just the air around them
 
-**tracers**:\
+#### tracers
 sniper rifles will always have a visible tracer for every shot instead of for every 4 shots\
 silenced weapons will no longer fire visible tracers
 
-**sniper laser dot**:\
+#### sniper laser dot
 while zoomed in, sniper rifles will cast a laser dot on where they're pointing at
 
 this is similar to how tf2's sniper rifle casts a laser dot
 
 the purpose of this change is to make snipers easier to avoid and react to
 
-**accurate fire rates**:\
+#### accurate fire rates
 guns now have accurate fire rates, which means that they will shoot as fast as they should
 
 without this change, a gun's fire rate can be slower depending on the server's framerate
@@ -89,21 +89,21 @@ this change fixes this issue, so that 900 rpm is actually 900 rpm
 
 ## weapon changes
 
-**crowbar**:\
+#### crowbar
 secondary fire delay is shortened to 0.5 seconds from 5 seconds
 
 it just feels awkward how you can't use your crowbar for a long while after pushing
 
 you need to be in point-blank range to use it anyway, so i doubt this even affects balance
 
-**magneto-stick**:\
+#### magneto-stick
 props now look partially transparent while you're holding them with the magneto-stick
 
 the main point of this change is to make it easier to use props to block bullets without obscuring your vision too much
 
 and the main point of that point is to make it easier to cross sniper sightlines when you know where the sniper is shooting from
 
-**deagle**:\
+#### deagle
 \- increased fire rate to 150 rpm from 100 rpm\
 \- accuracy and headshot damage become very low immediately after shooting, but eventually recover in 1.5 seconds\
 \- base damage: 33\
@@ -129,7 +129,7 @@ to prevent people from just spamming shots to get a lucky headshot, the headshot
 
 these changes should hopefully still have it handle like a pistol without always having the power of a sniper rifle
 
-**huge-249**:\
+#### huge-249
 \- ammo capacity increased to 200 from 150\
 \- while ironsighted, accuracy and recoil is improved by sustained fire
 
@@ -147,7 +147,7 @@ and eventually gets extremely accurate with little recoil on the 20th shot
 
 this gives it a role as a weapon for suppressive fire at the cost of mobility
 
-**radar + body armor**:\
+#### radar + body armor
 now costs 2 credits for traitors
 
 in vanilla servers, traitors often just spend their first 2 credits on radar + body armour
@@ -159,7 +159,7 @@ body armour gives traitors an effective health of 142.86, which is a huge advant
 i believe that traitors shouldn't be able to easily win a head-on 1v1 fight,\
 since they're supposed to use stealth, surprise, teamwork, and deception to take out innocents
 
-**decoy**:\
+#### decoy
 \- you receive 8 decoys instead of 1\
 \- decoy positions will always be visible to the owner, even without a radar\
 \- a decoy's radar position will be the owner's position at the moment it was placed\
@@ -172,7 +172,7 @@ nobody really buys the decoy because it's kinda underwhelming, so i'm buffing th
 i don't like how the detective can use the radar to know the number of living players,\
 so the decoy is now a great way to make the radar unreliable for counting players
 
-**knife**:\
+#### knife
 \-can now instakill on a backstab\
 \-decreased front-stab damage to 40 from 50\
 \-increased thrown knife minimum damage to 60 from 50
@@ -193,7 +193,7 @@ this is merely for better feedback, so the knife is still completely silent for 
 also, i've improved how the game looks for where to stick the knife in a ragdoll,\
 so you're gonna see a lot less floating knives in the air
 
-**flare gun**:\
+#### flare gun
 \- will now ignite players in a small radius\
 \- model is now coloured red
 
@@ -204,7 +204,7 @@ and obviously, the shooter cannot be self-ignited
 the model is now coloured red so it's more obvious when someone is holding a flare gun,\
 since it looks like a generic pistol from a distance
 
-**newton launcher**:\
+#### newton launcher
 \- alt-fire now pulls players\
 \- will now properly credit prop-kills
 
@@ -220,11 +220,11 @@ instead of charging up a push attack, using alt-fire will now pull players towar
 this gives the newton launcher another angle to use it from\
 for example, it can be used to pull players off of ledges
 
-**silenced pistol**:\
+#### silenced pistol
 \- now uses USP stats (see "new weapons" section), but has less recoil, better accuracy, and higher damage\
 \- gives 2 clips of bonus ammo instead of 1 when bought, and will no longer exceed the reserve size
 
-**ump prototype**:\
+#### ump prototype
 \- renamed to "TMP Prototype"\
 \- uses the tmp model instead of the ump model\
 \- silenced\
@@ -232,19 +232,19 @@ for example, it can be used to pull players off of ledges
 \- the jolting of aim when hit is now interpolated (so it's less annoying)\
 \- the random amount of jolt is now normally distributed (so it's higher on average)
 
-**health station**:\
+#### health station
 detectives can now carry health stations with the magneto-stick
 
 ## other changes
 
-**dropping ammo**:\
+#### dropping ammo
 the console command `ttt_dropammo` now drops ammo from your reserve instead of from your clip
 
 this makes it significantly easier to transfer ammo to another weapon
 
 a new console command `ttt_dropclip` is added for when you do want to drop ammo from your clip
 
-**crouch view offset**:\
+#### crouch view offset
 raised to 36 units from 28 units
 
 the default crouch view offset is too low, since it's positioned at around the player's waist\
@@ -258,10 +258,10 @@ https://cdn.discordapp.com/attachments/538431794786336798/826401713295458304/unk
 https://cdn.discordapp.com/attachments/538431794786336798/826398116063215656/unknown.png \
 https://cdn.discordapp.com/attachments/538431794786336798/826399524447584286/unknown.png
 
-**detective credit rewards**:\
+#### detective credit rewards
 detectives will only receive their credit reward for traitor deaths when the traitor's body is identified
 
-**traitor credit rewards**:\
+#### traitor credit rewards
 instead of rewarding traitors with credits based on the percent of dead innocents,\
 they're rewarded with credits for killing "priority targets"
 
@@ -270,7 +270,7 @@ as much as possible, the game will try to avoid assigning the same target to dif
 
 this mechanic can be disabled by setting the cvar `ttt_prioritytargets` from 2 to 0
 
-**weapon sound distance attenuation**:\
+#### weapon sound distance attenuation
 how weapon sounds drop off in volume by distance now makes a lot more sense
 
 without this change:\
@@ -278,7 +278,7 @@ the five-seven is silent after ~1200 units (???)\
 the scout is silent after ~600 units (??????)\
 the crowbar is silent after ~2400 units (?????????)
 
-**dying shot**:\
+#### dying shot
 the experimental [dying shot](https://www.troubleinterroristtown.com/config/settings/#other-gameplay-settings) mechanic that's disabled by default is fixed and reworked
 
 to trigger a dying shot, the following conditions must be met on a player's death:\
@@ -303,7 +303,7 @@ the idea behind adding more weapons is to provide more "soft evidence" in the ga
 since each gun has their own distinct sound and appearance\
 and this makes it more useful to note the killer's weapon identified on a corpse
 
-**pistols**:\
+#### pistols
 these are supposed to be sidearms that are weaker than primary weapons, but can be deployed much faster
 
 they typically have a deploy time of 0.4 seconds and a reload time of 2.5 seconds
@@ -323,7 +323,7 @@ USP\
 Dual Elites\
 19 dmg, 38 hs dmg, 30-round clip, 360 rpm, bad accuracy, average recoil, 0.7-sec deploy time, 4-sec reload time
 
-**smgs**:\
+#### smgs
 these weapons have fast fire rates and low recoil, shredding targets at close-range, but they have low base damage and poor accuracy
 
 they have a headshot multiplier of 320% which quickly drops off to 170% from 150 units to 350 units
@@ -342,7 +342,7 @@ UMP\
 P90\
 10 dmg, 32 - 17 hs dmg, 50-round clip, 857 rpm, average accuracy, very low recoil, 0.7-sec deploy time, 3-sec reload time
 
-**assault rifles**:\
+#### assault rifles
 these are supposed to be generally decent primary weapons for most ranges\
 assault rifles are slightly more accurate when tap-fired
 
@@ -366,7 +366,7 @@ Aug\
 Krieg\
 24 dmg, 60 hs dmg, 30-round clip, 400 rpm, better accuracy, higher recoil
 
-**sniper rifles**:\
+#### sniper rifles
 these are long-range scoped weapons with very high accuracy but slow fire rates
 
 they all have a deploy time of 0.75 seconds
@@ -383,7 +383,7 @@ G3\
 SG 550\
 29 dmg, 72.5 hs dmg, 20-round clip, 160 rpm, 3.5-sec reload time
 
-**shotguns**:\
+#### shotguns
 great burst damage at close-range, but becomes completely useless outside of close-range
 
 these have a headshot multiplier of 310% which rapidly drops off to 100% from 140 units to 402 units
@@ -409,7 +409,7 @@ SPAS-12\
 75 rpm, 6-round clip, 0.5-sec deploy time\
 takes 0.5 secs to reload a shell instead of 0.6 secs
 
-**deagle and revolver**:\
+#### deagle and revolver
 the deagle is obviously not a new weapon, but a new weapon, the revolver, spawns with the same "weapon type" as the deagle
 
 the deagle and revolver have the same base damage, headshot damage, accuracy, and rate of fire:\
@@ -429,19 +429,23 @@ this means reloading 6 rounds takes 5.6 seconds (1.7 + 0.7 * 5 + 0.4 = 5.6)
 
 these are bugs that exist in vanilla ttt that should be fixed by this mod
 
-**fov zoom glitch**:\
+#### fov zoom glitch
 fixed a glitch with fov zooming in slightly for a split second before returning to normal\
 this was happening with zoomable weapons whenever they're reloaded, holstered, or dropped
 
 also fixed a glitch with the weapon viewmodel being in the ironsighted position when picked up and deployed after being dropped while zoomed in
 
-**instant reload exploit**:\
+<!--
+
+#### instant reload exploit
 fixed an exploit that lets you reload instantly by dropping the gun while it's reloading:\
 https://cdn.discordapp.com/attachments/383927930641842186/812515986674155531/simplescreenrecorder-2021-02-20_10.33.18.mp4
 
 though the exploit should also be fixed by the next gmod update:\
 https://reddit.com/comments/lo48v9//go7ybif \
 https://github.com/Facepunch/garrysmod/commit/9d3ba42
+
+-->
 
 ## compatibility
 
