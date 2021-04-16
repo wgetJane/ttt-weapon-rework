@@ -1,7 +1,7 @@
 TTTWR.MakeSMG(SWEP,
 	"ump",
 	"ump45",
-	"UMP45",
+	"weapons/ump45/ump45-1.wav",
 	16,
 	60 / 600,
 	0.0255,

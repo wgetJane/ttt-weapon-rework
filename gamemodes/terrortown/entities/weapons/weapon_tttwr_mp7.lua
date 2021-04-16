@@ -1,7 +1,7 @@
 TTTWR.MakeSMG(SWEP,
 	"mp7",
 	"",
-	"SMG1",
+	"weapons/smg1/smg1_fire1.wav",
 	13,
 	60 / 750,
 	0.03,

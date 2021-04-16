@@ -1,7 +1,7 @@
 TTTWR.MakeShotgun(SWEP,
 	"m3",
 	"m3super90",
-	"M3",
+	"weapons/xm1014/xm1014-1.wav",
 	11,
 	60 / 65,
 	0.085,
@@ -14,8 +14,7 @@ TTTWR.MakeShotgun(SWEP,
 
 SWEP.ShootSequence = 2
 
-SWEP.Primary.Sound = "Weapon_XM1014.Single"
-SWEP.PumpSound = "Weapon_M3.Pump"
+SWEP.PumpSound = "weapons/m3/m3_pump.wav"
 
 
 function SWEP:ShotgunThink()
@@ -25,7 +24,25 @@ function SWEP:ShotgunThink()
 		self.PlayPumpSound = nil
 
 		if self:GetActivity() == ACT_VM_PRIMARYATTACK then
-			self:EmitSound(self.PumpSound, 50)
+			local ent = self
+
+			if CLIENT then
+				local owner = self:GetOwner()
+
+				if IsValid(owner) then
+					ent = owner
+
+					local vm = owner:GetViewModel()
+
+					if IsValid(vm) then
+						ent = vm
+					end
+				end
+			end
+
+			ent:EmitSound(
+				self.PumpSound, 75, 100, 1, CHAN_WEAPON
+			)
 
 			return
 		end

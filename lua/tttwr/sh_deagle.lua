@@ -3,7 +3,7 @@ local SWEP = weapons.GetStored("weapon_zm_revolver")
 TTTWR.MakePistol(SWEP,
 	"deagle",
 	"deagle",
-	"Deagle",
+	{"weapons/deagle/deagle-1.wav", 90},
 	33,
 	60 / 150,
 	0.015,

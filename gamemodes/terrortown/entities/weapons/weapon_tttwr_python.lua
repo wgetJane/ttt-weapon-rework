@@ -1,7 +1,7 @@
 TTTWR.MakePistol(SWEP,
 	"python",
 	"",
-	"357",
+	{"weapons/357/357_fire3.wav", 90, 90},
 	33,
 	60 / 150,
 	0.015,

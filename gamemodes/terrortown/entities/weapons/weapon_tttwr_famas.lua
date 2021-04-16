@@ -1,7 +1,7 @@
 TTTWR.MakeRifle(SWEP,
 	"famas",
 	"famas",
-	"FAMAS",
+	"weapons/famas/famas-1.wav",
 	20,
 	60 / 470,
 	0.02,

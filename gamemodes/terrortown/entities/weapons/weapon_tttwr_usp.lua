@@ -1,7 +1,7 @@
 TTTWR.MakePistol(SWEP,
 	"usp",
 	"usp",
-	"USP",
+	"weapons/usp/usp_unsil-1.wav",
 	26,
 	60 / 200,
 	0.013,

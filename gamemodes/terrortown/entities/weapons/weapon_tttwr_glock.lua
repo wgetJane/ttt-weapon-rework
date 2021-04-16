@@ -1,7 +1,7 @@
 TTTWR.MakePistol(SWEP,
 	"glock",
 	"glock18",
-	"Glock",
+	"weapons/glock/glock18-1.wav",
 	20,
 	60 / 300,
 	0.02,

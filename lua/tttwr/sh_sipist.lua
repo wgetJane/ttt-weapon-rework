@@ -3,7 +3,7 @@ local SWEP = weapons.GetStored("weapon_ttt_sipistol")
 TTTWR.MakePistol(SWEP,
 	"sipist",
 	"usp",
-	"USP",
+	{"weapons/usp/usp1.wav", 65, 90, 0.8},
 	30,
 	60 / 200,
 	0.012,
@@ -17,8 +17,6 @@ TTTWR.MakeEquipment(SWEP)
 
 
 SWEP.ExtraAmmoOnBuy = 32
-
-SWEP.Primary.Sound = "Weapon_USP.SilencedShot"
 
 SWEP.WorldModel = "models/weapons/w_pist_usp_silencer.mdl"
 

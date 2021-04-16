@@ -1,7 +1,7 @@
 TTTWR.MakeRifle(SWEP,
 	"sim16",
 	"m4a1",
-	"M4A1",
+	{"weapons/m4a1/m4a1-1.wav", 65, 90, 0.8},
 	25,
 	60 / 400,
 	0.015,
@@ -16,11 +16,7 @@ TTTWR.MakeEquipment(SWEP, {ROLE_TRAITOR}, 2)
 
 SWEP.FakeDefaultEquipment = true
 
-SWEP.Primary.SoundLevel = 50
-
 SWEP.IsSilent = true
-
-SWEP.Primary.Sound = "Weapon_M4A1.Silenced"
 
 -- for some reason, the silenced version of the m4a1's world model has a longer grip and magazine
 SWEP.WorldModel = "models/weapons/w_rif_m4a1_silencer.mdl"

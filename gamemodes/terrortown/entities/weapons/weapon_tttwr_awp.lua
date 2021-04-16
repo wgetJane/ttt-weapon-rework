@@ -1,7 +1,7 @@
 TTTWR.MakeSniper(SWEP,
 	"awp",
 	"awp",
-	"AWP",
+	{"weapons/awp/awp1.wav", 95},
 	75,
 	2,
 	0.001,

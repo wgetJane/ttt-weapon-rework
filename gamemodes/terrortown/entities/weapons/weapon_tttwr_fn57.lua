@@ -1,7 +1,7 @@
 TTTWR.MakePistol(SWEP,
 	"fn57",
 	"fiveseven",
-	"FiveSeven",
+	"weapons/fiveseven/fiveseven-1.wav",
 	25,
 	60 / 200,
 	0.02,

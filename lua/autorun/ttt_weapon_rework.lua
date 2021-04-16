@@ -5,6 +5,7 @@ end
 TTTWR = {
 	fns = TTTWR and TTTWR.fns or {},
 	weakkeys = {__mode = "k"},
+	sounds = {},
 }
 
 local included = {}
@@ -71,6 +72,15 @@ local function PostGamemodeLoaded()
 	crowbar.Secondary.Delay = crowbar.Primary.Delay
 	crowbar.DeploySpeed = 28 / 15
 
+	sound.Add({
+		name = "Weapon_Crowbar.Single",
+		channel = CHAN_WEAPON,
+		volume = 0.5,
+		level = 75,
+		pitch = 100,
+		sound = "weapons/iceaxe/iceaxe_swing1.wav",
+	})
+
 	-- allow these weapons to be deployed near-instantly
 	for _, v in pairs({
 		"weapon_ttt_binoculars",
@@ -105,6 +115,8 @@ local function PostGamemodeLoaded()
 	incl("equip")
 
 	incl("movement")
+
+	incl("sound")
 
 	if CLIENT then
 		goto skip

@@ -1,7 +1,7 @@
 TTTWR.MakeSMG(SWEP,
 	"p90",
 	"p90",
-	"P90",
+	"weapons/p90/p90-1.wav",
 	10,
 	60 / 857,
 	0.03,

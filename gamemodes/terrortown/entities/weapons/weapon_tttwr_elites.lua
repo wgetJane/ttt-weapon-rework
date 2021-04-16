@@ -1,7 +1,7 @@
 TTTWR.MakePistol(SWEP,
 	"elites",
 	"elite",
-	"ELITE",
+	"weapons/elite/elite-1.wav",
 	19,
 	60 / 360,
 	0.03,

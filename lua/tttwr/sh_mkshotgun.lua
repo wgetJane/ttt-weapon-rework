@@ -34,7 +34,7 @@ function TTTWR:MakeShotgun(class, model, ...)
 
 	self.ReloadAnim = ACT_SHOTGUN_RELOAD_START
 
-	self.DryFireSound = "Weapon_Shotgun.Empty"
+	self.DryFireSound = "weapons/shotgun/shotgun_empty.wav"
 
 	self.ViewModel = "models/weapons/cstrike/c_shot_" .. model .. ".mdl"
 	self.WorldModel = "models/weapons/w_shot_" .. model .. ".mdl"

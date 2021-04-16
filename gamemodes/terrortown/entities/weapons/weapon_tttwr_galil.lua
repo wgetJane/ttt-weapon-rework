@@ -1,7 +1,7 @@
 TTTWR.MakeRifle(SWEP,
 	"galil",
 	"galil",
-	"Galil",
+	"weapons/galil/galil-1.wav",
 	22,
 	60 / 450,
 	0.02,

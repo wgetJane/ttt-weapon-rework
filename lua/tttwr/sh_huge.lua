@@ -2,7 +2,7 @@ local SWEP = weapons.GetStored("weapon_zm_sledge")
 
 TTTWR.MakeWeapon(SWEP,
 	"huge",
-	"M249",
+	"weapons/m249/m249-1.wav",
 	7,
 	60 / 1000,
 	0.1,

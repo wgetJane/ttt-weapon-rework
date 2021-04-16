@@ -1,7 +1,7 @@
 TTTWR.MakeShotgun(SWEP,
 	"xm",
 	"xm1014",
-	"XM1014",
+	"weapons/xm1014/xm1014-1.wav",
 	6,
 	60 / 240,
 	0.085,

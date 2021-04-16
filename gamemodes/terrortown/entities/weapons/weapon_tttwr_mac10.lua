@@ -1,7 +1,7 @@
 TTTWR.MakeSMG(SWEP,
 	"mac10",
 	"mac10",
-	"MAC10",
+	"weapons/mac10/mac10-1.wav",
 	12,
 	60 / 900,
 	0.03,

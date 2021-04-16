@@ -1,7 +1,7 @@
 local SetupDataTables, PrimaryAttack, ShootBullet, GetRandomFloat, DryFire, CanDyingShot, DyingShot, SetVMSpeed, Reload, Think, Deploy
 
 function TTTWR:MakeWeapon(
-	class, sound,
+	class, snd,
 	dmg, delay, cone, recoil, clip,
 	x, y, z, a, b, c
 )
@@ -13,7 +13,6 @@ function TTTWR:MakeWeapon(
 	pr.Recoil = recoil
 	pr.ClipSize = clip
 	pr.DefaultClip = clip
-	pr.Sound = "Weapon_" .. sound .. ".Single"
 
 	pr.Automatic = true
 
@@ -23,6 +22,29 @@ function TTTWR:MakeWeapon(
 	else
 		self.NoSights = true
 	end
+
+	local sndfile, lvl, pit, vol = snd, 85, 100, 1
+
+	if istable(snd) then
+		sndfile = snd[1]
+		lvl = snd[2] or lvl
+		pit = snd[3] or pit
+		vol = snd[4] or vol
+	end
+
+	pr.Sound = "tttwr_" .. class .. ".Single"
+	pr.SoundLevel = lvl
+
+	sound.Add({
+		name = pr.Sound,
+		channel = CHAN_WEAPON,
+		level = lvl,
+		pitch = pit,
+		volume = vol,
+		sound = ")" .. sndfile,
+	})
+
+	TTTWR.sounds[pr.Sound] = true
 
 	self.Base = "weapon_tttbase"
 
@@ -122,10 +144,14 @@ function PrimaryAttack(self, worldsnd)
 
 	local pri = self.Primary
 
-	if not worldsnd then
-		self:EmitSound(pri.Sound, pri.SoundLevel)
-	elseif SERVER then
-		sound.Play(pri.Sound, self:GetPos(), pri.SoundLevel)
+	if CLIENT then
+		self:EmitSound(pri.Sound)
+	else
+		TTTWR.PlaySound(
+			not worldsnd and owner,
+			pri.Sound,
+			owner and owner:GetShootPos() or self:GetPos()
+		)
 	end
 
 	if owner and self.DoShootAnim then
@@ -288,8 +314,8 @@ function DryFire(self, setnext)
 	end
 
 	self:EmitSound(
-		self.DryFireSound or "Weapon_Pistol.Empty",
-		50, 100, 1 / 3, CHAN_WEAPON, SND_CHANGE_VOL
+		self.DryFireSound or "weapons/pistol/pistol_empty.wav",
+		60, 100, 0.25, CHAN_WEAPON
 	)
 
 	setnext(self, CurTime() + max(0.2, (
@@ -389,13 +415,7 @@ function Reload(self)
 	self:SendWeaponAnim(self.ReloadAnim or ACT_VM_RELOAD)
 
 	if owner then
-		if SERVER or owner:ShouldDrawLocalPlayer() then
-			if self.Do3rdPersonReloadAnim then
-				self:Do3rdPersonReloadAnim(owner)
-			else
-				owner:SetAnimation(PLAYER_RELOAD)
-			end
-		end
+		owner:SetAnimation(PLAYER_RELOAD)
 
 		local vm = owner:GetViewModel()
 

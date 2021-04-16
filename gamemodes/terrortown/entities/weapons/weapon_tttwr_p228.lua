@@ -1,7 +1,7 @@
 TTTWR.MakePistol(SWEP,
 	"p228",
 	"p228",
-	"P228",
+	"weapons/p228/p228-1.wav",
 	30,
 	60 / 230,
 	0.025,

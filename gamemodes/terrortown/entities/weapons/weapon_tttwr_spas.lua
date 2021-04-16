@@ -1,7 +1,7 @@
 TTTWR.MakeShotgun(SWEP,
 	"spas",
 	"",
-	"Shotgun",
+	"weapons/shotgun/shotgun_fire7.wav",
 	9,
 	60 / 75,
 	0.085,
@@ -18,7 +18,7 @@ SWEP.DeployAnimSpeed = 1.5
 
 SWEP.PumpTime = 0.2
 
-SWEP.PumpSound = "Weapon_Shotgun.Special1"
+SWEP.PumpSound = "weapons/shotgun/shotgun_cock.wav"
 SWEP.ViewModel = "models/weapons/c_shotgun.mdl"
 SWEP.WorldModel = "models/weapons/w_shotgun.mdl"
 
@@ -29,7 +29,25 @@ function SWEP:ShotgunThink()
 	then
 		self:SendWeaponAnim(ACT_SHOTGUN_PUMP)
 
-		self:EmitSound(self.PumpSound, 50)
+		local ent = self
+
+		if CLIENT then
+			local owner = self:GetOwner()
+
+			if IsValid(owner) then
+				ent = owner
+
+				local vm = owner:GetViewModel()
+
+				if IsValid(vm) then
+					ent = vm
+				end
+			end
+		end
+
+		ent:EmitSound(
+			self.PumpSound, 75, 100, 1, CHAN_WEAPON
+		)
 	end
 end
 

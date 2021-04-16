@@ -1,7 +1,7 @@
 TTTWR.MakeRifle(SWEP,
 	"m16",
 	"m4a1",
-	"M4A1",
+	"weapons/m4a1/m4a1_unsil-1.wav",
 	23,
 	60 / 400,
 	0.018,

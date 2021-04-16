@@ -1,7 +1,7 @@
 TTTWR.MakeRifle(SWEP,
 	"krieg",
 	"sg552",
-	"SG552",
+	"weapons/sg552/sg552-1.wav",
 	24,
 	60 / 400,
 	0.015,

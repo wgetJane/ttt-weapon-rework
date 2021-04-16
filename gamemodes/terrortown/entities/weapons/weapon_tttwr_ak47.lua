@@ -1,7 +1,7 @@
 TTTWR.MakeRifle(SWEP,
 	"ak47",
 	"ak47",
-	"AK47",
+	{"weapons/ak47/ak47-1.wav", 85, 100, 0.75},
 	25,
 	60 / 375,
 	0.0166,

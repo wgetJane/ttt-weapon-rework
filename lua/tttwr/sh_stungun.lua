@@ -5,7 +5,7 @@ local GetHeadshotMultiplier = TTTWR.getfn(SWEP, "GetHeadshotMultiplier")
 TTTWR.MakeSMG(SWEP,
 	"tmp",
 	"tmp",
-	"TMP",
+	{"weapons/tmp/tmp-1.wav", 70, 90},
 	9,
 	60 / 600,
 	0.02,
@@ -17,8 +17,6 @@ TTTWR.MakeSMG(SWEP,
 
 
 TTTWR.MakeEquipment(SWEP)
-
-SWEP.Primary.SoundLevel = 50
 
 SWEP.IsSilent = true
 
