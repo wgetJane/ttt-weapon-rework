@@ -270,8 +270,16 @@ as much as possible, the game will try to avoid assigning the same target to dif
 
 this mechanic can be disabled by setting the cvar `ttt_prioritytargets` from 2 to 0
 
-**fixed dying shot**:\
-the experimental [dying shot](https://www.troubleinterroristtown.com/config/settings/#other-gameplay-settings) mechanic that's disabled by default is reworked
+**weapon sound distance attenuation**:\
+how weapon sounds drop off in volume by distance now makes a lot more sense
+
+without this change:\
+the five-seven is silent after ~1200 units (???)\
+the scout is silent after ~600 units (??????)\
+the crowbar is silent after ~2400 units (?????????)
+
+**dying shot**:\
+the experimental [dying shot](https://www.troubleinterroristtown.com/config/settings/#other-gameplay-settings) mechanic that's disabled by default is fixed and reworked
 
 to trigger a dying shot, the following conditions must be met on a player's death:\
 \- the killer must be a player\
