@@ -214,13 +214,13 @@ function PreFireBullet(self, owner, bul)
 
 	d[1], d[2], d[3] = bul.Dir[1], bul.Dir[2], bul.Dir[3]
 
-	local r = (d[1] * d[1] + d[2] * d[2]) ^ 0.5
+	local r = 1 / (d[1] * d[1] + d[2] * d[2]) ^ 0.5
 
 	d[4], d[5], d[6] = d[2] * r, -d[1] * r, 0
 
 	d[7], d[8], d[9] = d[5] * d[3], -d[4] * d[3], d[4] * d[2] - d[5] * d[1]
 
-	r = (d[7] * d[7] + d[8] * d[8] + d[9] * d[9]) ^ 0.5
+	r = 1 / (d[7] * d[7] + d[8] * d[8] + d[9] * d[9]) ^ 0.5
 
 	d[7], d[8], d[9] = d[7] * r, d[8] * r, d[9] * r
 
