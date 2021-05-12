@@ -24,25 +24,13 @@ function SWEP:ShotgunThink()
 		self.PlayPumpSound = nil
 
 		if self:GetActivity() == ACT_VM_PRIMARYATTACK then
-			local ent = self
+			local ent = CLIENT and self:GetOwnerViewModel() or self
 
-			if CLIENT then
-				local owner = self:GetOwner()
-
-				if IsValid(owner) then
-					ent = owner
-
-					local vm = owner:GetViewModel()
-
-					if IsValid(vm) then
-						ent = vm
-					end
-				end
+			if ent == self or IsFirstTimePredicted() then
+				ent:EmitSound(
+					self.PumpSound, 75, 100, 1, CHAN_WEAPON
+				)
 			end
-
-			ent:EmitSound(
-				self.PumpSound, 75, 100, 1, CHAN_WEAPON
-			)
 
 			return
 		end
@@ -51,10 +39,9 @@ function SWEP:ShotgunThink()
 	if self:GetActivity() == ACT_SHOTGUN_RELOAD_START
 		and self:GetInserting()
 	then
-		local owner = self:GetOwner()
-		local vm = IsValid(owner) and owner:GetViewModel()
+		local vm = self:GetOwnerViewModel()
 
-		if vm and IsValid(vm) and vm:IsSequenceFinished() then
+		if vm and vm:IsSequenceFinished() then
 			self:SetInserting(false)
 
 			self:SendWeaponAnim(ACT_SHOTGUN_RELOAD_FINISH)

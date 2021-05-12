@@ -1,4 +1,4 @@
-local SetupDataTables, PrimaryAttack, ShootBullet, GetRandomFloat, DryFire, CanDyingShot, DyingShot, SetVMSpeed, Reload, Think, Deploy
+local SetupDataTables, PrimaryAttack, ShootBullet, GetRandomFloat, DryFire, CanDyingShot, DyingShot, GetOwnerViewModel, SetVMSpeed, Reload, Think, Deploy
 
 function TTTWR:MakeWeapon(
 	class, snd,
@@ -67,6 +67,7 @@ function TTTWR:MakeWeapon(
 	self.DryFire = DryFire
 	self.CanDyingShot = CanDyingShot
 	self.DyingShot = DyingShot
+	self.GetOwnerViewModel = GetOwnerViewModel
 	self.SetVMSpeed = SetVMSpeed
 	self.Reload = Reload
 	self.Think = Think
@@ -167,9 +168,9 @@ function PrimaryAttack(self, worldsnd)
 	end
 
 	if owner and self.ShootSequence then
-		local vm = owner:GetViewModel()
+		local vm = self:GetOwnerViewModel(owner)
 
-		if IsValid(vm) then
+		if vm then
 			vm:SendViewModelMatchingSequence(self.ShootSequence)
 		end
 	end
@@ -306,23 +307,29 @@ function GetRandomFloat(self, x, y, seed)
 	)
 end
 
-local max = math.max
+local clamp = math.Clamp
 
 function DryFire(self, setnext)
 	if self:Reload() ~= false then
 		return
 	end
 
-	self:EmitSound(
-		self.DryFireSound or "weapons/pistol/pistol_empty.wav",
-		60, 100, 0.25, CHAN_WEAPON
-	)
-
-	setnext(self, CurTime() + max(0.2, (
+	setnext(self, CurTime() + clamp((
 			setnext == self.SetNextSecondaryFire
 				and self.Secondary
 				or self.Primary
-		).Delay))
+		).Delay, 0.25, 0.5))
+
+	local ent = CLIENT and self:GetOwnerViewModel() or self
+
+	if ent ~= self and not IsFirstTimePredicted() then
+		return
+	end
+
+	ent:EmitSound(
+		self.DryFireSound or "weapons/pistol/pistol_empty.wav",
+		60, 100, 0.25, CHAN_WEAPON
+	)
 end
 
 function CanDyingShot(self, curtime)
@@ -355,24 +362,31 @@ function DyingShot(self)
 	return true
 end
 
-function SetVMSpeed(self, speed, owner)
-	if speed == 1 then
-		return
-	end
-
+function GetOwnerViewModel(self, owner)
 	if not owner then
 		owner = self:GetOwner()
+
 		if not IsValid(owner) then
 			return
 		end
 	end
 
-	if owner then
-		local vm = owner:GetViewModel()
+	local vm = owner:GetViewModel()
 
-		if IsValid(vm) then
-			vm:SetPlaybackRate(speed)
-		end
+	if IsValid(vm) then
+		return vm
+	end
+end
+
+function SetVMSpeed(self, speed, owner)
+	if speed == 1 then
+		return
+	end
+
+	local vm = self:GetOwnerViewModel(owner)
+
+	if vm then
+		vm:SetPlaybackRate(speed)
 	end
 end
 
@@ -417,9 +431,9 @@ function Reload(self)
 	if owner then
 		owner:SetAnimation(PLAYER_RELOAD)
 
-		local vm = owner:GetViewModel()
+		local vm = self:GetOwnerViewModel(owner)
 
-		if IsValid(vm) then
+		if vm then
 			if self.ReloadSequence then
 				vm:SendViewModelMatchingSequence(self.ReloadSequence)
 			end
@@ -568,8 +582,6 @@ end
 local remap = TTTWR.RemapClamp
 
 if SERVER then
-	local clamp = math.Clamp
-
 	function TTTWR.SendRecoil(ply, recoil, time, axis)
 		net.Start("tttwr_recoil")
 

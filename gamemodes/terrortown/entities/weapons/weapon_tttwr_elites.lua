@@ -66,15 +66,9 @@ function SWEP:GetTracerOrigin()
 		return
 	end
 
-	local owner = self:GetOwner()
+	local vm = self:GetOwnerViewModel()
 
-	if not IsValid(owner) then
-		return
-	end
-
-	local vm = owner:GetViewModel()
-
-	if not IsValid(vm) then
+	if not vm then
 		return
 	end
 

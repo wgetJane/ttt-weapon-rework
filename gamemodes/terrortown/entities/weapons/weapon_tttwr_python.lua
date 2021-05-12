@@ -95,9 +95,9 @@ function SWEP:OnThink()
 		self:SetReloading(0)
 		self:SetInserting(false)
 
-		local vm = owner:GetViewModel()
+		local vm = self:GetOwnerViewModel(owner)
 
-		if IsValid(vm) then
+		if vm then
 			vm:SendViewModelMatchingSequence(self.ReloadEndSequence)
 
 			vm:SetPlaybackRate(self.ReloadAnimEndSpeed)
@@ -129,9 +129,9 @@ function SWEP:OnThink()
 	self:SetNextPrimaryFire(relfin)
 	self:SetNextSecondaryFire(relfin)
 
-	local vm = owner and owner:GetViewModel()
+	local vm = self:GetOwnerViewModel(owner)
 
-	if vm and IsValid(vm) then
+	if vm then
 		vm:SendViewModelMatchingSequence(self.ReloadLoopSequence)
 
 		vm:SetPlaybackRate(self.ReloadAnimLoopSpeed)
@@ -196,14 +196,10 @@ function SWEP:GetViewModelPosition(pos, ang)
 	local cycle
 
 	if self:GetActivity() == ACT_VM_PRIMARYATTACK then
-		local owner = self:GetOwner()
+		local vm = self:GetOwnerViewModel()
 
-		if IsValid(owner) then
-			local vm = owner:GetViewModel()
-
-			if IsValid(vm) then
-				cycle = vm:GetCycle()
-			end
+		if vm then
+			cycle = vm:GetCycle()
 		end
 	end
 

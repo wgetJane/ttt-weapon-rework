@@ -29,20 +29,10 @@ function SWEP:ShotgunThink()
 	then
 		self:SendWeaponAnim(ACT_SHOTGUN_PUMP)
 
-		local ent = self
+		local ent = CLIENT and self:GetOwnerViewModel() or self
 
-		if CLIENT then
-			local owner = self:GetOwner()
-
-			if IsValid(owner) then
-				ent = owner
-
-				local vm = owner:GetViewModel()
-
-				if IsValid(vm) then
-					ent = vm
-				end
-			end
+		if ent ~= self and not IsFirstTimePredicted() then
+			return
 		end
 
 		ent:EmitSound(
@@ -80,11 +70,9 @@ function SWEP:FireAnimationEvent(pos, ang, event, options)
 		local data = EffectData()
 		data:SetFlags(90)
 
-		local owner = self:GetOwner()
-		local vm = IsValid(owner) and owner:GetViewModel()
+		local vm = self:GetOwnerViewModel()
 
 		local att = vm
-			and IsValid(vm)
 			and vm:GetAttachment(2)
 			or self:GetAttachment(2)
 

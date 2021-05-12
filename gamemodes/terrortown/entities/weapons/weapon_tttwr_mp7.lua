@@ -62,11 +62,9 @@ function SWEP:FireAnimationEvent(pos, ang, event, options)
 		local data = EffectData()
 		data:SetFlags(90)
 
-		local owner = self:GetOwner()
-		local vm = IsValid(owner) and owner:GetViewModel()
+		local vm = self:GetOwnerViewModel()
 
 		local att = vm
-			and IsValid(vm)
 			and vm:GetAttachment(2)
 			or self:GetAttachment(2)
 
