@@ -93,13 +93,6 @@ function GAMEMODE:Move(ply, mv)
 	mv:SetMaxSpeed(maxspeed * mul)
 end
 
---[[
- i fucking hate gmod footsteps
- most of them are way too quiet, like a lot of ambient noises are louder than footsteps on concrete
- meanwhile, footsteps on grass and dirt are very significantly much louder than other footsteps
- ?????????
- im not dealing with this shit anymore
-
 if SERVER then
 	function GAMEMODE:PlayerFootstep()
 		return true
@@ -118,6 +111,12 @@ function GAMEMODE:PlayerFootstep(ply, pos, foot, snd, volume, filter)
 		return true
 	end
 
+	local wep = ply:GetActiveWeapon()
+	if IsValid(wep) and wep.GetIronsights and wep:GetIronsights() then
+		return true
+	end
+
+--[[
 	if not localply then
 		localply = LocalPlayer()
 	end
@@ -132,5 +131,5 @@ function GAMEMODE:PlayerFootstep(ply, pos, foot, snd, volume, filter)
 	)
 
 	return true
-end
 --]]
+end
