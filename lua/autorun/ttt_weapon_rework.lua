@@ -152,17 +152,17 @@ function TTTWR.RemapClamp(val, a, b, c, d)
 end
 
 TTTWR.FrameTime = (function(ft)
-	local function tofloat(d)
-		return d + d * 0x1p29 - d * 0x1p29
-	end
+	local a = Angle(0.015)
 
-	if ft == tofloat(0.15) then
+	if ft == a[1] then
 		return 0.015
 	end
 
 	--for r = 10, 100 do
 	for r = math.floor(1 / ft), math.ceil(1 / ft) do
-		if ft == tofloat(1 / r) then
+		a[1] = 1 / r
+
+		if ft == a[1] then
 			return 1 / r
 		end
 	end
