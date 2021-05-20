@@ -27,11 +27,9 @@ local heldr, heldg, heldb, helda = 1, 1, 1, 1
 local PushRenderTarget, PopRenderTarget, SetWriteDepthToDestAlpha, Clear, GetBlend, SetBlend, GetColorModulation, SetColorModulation, PushFlashlightMode, PopFlashlightMode, SetMaterial, OverrideBlend, DrawScreenQuad =
 	render.PushRenderTarget, render.PopRenderTarget, render.SetWriteDepthToDestAlpha, render.Clear, render.GetBlend, render.SetBlend, render.GetColorModulation, render.SetColorModulation, render.PushFlashlightMode, render.PopFlashlightMode, render.SetMaterial, render.OverrideBlend, render.DrawScreenQuad
 
-hook.Add("PostDrawTranslucentRenderables", "tttwr_magneto_PostDrawTranslucentRenderables", function(depth, sky)
-	if depth or sky then
-		return
-	end
+local _RenderOverride, flags
 
+hook.Add("PreDrawEffects", "tttwr_magneto_PreDrawEffects", function()
 	local ent = heldent
 
 	if not IsValid(ent) then
@@ -48,10 +46,10 @@ hook.Add("PostDrawTranslucentRenderables", "tttwr_magneto_PostDrawTranslucentRen
 	SetBlend(helda)
 	SetColorModulation(heldr, heldg, heldb)
 
-	if ent.RenderOverride then
-		ent:RenderOverride()
+	if _RenderOverride then
+		_RenderOverride(ent, flags)
 	else
-		ent:DrawModel()
+		ent:DrawModel(flags)
 	end
 
 	local ply = localply
@@ -66,10 +64,10 @@ hook.Add("PostDrawTranslucentRenderables", "tttwr_magneto_PostDrawTranslucentRen
 	if flash then
 		PushFlashlightMode(true)
 
-		if ent.RenderOverride then
-			ent:RenderOverride()
+		if _RenderOverride then
+			_RenderOverride(ent, flags)
 		else
-			ent:DrawModel()
+			ent:DrawModel(flags)
 		end
 
 		PopFlashlightMode()
@@ -94,7 +92,21 @@ hook.Add("PostDrawTranslucentRenderables", "tttwr_magneto_PostDrawTranslucentRen
 	DrawScreenQuad()
 
 	OverrideBlend(false)
+
+	flags = nil
 end)
+
+local GetRenderTarget = render.GetRenderTarget
+
+local function RenderOverride(self, f)
+	if not GetRenderTarget() then
+		flags = flags or f
+	elseif _RenderOverride then
+		return _RenderOverride(self, f)
+	else
+		return self:DrawModel(f)
+	end
+end
 
 local lastadd, lastrem = 0, 0
 
@@ -111,13 +123,14 @@ net.Receive("tttwr_magneto", function()
 		lastrem = 0
 
 		if IsValid(heldent) then
-			heldent:SetNoDraw(false)
+			heldent.RenderOverride = _RenderOverride
 		end
 
 		heldent = ent
 
 		if IsValid(ent) then
-			ent:SetNoDraw(true)
+			_RenderOverride = heldent.RenderOverride
+			heldent.RenderOverride = RenderOverride
 
 			local col = ent:GetColor()
 
@@ -130,7 +143,7 @@ net.Receive("tttwr_magneto", function()
 		lastadd = 0
 
 		if IsValid(heldent) then
-			heldent:SetNoDraw(false)
+			heldent.RenderOverride = _RenderOverride
 		end
 
 		heldent = nil
@@ -176,15 +189,13 @@ function SWEP:Pickup()
 
 	local ent = self.EntHolding
 
-	if not ent:IsWeapon() then
-		self._magnetoowner = owner
+	self._magnetoowner = owner
 
-		net.Start("tttwr_magneto")
-		net.WriteFloat(CurTime())
-		net.WriteBool(true)
-		net.WriteEntity(ent)
-		net.Send(owner)
-	end
+	net.Start("tttwr_magneto")
+	net.WriteFloat(CurTime())
+	net.WriteBool(true)
+	net.WriteEntity(ent)
+	net.Send(owner)
 
 	if ent.MagnetoPickUpMass then
 		ent:GetPhysicsObject():SetMass(ent.MagnetoPickUpMass)
