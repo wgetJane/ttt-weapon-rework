@@ -12,7 +12,7 @@ also, this is a work-in-progress, but it should be in a well playable state righ
 
 #### new weapons
 the glock, pistol, mac10, m16, rifle, and shotgun have been replaced\
-instead there are now instead various weapons for each weapon type: pistols, smgs, rifles, snipers, and shotguns
+instead there are now various weapons for each weapon type: pistols, smgs, rifles, snipers, and shotguns
 
 9mm ammo is renamed to "Pistol ammo", and its reserve size is increased to 120\
 \- pistol ammo is used by pistols and smgs
@@ -102,6 +102,8 @@ props now look partially transparent while you're holding them with the magneto-
 the main point of this change is to make it easier to use props to block bullets without obscuring your vision too much
 
 and the main point of that point is to make it easier to cross sniper sightlines when you know where the sniper is shooting from
+
+clients can choose to disable this by setting the cvar `ttt_magnetotrans` from 1 to 0
 
 #### deagle
 \- increased fire rate to 150 rpm from 100 rpm\
