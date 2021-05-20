@@ -4,6 +4,8 @@ SWEP.DeploySpeed = 28 / 15
 
 if CLIENT then
 
+local ttt_magnetotrans = CreateConVar("ttt_magnetotrans", "1", FCVAR_ARCHIVE)
+
 local tex = GetRenderTargetEx(
 	"tttwr_magneto_tex",
 	0, 0,
@@ -129,8 +131,10 @@ net.Receive("tttwr_magneto", function()
 		heldent = ent
 
 		if IsValid(ent) then
-			_RenderOverride = heldent.RenderOverride
-			heldent.RenderOverride = RenderOverride
+			if ttt_magnetotrans:GetBool() then
+				_RenderOverride = heldent.RenderOverride
+				heldent.RenderOverride = RenderOverride
+			end
 
 			local col = ent:GetColor()
 
