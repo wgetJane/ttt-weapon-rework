@@ -51,7 +51,7 @@ local dot = Material("sprites/redglow_mp1")
 local GetColorModulation, SetColorModulation, GetBlend, SetBlend, SetMaterial, DepthRange, DrawSprite =
 	render.GetColorModulation, render.SetColorModulation, render.GetBlend, render.SetBlend, render.SetMaterial, render.DepthRange, render.DrawSprite
 
-local function PreDrawEffects(depth, sky)
+local function PostDrawTranslucentRenderables(depth, sky)
 	if depth or sky or empty then
 		return
 	end
@@ -168,5 +168,5 @@ function PostSetupDataTables(self)
 end
 
 return function()
-	hook.Add("PreDrawEffects", "tttwr_mksniper_PreDrawEffects", PreDrawEffects)
+	hook.Add("PostDrawTranslucentRenderables", "tttwr_mksniper_PostDrawTranslucentRenderables", PostDrawTranslucentRenderables)
 end
