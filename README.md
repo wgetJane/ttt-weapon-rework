@@ -330,43 +330,46 @@ these weapons have fast fire rates and low recoil, shredding targets at close-ra
 
 they have a headshot multiplier of 320% which quickly drops off to 170% from 150 units to 350 units
 
+they will deal up to 33.33% extra damage on bodyshots, dropping off from 150 units to 350 units
+
 they typically have a deploy time of 0.6 seconds and a reload time of 2.75 seconds
 
 MAC-10\
-12 dmg, 38.4 - 20.4 hs dmg, 30-round clip, 900 rpm, average accuracy, average recoil, 0.5-sec deploy time
+16 - 12 dmg, 38.4 - 20.4 hs dmg, 30-round clip, 900 rpm, average accuracy, average recoil, 0.5-sec deploy time
 
 MP5\
-12 dmg, 38.4 - 20.4 hs dmg, 30-round clip, 750 rpm, better accuracy, lower recoil
+16 - 12 dmg, 38.4 - 20.4 hs dmg, 30-round clip, 800 rpm, better accuracy, lower recoil
 
 UMP\
-16 dmg, 51.2 - 27.2 hs dmg, 25-round clip, 600 rpm, better accuracy, higher recoil
+21.33 - 16 dmg, 51.2 - 27.2 hs dmg, 25-round clip, 640 rpm, better accuracy, higher recoil
 
 P90\
-10 dmg, 32 - 17 hs dmg, 50-round clip, 857 rpm, average accuracy, very low recoil, 0.7-sec deploy time, 3-sec reload time
+13.33 - 10 dmg, 32 - 17 hs dmg, 50-round clip, 900 rpm, average accuracy, very low recoil, 3-sec reload time
 
 #### assault rifles
-these are supposed to be generally decent primary weapons for most ranges\
-assault rifles are slightly more accurate when tap-fired
+these are supposed to be generally decent primary weapons for most ranges
+
+assault rifles are a lot less accurate when spraying, so it's best to fire in bursts
 
 they typically have a deploy time of 0.75 seconds and a reload time of 3 seconds
 
 M16\
-23 dmg, 57.5 hs dmg, 30-round clip, 400 rpm, average accuracy, average recoil
+23 dmg, 57.5 hs dmg, 30-round clip, 500 rpm, average accuracy, average recoil
 
 AK-47\
-25 dmg, 62.5 hs dmg, 30-round clip, 375 rpm, average accuracy, average recoil, 2.75-sec reload time
+25 dmg, 62.5 hs dmg, 30-round clip, 480 rpm, average accuracy, average recoil, 2.75-sec reload time
 
 FAMAS\
-20 dmg, 50 hs dmg, 25-round clip, 470 rpm, lower accuracy, lower recoil, 3.25-sec reload time
+20 dmg, 50 hs dmg, 25-round clip, 525 rpm, lower accuracy, lower recoil, 3.25-sec reload time
 
 Galil\
-22 dmg, 55 hs dmg, 35-round clip, 450 rpm, lower accuracy, higher recoil
+22 dmg, 55 hs dmg, 35-round clip, 520 rpm, lower accuracy, higher recoil
 
 Aug\
-21 dmg, 52.5 hs dmg, 30-round clip, 425 rpm, average accuracy, average recoil, 3.25-sec reload time
+21 dmg, 52.5 hs dmg, 30-round clip, 512 rpm, average accuracy, average recoil, 3.25-sec reload time
 
 Krieg\
-24 dmg, 60 hs dmg, 30-round clip, 400 rpm, better accuracy, higher recoil
+24 dmg, 60 hs dmg, 30-round clip, 500 rpm, better accuracy, higher recoil
 
 #### sniper rifles
 these are long-range scoped weapons with very high accuracy but slow fire rates
@@ -380,10 +383,10 @@ AWP\
 75 dmg, 200 hs dmg, 5-round clip, 30 rpm, 4-sec reload time
 
 G3\
-45 dmg, 90 hs dmg, 10-round clip, 100 rpm, 3.5-sec reload time
+45 dmg, 90 hs dmg, 10-round clip, 120 rpm, 3.5-sec reload time
 
 SG 550\
-29 dmg, 72.5 hs dmg, 20-round clip, 160 rpm, 3.5-sec reload time
+29 dmg, 72.5 hs dmg, 20-round clip, 200 rpm, 3.5-sec reload time
 
 #### shotguns
 great burst damage at close-range, but becomes completely useless outside of close-range

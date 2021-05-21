@@ -224,10 +224,6 @@ function PrimaryAttack(self, worldsnd)
 
 	self:TakePrimaryAmmo(1)
 
-	if self.SetLastPrimaryFire then
-		self:SetLastPrimaryFire(curtime)
-	end
-
 	if owner and owner.ViewPunch then
 		local ang = ang
 
@@ -241,7 +237,11 @@ function PrimaryAttack(self, worldsnd)
 	end
 
 	if self.OnPostShoot then
-		return self:OnPostShoot(curatt)
+		self:OnPostShoot(curatt)
+	end
+
+	if self.SetLastPrimaryFire then
+		self:SetLastPrimaryFire(curtime)
 	end
 end
 

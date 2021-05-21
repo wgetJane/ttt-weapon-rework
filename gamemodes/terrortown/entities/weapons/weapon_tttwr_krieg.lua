@@ -3,9 +3,9 @@ TTTWR.MakeRifle(SWEP,
 	"sg552",
 	"weapons/sg552/sg552-1.wav",
 	24,
-	60 / 400,
+	60 / 500,
 	0.015,
-	2.4,
+	2.5,
 	30
 )
 

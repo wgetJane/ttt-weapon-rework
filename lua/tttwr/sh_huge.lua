@@ -22,43 +22,45 @@ SWEP.DeployTime = 0.75
 SWEP.StoreLastPrimaryFire = true
 
 function SWEP:PreSetupDataTables()
-	-- this is a 32-bit signed integer, which is overkill for what im using it for
-	-- again, i can use the net library instead, but im lazy
-	self:NetworkVar("Int", 0, "ConsecutiveShots")
+	self:NetworkVar("Float", 2, "Inaccuracy")
 end
 
-function SWEP:OnPreShoot()
-	return self:SetConsecutiveShots(
-		(CurTime() - self:GetLastPrimaryFire() < 0.2)
-		and (self:GetConsecutiveShots() + 1)
-		or 0
+local remapclamp, clamp = TTTWR.RemapClamp, math.Clamp
+
+local function getacc(self)
+	return clamp(
+		self:GetInaccuracy() - remapclamp(
+			CurTime() - self:GetLastPrimaryFire(),
+			0.12, 0.6, 0, 2000
+		),
+		0, 2000
 	)
 end
 
-local remap = TTTWR.RemapClamp
+function SWEP:OnPostShoot()
+	return self:SetInaccuracy(
+		clamp(getacc(self) + 100, 0, 2000)
+	)
+end
+
+local remap = math.Remap
 
 function SWEP:GetPrimaryCone()
-	return (
-		self:GetIronsights()
-		and remap(
-			CurTime() - self:GetLastPrimaryFire(),
-			0.1, 0.2,
-			remap(self:GetConsecutiveShots(), 1, 20, 1, 0.05), 1
-		) * (1 / 0.85)
-		or 1
-	) * self.BaseClass.GetPrimaryCone(self)
+	if not self:GetIronsights() then
+		return self.BaseClass.GetPrimaryCone(self)
+	end
+
+	return self.BaseClass.GetPrimaryCone(self) * remap(
+		getacc(self), 0, 2000, 1, 0.05
+	) * (1 / 0.85)
 end
 
 function SWEP:GetRecoilScale(sights)
-	if not sights then
-		return
+	if sights then
+		return remap(
+			getacc(self), 0, 2000, 1, 0.125
+		)
 	end
-
-	return remap(
-		CurTime() - self:GetLastPrimaryFire(),
-		0.1, 0.2,
-		remap(self:GetConsecutiveShots(), 1, 20, 1, 0.125), 1
-	)
 end
 
 if CLIENT then

@@ -255,7 +255,15 @@ function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 		)
 	elseif hitgroup > HITGROUP_STOMACH then
 		dmginfo:ScaleDamage(
-			wep and wep.LimbshotMultiplier or 0.55
+			wep and (
+				wep.GetLimbshotMultiplier
+				and wep:GetLimbshotMultiplier(ply, dmginfo)
+				or wep.LimbshotMultiplier
+			) or 0.55
+		)
+	elseif wep and wep.GetBodyshotMultiplier then
+		dmginfo:ScaleDamage(
+			wep:GetBodyshotMultiplier(ply, dmginfo) or 1
 		)
 	end
 
