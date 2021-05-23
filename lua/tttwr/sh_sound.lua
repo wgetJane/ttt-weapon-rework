@@ -37,6 +37,15 @@ hook.Add("PlayerFireAnimationEvent", "tttwr_PlayerFireAnimationEvent", function(
 	end
 end)
 
+local readvec = (function(vec)
+	return function()
+		vec[1] = net.ReadInt(15)
+		vec[2] = net.ReadInt(15)
+		vec[3] = net.ReadInt(15)
+		return vec
+	end
+end)(Vector())
+
 net.Receive("tttwr_playsound", function()
 	local snd = soundmap[net.ReadUInt(bits) + 1]
 
@@ -45,7 +54,7 @@ net.Receive("tttwr_playsound", function()
 	end
 
 	if net.ReadBool() then
-		return sound.Play(snd, net.ReadVector(), 75, 100, 1)
+		return sound.Play(snd, readvec(), 75, 100, 1)
 	end
 
 	local ent = Entity(net.ReadUInt(maxplayers_bits) + 1)
@@ -54,8 +63,8 @@ net.Receive("tttwr_playsound", function()
 		return
 	end
 
-	if net.ReadBool() then
-		ent:SetNetworkOrigin(net.ReadVector())
+	if net.ReadBool() and ent:IsDormant() then
+		ent:SetPos(readvec())
 	end
 
 	ent = ent:GetActiveWeapon() or ent
@@ -68,6 +77,14 @@ end
 
 util.AddNetworkString("tttwr_playsound")
 
+local writevec = (function(floor)
+	return function(x, y, z)
+		net.WriteInt(floor(x + 0.5), 15)
+		net.WriteInt(floor(y + 0.5), 15)
+		net.WriteInt(floor(z + 0.5), 15)
+	end
+end)(math.floor)
+
 function TTTWR.PlaySound(owner, snd, worldsnd)
 	local sndid = soundmap[snd]
 
@@ -79,7 +96,7 @@ function TTTWR.PlaySound(owner, snd, worldsnd)
 
 	local entid = owner:EntIndex() - 1
 
-	local pos
+	local x, y, z
 
 	local players = player.GetHumans()
 
@@ -106,7 +123,7 @@ function TTTWR.PlaySound(owner, snd, worldsnd)
 	net.WriteBool(worldsnd)
 
 	if worldsnd then
-		net.WriteVector(owner:GetShootPos())
+		writevec(owner:GetShootPos():Unpack())
 
 		return net.Broadcast()
 	end
@@ -118,9 +135,11 @@ function TTTWR.PlaySound(owner, snd, worldsnd)
 	else
 		net.WriteBool(true)
 
-		pos = pos or owner:GetPos()
+		if not x then
+			x, y, z = owner:GetPos():Unpack()
+		end
 
-		net.WriteVector(pos)
+		writevec(x, y, z)
 	end
 
 	net.Send(ply)
