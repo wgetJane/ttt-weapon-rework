@@ -145,14 +145,10 @@ function PrimaryAttack(self, worldsnd)
 
 	local pri = self.Primary
 
-	if CLIENT then
-		self:EmitSound(pri.Sound)
+	if owner and SERVER then
+		TTTWR.PlaySound(owner, pri.Sound, worldsnd)
 	else
-		TTTWR.PlaySound(
-			not worldsnd and owner,
-			pri.Sound,
-			owner and owner:GetShootPos() or self:GetPos()
-		)
+		self:EmitSound(pri.Sound)
 	end
 
 	if owner and self.DoShootAnim then
@@ -328,7 +324,7 @@ function DryFire(self, setnext)
 
 	ent:EmitSound(
 		self.DryFireSound or "weapons/pistol/pistol_empty.wav",
-		60, 100, 0.25, CHAN_WEAPON
+		60, 100, 0.25, CHAN_AUTO
 	)
 end
 

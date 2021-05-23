@@ -14,6 +14,8 @@ end
 
 local bits = math.ceil(math.log(n) / math.log(2))
 
+local maxplayers_bits = TTTWR.maxplayers_bits
+
 if CLIENT then
 
 local silence = {
@@ -42,9 +44,23 @@ net.Receive("tttwr_playsound", function()
 		return
 	end
 
-	local pos = net.ReadVector()
+	if net.ReadBool() then
+		return sound.Play(snd, net.ReadVector(), 75, 100, 1)
+	end
 
-	sound.Play(snd, pos, 75, 100, 1)
+	local ent = Entity(net.ReadUInt(maxplayers_bits) + 1)
+
+	if not (IsValid(ent) and ent:IsPlayer()) then
+		return
+	end
+
+	if net.ReadBool() then
+		ent:SetNetworkOrigin(net.ReadVector())
+	end
+
+	ent = ent:GetActiveWeapon() or ent
+
+	return ent:EmitSound(snd)
 end)
 
 	return
@@ -52,20 +68,62 @@ end
 
 util.AddNetworkString("tttwr_playsound")
 
-function TTTWR.PlaySound(ply, snd, pos)
-	if not pos then
+function TTTWR.PlaySound(owner, snd, worldsnd)
+	local sndid = soundmap[snd]
+
+	if not (sndid and IsValid(owner)) then
 		return
+	end
+
+	sndid = sndid - 1
+
+	local entid = owner:EntIndex() - 1
+
+	local pos
+
+	local players = player.GetHumans()
+
+	local i = #players + 1
+
+	::loop::
+
+	i = i - 1
+
+	if i == 0 then
+		return
+	end
+
+	local ply = players[i]
+
+	if ply == owner and not worldsnd then
+		goto loop
 	end
 
 	net.Start("tttwr_playsound")
 
-	net.WriteUInt(soundmap[snd] - 1, bits)
+	net.WriteUInt(sndid, bits)
 
-	net.WriteVector(pos)
+	net.WriteBool(worldsnd)
 
-	if ply then
-		return net.SendOmit(ply)
+	if worldsnd then
+		net.WriteVector(owner:GetShootPos())
+
+		return net.Broadcast()
 	end
 
-	return net.Broadcast() --net.SendPAS(pos)
+	net.WriteUInt(entid, maxplayers_bits)
+
+	if ply:TestPVS(owner) then
+		net.WriteBool(false)
+	else
+		net.WriteBool(true)
+
+		pos = pos or owner:GetPos()
+
+		net.WriteVector(pos)
+	end
+
+	net.Send(ply)
+
+	goto loop
 end

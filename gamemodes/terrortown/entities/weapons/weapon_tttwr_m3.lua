@@ -28,7 +28,7 @@ function SWEP:ShotgunThink()
 
 			if ent == self or IsFirstTimePredicted() then
 				ent:EmitSound(
-					self.PumpSound, 75, 100, 1, CHAN_WEAPON
+					self.PumpSound, 75, 100, 1, CHAN_AUTO
 				)
 			end
 
