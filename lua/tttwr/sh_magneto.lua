@@ -26,8 +26,8 @@ local localply, heldent
 
 local heldr, heldg, heldb, helda = 1, 1, 1, 1
 
-local PushRenderTarget, PopRenderTarget, SetWriteDepthToDestAlpha, Clear, GetBlend, SetBlend, GetColorModulation, SetColorModulation, PushFlashlightMode, PopFlashlightMode, SetMaterial, OverrideBlend, DrawScreenQuad =
-	render.PushRenderTarget, render.PopRenderTarget, render.SetWriteDepthToDestAlpha, render.Clear, render.GetBlend, render.SetBlend, render.GetColorModulation, render.SetColorModulation, render.PushFlashlightMode, render.PopFlashlightMode, render.SetMaterial, render.OverrideBlend, render.DrawScreenQuad
+local PushRenderTarget, PopRenderTarget, OverrideAlphaWriteEnable, SetWriteDepthToDestAlpha, Clear, GetBlend, SetBlend, GetColorModulation, SetColorModulation, PushFlashlightMode, PopFlashlightMode, SetMaterial, OverrideBlend, DrawScreenQuad =
+	render.PushRenderTarget, render.PopRenderTarget, render.OverrideAlphaWriteEnable, render.SetWriteDepthToDestAlpha, render.Clear, render.GetBlend, render.SetBlend, render.GetColorModulation, render.SetColorModulation, render.PushFlashlightMode, render.PopFlashlightMode, render.SetMaterial, render.OverrideBlend, render.DrawScreenQuad
 
 local _RenderOverride, flags
 
@@ -39,6 +39,8 @@ hook.Add("PreDrawEffects", "tttwr_magneto_PreDrawEffects", function()
 	end
 
 	PushRenderTarget(tex)
+
+	OverrideAlphaWriteEnable(true, true)
 
 	SetWriteDepthToDestAlpha(false)
 
@@ -79,6 +81,8 @@ hook.Add("PreDrawEffects", "tttwr_magneto_PreDrawEffects", function()
 	SetBlend(a)
 
 	SetWriteDepthToDestAlpha(true)
+
+	OverrideAlphaWriteEnable(false)
 
 	PopRenderTarget()
 
