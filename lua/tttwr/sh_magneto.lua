@@ -22,14 +22,28 @@ local mat = CreateMaterial("tttwr_magneto_mat", "UnlitGeneric", {
 	["$alpha"] = 0.65,
 })
 
-local localply, heldent
+local heldent
 
 local heldr, heldg, heldb, helda = 1, 1, 1, 1
 
-local PushRenderTarget, PopRenderTarget, OverrideAlphaWriteEnable, SetWriteDepthToDestAlpha, Clear, GetBlend, SetBlend, GetColorModulation, SetColorModulation, PushFlashlightMode, PopFlashlightMode, SetMaterial, OverrideBlend, DrawScreenQuad =
-	render.PushRenderTarget, render.PopRenderTarget, render.OverrideAlphaWriteEnable, render.SetWriteDepthToDestAlpha, render.Clear, render.GetBlend, render.SetBlend, render.GetColorModulation, render.SetColorModulation, render.PushFlashlightMode, render.PopFlashlightMode, render.SetMaterial, render.OverrideBlend, render.DrawScreenQuad
+local PushRenderTarget, PopRenderTarget, OverrideAlphaWriteEnable, SetWriteDepthToDestAlpha, Clear, GetBlend, SetBlend, GetColorModulation, SetColorModulation, SetMaterial, OverrideBlend, DrawScreenQuad =
+	render.PushRenderTarget, render.PopRenderTarget, render.OverrideAlphaWriteEnable, render.SetWriteDepthToDestAlpha, render.Clear, render.GetBlend, render.SetBlend, render.GetColorModulation, render.SetColorModulation, render.SetMaterial, render.OverrideBlend, render.DrawScreenQuad
 
-local _RenderOverride, flags
+local _RenderOverride, flags, alphatest
+
+local function checkmat(name)
+	if name == "" then
+		return
+	end
+
+	local mat = Material(name)
+
+	if not mat or mat:IsError() then
+		return
+	end
+
+	return bit.band(mat:GetInt("$flags") or 0, 256) == 256
+end
 
 hook.Add("PreDrawEffects", "tttwr_magneto_PreDrawEffects", function()
 	local ent = heldent
@@ -38,9 +52,42 @@ hook.Add("PreDrawEffects", "tttwr_magneto_PreDrawEffects", function()
 		return
 	end
 
+	if alphatest == nil then
+		alphatest = false
+
+		if checkmat(ent:GetMaterial()) then
+			alphatest = true
+
+			goto done
+		end
+
+		local mats = ent:GetMaterials()
+
+		for i = 1, #mats do
+			if checkmat(mats[i]) then
+				alphatest = true
+
+				goto done
+			end
+		end
+
+		::done::
+	end
+
+	local redraw = alphatest
+
 	PushRenderTarget(tex)
 
-	OverrideAlphaWriteEnable(true, true)
+	if redraw then
+		OverrideAlphaWriteEnable(true, true)
+
+		OverrideBlend(
+			true,
+			BLEND_ONE_MINUS_DST_ALPHA,
+			BLEND_DST_ALPHA,
+			BLENDFUNC_ADD
+		)
+	end
 
 	SetWriteDepthToDestAlpha(false)
 
@@ -50,39 +97,28 @@ hook.Add("PreDrawEffects", "tttwr_magneto_PreDrawEffects", function()
 	SetBlend(helda)
 	SetColorModulation(heldr, heldg, heldb)
 
+	::redraw::
+
 	if _RenderOverride then
 		_RenderOverride(ent, flags)
 	else
 		ent:DrawModel(flags)
 	end
 
-	local ply = localply
+	if redraw then
+		redraw = nil
 
-	if not IsValid(ply) then
-		ply = LocalPlayer()
-		localply = ply
-	end
+		OverrideAlphaWriteEnable(false)
 
-	local flash = IsValid(ply) and ply:FlashlightIsOn()
+		OverrideBlend(false)
 
-	if flash then
-		PushFlashlightMode(true)
-
-		if _RenderOverride then
-			_RenderOverride(ent, flags)
-		else
-			ent:DrawModel(flags)
-		end
-
-		PopFlashlightMode()
+		goto redraw
 	end
 
 	SetColorModulation(r, g, b)
 	SetBlend(a)
 
 	SetWriteDepthToDestAlpha(true)
-
-	OverrideAlphaWriteEnable(false)
 
 	PopRenderTarget()
 
@@ -130,15 +166,16 @@ net.Receive("tttwr_magneto", function()
 
 		if IsValid(heldent) then
 			heldent.RenderOverride = _RenderOverride
+			_RenderOverride = nil
 		end
 
-		heldent = ent
+		heldent = nil
 
-		if IsValid(ent) then
-			if ttt_magnetotrans:GetBool() then
-				_RenderOverride = heldent.RenderOverride
-				heldent.RenderOverride = RenderOverride
-			end
+		if IsValid(ent) and ttt_magnetotrans:GetBool() then
+			_RenderOverride = ent.RenderOverride
+			ent.RenderOverride = RenderOverride
+
+			heldent = ent
 
 			local col = ent:GetColor()
 
@@ -152,9 +189,10 @@ net.Receive("tttwr_magneto", function()
 
 		if IsValid(heldent) then
 			heldent.RenderOverride = _RenderOverride
+			_RenderOverride = nil
 		end
 
-		heldent = nil
+		heldent, alphatest = nil, nil
 	end
 end)
 
