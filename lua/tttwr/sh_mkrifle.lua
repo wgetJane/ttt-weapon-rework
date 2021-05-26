@@ -1,4 +1,4 @@
-local PreSetupDataTables, OnPostShoot, GetPrimaryCone
+local PreSetupDataTables, OnPostShoot, GetPrimaryCone, GetHeadshotMultiplier
 
 function TTTWR:MakeRifle(class, model, ...)
 	TTTWR.MakeWeapon(self, class, ...)
@@ -16,6 +16,10 @@ function TTTWR:MakeRifle(class, model, ...)
 	self.PreSetupDataTables = PreSetupDataTables
 	self.OnPostShoot = OnPostShoot
 	self.GetPrimaryCone = GetPrimaryCone
+
+	if SERVER then
+		self.GetHeadshotMultiplier = GetHeadshotMultiplier
+	end
 
 	self.StoreLastPrimaryFire = true
 
@@ -55,4 +59,14 @@ function GetPrimaryCone(self)
 	end
 
 	return self.BaseClass.GetPrimaryCone(self) * scale
+end
+
+if CLIENT then
+	return
+end
+
+function GetHeadshotMultiplier(self)
+	return remap(
+		getacc(self), 500, 2000, self.HeadshotMultiplier, 1
+	)
 end
