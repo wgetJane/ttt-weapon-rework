@@ -67,7 +67,9 @@ net.Receive("tttwr_playsound", function()
 		ent:SetPos(readvec())
 	end
 
-	ent = ent:GetActiveWeapon() or ent
+	local wep = ent:GetActiveWeapon()
+
+	ent = IsValid(wep) and wep or ent
 
 	return ent:EmitSound(snd)
 end)
