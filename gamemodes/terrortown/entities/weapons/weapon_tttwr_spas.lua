@@ -12,7 +12,7 @@ TTTWR.MakeShotgun(SWEP,
 )
 
 
-SWEP.ReloadTimeConsecutive = 0.5
+SWEP.ReloadTimeConsecutive = 0.4
 SWEP.DeployTime = 0.5
 SWEP.DeployAnimSpeed = 1.5
 

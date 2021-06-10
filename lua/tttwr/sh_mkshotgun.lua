@@ -28,7 +28,7 @@ function TTTWR:MakeShotgun(class, model, ...)
 	self.ShotgunSpread = 0.01
 
 	self.ReloadTime = 0.5
-	self.ReloadTimeConsecutive = 0.6
+	self.ReloadTimeConsecutive = 0.5
 	self.ReloadTimeFinish = 0.5
 	self.DeployTime = 0.75
 
@@ -66,7 +66,7 @@ function OnThink(self)
 		or self.Primary.ClipMax
 
 	if self:GetInserting()
-		and curtime > reloading - self.ReloadTime * 0.4
+		and curtime > reloading - self.ReloadTime * (2 / 3)
 	then
 		self:SetInserting(false)
 
@@ -132,6 +132,10 @@ function OnThink(self)
 	self:SetNextSecondaryFire(relfin)
 
 	self:SendWeaponAnim(ACT_VM_RELOAD)
+
+	if owner and self.ReloadAnimSpeedConsecutive then
+		self:SetVMSpeed(self.ReloadAnimSpeedConsecutive, owner)
+	end
 
 	self:SetInserting(true)
 

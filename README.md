@@ -393,26 +393,26 @@ great burst damage at close-range, but becomes completely useless outside of clo
 
 these have a headshot multiplier of 310% which rapidly drops off to 100% from 140 units to 402 units
 
-it takes 0.5 seconds to begin reloading, 0.6 seconds to reload a shell, and 0.5 seconds to finish reloading\
-this means reloading 8 shells takes 5.8 seconds (0.5 + 0.6 * 8 + 0.5 = 5.8)
+it takes 0.5 seconds to begin reloading, 0.5 seconds to reload a shell, and 0.5 seconds to finish reloading\
+this means reloading 8 shells takes 5 seconds (0.5 + 0.5 * 8 + 0.5 = 5)
 
 all shotguns shoot 8 pellets in a fixed spread pattern
 
 M3\
 1 pellet: 11 dmg, 34.1 max hs dmg\
 8 pellets: 88 dmg, 180.4 max hs dmg\
-65 rpm, 8-round clip, 0.75-sec deploy time
+67 rpm, 8-round clip, 0.75-sec deploy time
 
 XM\
 1 pellet: 6 dmg, 18.6 max hs dmg\
 8 pellets: 48 dmg, 98.4 max hs dmg\
-240 rpm, 8-round clip, 0.75-sec deploy time
+250 rpm, 8-round clip, 0.75-sec deploy time
 
 SPAS-12\
 1 pellet: 9 dmg, 27.9 max hs dmg\
 8 pellets: 72 dmg, 147.6 max hs dmg\
 75 rpm, 6-round clip, 0.5-sec deploy time\
-takes 0.5 secs to reload a shell instead of 0.6 secs
+takes 0.4 secs to reload a shell instead of 0.5 secs
 
 #### deagle and revolver
 the deagle is obviously not a new weapon, but a new weapon, the revolver, spawns with the same "weapon type" as the deagle
