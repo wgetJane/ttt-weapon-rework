@@ -22,15 +22,6 @@ local mat = CreateMaterial("tttwr_magneto_mat", "UnlitGeneric", {
 	["$alpha"] = 0.65,
 })
 
-local heldent
-
-local heldr, heldg, heldb, helda = 1, 1, 1, 1
-
-local PushRenderTarget, PopRenderTarget, OverrideAlphaWriteEnable, SetWriteDepthToDestAlpha, Clear, GetBlend, SetBlend, GetColorModulation, SetColorModulation, SetMaterial, OverrideBlend, DrawScreenQuad =
-	render.PushRenderTarget, render.PopRenderTarget, render.OverrideAlphaWriteEnable, render.SetWriteDepthToDestAlpha, render.Clear, render.GetBlend, render.SetBlend, render.GetColorModulation, render.SetColorModulation, render.SetMaterial, render.OverrideBlend, render.DrawScreenQuad
-
-local _RenderOverride, flags, alphatest
-
 local function checkmat(name)
 	if name == "" then
 		return
@@ -42,8 +33,15 @@ local function checkmat(name)
 		return
 	end
 
-	return bit.band(mat:GetInt("$flags") or 0, 256) == 256
+	return bit.band(mat:GetInt("$flags") or 0, 256 + 2097152) ~= 0
 end
+
+local heldent, _RenderOverride, flags, trans
+
+local heldr, heldg, heldb, helda = 1, 1, 1, 1
+
+local PushRenderTarget, PopRenderTarget, OverrideAlphaWriteEnable, SetWriteDepthToDestAlpha, Clear, GetBlend, SetBlend, GetColorModulation, SetColorModulation, SetMaterial, OverrideBlend, DrawScreenQuad =
+	render.PushRenderTarget, render.PopRenderTarget, render.OverrideAlphaWriteEnable, render.SetWriteDepthToDestAlpha, render.Clear, render.GetBlend, render.SetBlend, render.GetColorModulation, render.SetColorModulation, render.SetMaterial, render.OverrideBlend, render.DrawScreenQuad
 
 hook.Add("PreDrawEffects", "tttwr_magneto_PreDrawEffects", function()
 	local ent = heldent
@@ -52,11 +50,13 @@ hook.Add("PreDrawEffects", "tttwr_magneto_PreDrawEffects", function()
 		return
 	end
 
-	if alphatest == nil then
-		alphatest = false
+	if trans == nil then
+		trans = false
 
-		if checkmat(ent:GetMaterial()) then
-			alphatest = true
+		if helda < 1
+			or checkmat(ent:GetMaterial())
+		then
+			trans = true
 
 			goto done
 		end
@@ -65,7 +65,7 @@ hook.Add("PreDrawEffects", "tttwr_magneto_PreDrawEffects", function()
 
 		for i = 1, #mats do
 			if checkmat(mats[i]) then
-				alphatest = true
+				trans = true
 
 				goto done
 			end
@@ -74,7 +74,7 @@ hook.Add("PreDrawEffects", "tttwr_magneto_PreDrawEffects", function()
 		::done::
 	end
 
-	local redraw = alphatest
+	local redraw = trans
 
 	PushRenderTarget(tex)
 
@@ -102,7 +102,7 @@ hook.Add("PreDrawEffects", "tttwr_magneto_PreDrawEffects", function()
 	if _RenderOverride then
 		_RenderOverride(ent, flags)
 	else
-		ent:DrawModel(flags)
+		ent:DrawModel()--flags)
 	end
 
 	if redraw then
@@ -171,7 +171,10 @@ net.Receive("tttwr_magneto", function()
 
 		heldent = nil
 
-		if IsValid(ent) and ttt_magnetotrans:GetBool() then
+		if IsValid(ent)
+			and ent:GetBrushPlaneCount() == 0 -- ignore func_physbox
+			and ttt_magnetotrans:GetBool()
+		then
 			_RenderOverride = ent.RenderOverride
 			ent.RenderOverride = RenderOverride
 
@@ -192,7 +195,7 @@ net.Receive("tttwr_magneto", function()
 			_RenderOverride = nil
 		end
 
-		heldent, alphatest = nil, nil
+		heldent, trans = nil, nil
 	end
 end)
 
@@ -281,10 +284,10 @@ function SWEP:Reset()
 				local avel = phys:GetAngleVelocity()
 
 				vel:Mul(mult)
-				avel:Mul(mult - 1)
+				avel:Mul(mult)
 
-				phys:SetVelocity(vel)
-				phys:AddAngleVelocity(avel)
+				phys:SetVelocityInstantaneous(vel)
+				phys:SetAngleVelocityInstantaneous(avel)
 			end)
 		end
 	end
