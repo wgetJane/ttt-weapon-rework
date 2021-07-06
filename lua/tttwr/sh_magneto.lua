@@ -50,30 +50,6 @@ hook.Add("PreDrawEffects", "tttwr_magneto_PreDrawEffects", function()
 		return
 	end
 
-	if trans == nil then
-		trans = false
-
-		if helda < 1
-			or checkmat(ent:GetMaterial())
-		then
-			trans = true
-
-			goto done
-		end
-
-		local mats = ent:GetMaterials()
-
-		for i = 1, #mats do
-			if checkmat(mats[i]) then
-				trans = true
-
-				goto done
-			end
-		end
-
-		::done::
-	end
-
 	local redraw = trans
 
 	PushRenderTarget(tex)
@@ -91,7 +67,7 @@ hook.Add("PreDrawEffects", "tttwr_magneto_PreDrawEffects", function()
 
 	SetWriteDepthToDestAlpha(false)
 
-	Clear(0, 0, 0, 0)
+	Clear(0, 0, 0, 0, true, true)
 
 	local a, r, g, b = GetBlend(), GetColorModulation()
 	SetBlend(helda)
@@ -171,20 +147,39 @@ net.Receive("tttwr_magneto", function()
 
 		heldent = nil
 
-		if IsValid(ent)
+		if not (
+			ttt_magnetotrans:GetBool()
+			and IsValid(ent)
 			and ent:GetBrushPlaneCount() == 0 -- ignore func_physbox
-			and ttt_magnetotrans:GetBool()
-		then
-			_RenderOverride = ent.RenderOverride
-			ent.RenderOverride = RenderOverride
-
-			heldent = ent
-
-			local col = ent:GetColor()
-
-			heldr, heldg, heldb, helda =
-				col.r / 255, col.g / 255, col.b / 255, col.a / 255
+		) then
+			return
 		end
+
+		_RenderOverride = ent.RenderOverride
+		ent.RenderOverride = RenderOverride
+
+		heldent = ent
+
+		local col = ent:GetColor()
+
+		heldr, heldg, heldb, helda =
+			col.r / 255, col.g / 255, col.b / 255, col.a / 255
+
+		trans = true
+
+		if helda < 1 or checkmat(ent:GetMaterial()) then
+			return
+		end
+
+		local mats = ent:GetMaterials()
+
+		for i = 1, #mats do
+			if checkmat(mats[i]) then
+				return
+			end
+		end
+
+		trans = false
 	elseif not b and curtime >= lastadd then
 		lastrem = curtime
 
@@ -195,7 +190,7 @@ net.Receive("tttwr_magneto", function()
 			_RenderOverride = nil
 		end
 
-		heldent, trans = nil, nil
+		heldent = nil
 	end
 end)
 
