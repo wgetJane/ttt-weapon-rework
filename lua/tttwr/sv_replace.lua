@@ -90,6 +90,8 @@ for k, v in pairs(totttwr) do
 
 		ent:SetPos(self:GetPos())
 		ent:SetAngles(self:GetAngles())
+		ent:SetName(self:GetName())
+		ent:SetKeyValue("spawnflags", self:GetSpawnFlags())
 
 		self:Remove()
 
