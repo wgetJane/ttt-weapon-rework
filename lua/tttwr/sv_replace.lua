@@ -48,7 +48,7 @@ local totttwr = {
 	weapon_zm_revolver = {
 		ammo = "item_ammo_revolver_ttt",
 		checkactive = true,
-		"weapon_tttwr_deagle",
+		"weapon_zm_revolver",
 		"weapon_tttwr_python",
 	},
 }
@@ -57,7 +57,10 @@ totttwr.weapon_ttt_glock = totttwr.weapon_zm_pistol
 for k, v in pairs(totttwr) do
 	local SWEP = weapons.GetStored(k)
 
-	SWEP.AutoSpawnable = false
+	if not v.checkactive then
+		SWEP.AutoSpawnable = false
+	end
+
 	--SWEP.AmmoEnt = v.ammo
 
 	v.n = 0
@@ -67,8 +70,13 @@ for k, v in pairs(totttwr) do
 
 		if (v.checkactive and GetRoundState() == ROUND_ACTIVE)
 			or not IsValid(self)
-			or self._tttwr_dontreplace
 		then
+			return
+		end
+
+		if self._tttwr_dontreplace then
+			self._tttwr_dontreplace = nil
+
 			return
 		end
 
@@ -86,6 +94,10 @@ for k, v in pairs(totttwr) do
 
 		if not (ent and IsValid(ent)) then
 			return
+		end
+
+		if totttwr[new] then
+			ent._tttwr_dontreplace = true
 		end
 
 		ent:SetPos(self:GetPos())

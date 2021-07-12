@@ -12,6 +12,8 @@ TTTWR.MakePistol(SWEP,
 )
 
 
+SWEP.AutoSpawnable = false -- already spawns by replacing half of deagles (see sv_replace.lua)
+
 SWEP.ReloadTime = 1.7
 SWEP.ReloadTimeConsecutive = 0.7
 SWEP.ReloadTimeFinish = 0.4
