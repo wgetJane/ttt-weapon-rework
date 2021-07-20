@@ -118,7 +118,7 @@ function TTTWR.PlaySound(owner, snd, worldsnd)
 		goto loop
 	end
 
-	net.Start("tttwr_playsound")
+	net.Start("tttwr_playsound", true)
 
 	net.WriteUInt(sndid, bits)
 
