@@ -10,115 +10,35 @@ local tex = GetRenderTargetEx(
 	"tttwr_magneto_tex",
 	0, 0,
 	RT_SIZE_FULL_FRAME_BUFFER,
-	MATERIAL_RT_DEPTH_SHARED,
+	MATERIAL_RT_DEPTH_NONE,
 	0x8000, --TEXTUREFLAGS_RENDERTARGET
 	CREATERENDERTARGETFLAGS_HDR,
 	IMAGE_FORMAT_DEFAULT
 )
 
-local mat = CreateMaterial("tttwr_magneto_mat", "UnlitGeneric", {
+local mat = CreateMaterial("tttwr_magneto_matasdf", "UnlitGeneric", {
 	["$basetexture"] = tex:GetName(),
-	["$color"] = "0.65, 0.65, 0.65",
-	["$alpha"] = 0.65,
+	["$alpha"] = 0.5,
 })
 
-local function checkmat(name)
-	if name == "" then
-		return
-	end
+local _RenderOverride, heldrm
 
-	local mat = Material(name)
-
-	if not mat or mat:IsError() then
-		return
-	end
-
-	return bit.band(mat:GetInt("$flags") or 0, 256 + 2097152) ~= 0
-end
-
-local heldent, _RenderOverride, flags, trans
-
-local heldr, heldg, heldb, helda = 1, 1, 1, 1
-
-local PushRenderTarget, PopRenderTarget, OverrideAlphaWriteEnable, SetWriteDepthToDestAlpha, Clear, GetBlend, SetBlend, GetColorModulation, SetColorModulation, SetMaterial, OverrideBlend, DrawScreenQuad =
-	render.PushRenderTarget, render.PopRenderTarget, render.OverrideAlphaWriteEnable, render.SetWriteDepthToDestAlpha, render.Clear, render.GetBlend, render.SetBlend, render.GetColorModulation, render.SetColorModulation, render.SetMaterial, render.OverrideBlend, render.DrawScreenQuad
-
-hook.Add("PreDrawEffects", "tttwr_magneto_PreDrawEffects", function()
-	local ent = heldent
-
-	if not IsValid(ent) then
-		return
-	end
-
-	local redraw = trans
-
-	PushRenderTarget(tex)
-
-	if redraw then
-		OverrideAlphaWriteEnable(true, true)
-
-		OverrideBlend(
-			true,
-			BLEND_ONE_MINUS_DST_ALPHA,
-			BLEND_DST_ALPHA,
-			BLENDFUNC_ADD
-		)
-	end
-
-	SetWriteDepthToDestAlpha(false)
-
-	Clear(0, 0, 0, 0, true, true)
-
-	local a, r, g, b = GetBlend(), GetColorModulation()
-	SetBlend(helda)
-	SetColorModulation(heldr, heldg, heldb)
-
-	::redraw::
-
-	if _RenderOverride then
-		_RenderOverride(ent, flags)
-	else
-		ent:DrawModel()--flags)
-	end
-
-	if redraw then
-		redraw = nil
-
-		OverrideAlphaWriteEnable(false)
-
-		OverrideBlend(false)
-
-		goto redraw
-	end
-
-	SetColorModulation(r, g, b)
-	SetBlend(a)
-
-	SetWriteDepthToDestAlpha(true)
-
-	PopRenderTarget()
-
-	SetMaterial(mat)
-
-	OverrideBlend(
-		true,
-		BLEND_ONE,
-		BLEND_ONE_MINUS_SRC_ALPHA,
-		BLENDFUNC_ADD
-	)
-
-	DrawScreenQuad()
-
-	OverrideBlend(false)
-
-	flags = nil
-end)
-
-local GetRenderTarget = render.GetRenderTarget
+local GetRenderTarget, CopyRenderTargetToTexture, SetMaterial, DrawScreenQuad =
+	render.GetRenderTarget, render.CopyRenderTargetToTexture, render.SetMaterial, render.DrawScreenQuad
 
 local function RenderOverride(self, f)
 	if not GetRenderTarget() then
-		flags = flags or f
+		CopyRenderTargetToTexture(tex)
+
+		if _RenderOverride then
+			_RenderOverride(self, f)
+		else
+			self:DrawModel()
+		end
+
+		SetMaterial(mat)
+
+		DrawScreenQuad()
 	elseif _RenderOverride then
 		return _RenderOverride(self, f)
 	else
@@ -126,7 +46,7 @@ local function RenderOverride(self, f)
 	end
 end
 
-local lastadd, lastrem = 0, 0
+local lastadd, lastrem, heldent = 0, 0
 
 net.Receive("tttwr_magneto", function()
 	local curtime = net.ReadFloat()
@@ -155,37 +75,28 @@ net.Receive("tttwr_magneto", function()
 			return
 		end
 
+		heldrm = ent:GetRenderMode()
+
+		if heldrm == RENDERMODE_NORMAL then
+			ent:SetRenderMode(RENDERMODE_TRANSCOLOR)
+		end
+
 		_RenderOverride = ent.RenderOverride
 		ent.RenderOverride = RenderOverride
 
 		heldent = ent
-
-		local col = ent:GetColor()
-
-		heldr, heldg, heldb, helda =
-			col.r / 255, col.g / 255, col.b / 255, col.a / 255
-
-		trans = true
-
-		if helda < 1 or checkmat(ent:GetMaterial()) then
-			return
-		end
-
-		local mats = ent:GetMaterials()
-
-		for i = 1, #mats do
-			if checkmat(mats[i]) then
-				return
-			end
-		end
-
-		trans = false
 	elseif not b and curtime >= lastadd then
 		lastrem = curtime
 
 		lastadd = 0
 
 		if IsValid(heldent) then
+			if heldrm == RENDERMODE_NORMAL
+				and heldent:GetRenderMode() == RENDERMODE_TRANSCOLOR
+			then
+				heldent:SetRenderMode(heldrm)
+			end
+
 			heldent.RenderOverride = _RenderOverride
 			_RenderOverride = nil
 		end
