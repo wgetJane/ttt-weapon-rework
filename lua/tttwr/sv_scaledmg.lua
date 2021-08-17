@@ -71,12 +71,6 @@ end
 local function raytracehitbox(ply, boxes, i, start, delta, scale)
 	local pos, ang = ply:GetBonePosition(boxes.bones[i])
 
-	if not (pos and ang) then -- probably unnecessary
-		local m = ply:GetBoneMatrix(boxes.bones[i])
-		pos = pos or m:GetTranslation()
-		ang = ang or m:GetAngles()
-	end
-
 	local mins, maxs = boxes.mins[i], boxes.maxs[i]
 
 	if scale ~= 1 then
@@ -89,8 +83,6 @@ local function raytracehitbox(ply, boxes, i, start, delta, scale)
 		mins, maxs
 	)
 end
-
-local dmgtypes = bit.bor(DMG_DIRECT, DMG_BLAST, DMG_FALL, DMG_PHYSGUN)
 
 local vec = Vector()
 local tracedata = {
@@ -267,7 +259,34 @@ function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 		)
 	end
 
-	if dmginfo:IsDamageType(dmgtypes) then
+	if dmginfo:IsDamageType(
+		DMG_DIRECT + DMG_BLAST + DMG_FALL + DMG_PHYSGUN
+	) then
 		dmginfo:ScaleDamage(2)
+	end
+end
+
+function GAMEMODE:ScaleNPCDamage(npc, hitgroup, dmginfo)
+	local wep = util.WeaponFromDamage(dmginfo)
+	if wep and not IsValid(wep) then
+		wep = nil
+	end
+
+	if hitgroup == HITGROUP_HEAD then
+		dmginfo:ScaleDamage(
+			wep and wep:GetHeadshotMultiplier(npc, dmginfo) or 2
+		)
+	elseif hitgroup > HITGROUP_STOMACH then
+		dmginfo:ScaleDamage(
+			wep and (
+				wep.GetLimbshotMultiplier
+				and wep:GetLimbshotMultiplier(npc, dmginfo)
+				or wep.LimbshotMultiplier
+			) or 0.55
+		)
+	elseif wep and wep.GetBodyshotMultiplier then
+		dmginfo:ScaleDamage(
+			wep:GetBodyshotMultiplier(npc, dmginfo) or 1
+		)
 	end
 end
