@@ -68,19 +68,6 @@ local function PostGamemodeLoaded()
 	ammpist.AmmoAmount = 60
 	ammpist.AmmoMax = 120
 
-	local crowbar = weapons.GetStored("weapon_zm_improvised")
-	crowbar.Secondary.Delay = crowbar.Primary.Delay
-	crowbar.DeploySpeed = 28 / 15
-
-	sound.Add({
-		name = "Weapon_Crowbar.Single",
-		channel = CHAN_WEAPON,
-		volume = 0.5,
-		level = 75,
-		pitch = 100,
-		sound = "weapons/iceaxe/iceaxe_swing1.wav",
-	})
-
 	-- allow these weapons to be deployed near-instantly
 	for _, v in pairs({
 		"weapon_ttt_binoculars",
@@ -95,6 +82,8 @@ local function PostGamemodeLoaded()
 	}) do
 		weapons.GetStored(v).DeploySpeed = 12
 	end
+
+	incl("crowbar")
 
 	incl("deagle")
 
