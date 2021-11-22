@@ -2,50 +2,14 @@ TTTWR.MakeSniper(SWEP,
 	"awp",
 	"awp",
 	{"weapons/awp/awp1.wav", 95},
-	75,
-	2,
-	0.001,
-	10,
-	5
+	50,
+	60 / 40,
+	0x1p-126,
+	7,
+	10
 )
 
 
-SWEP.HeadshotMultiplier = 1 / 0.375
+SWEP.HeadshotMultiplier = 13 / 7 -- kills armoured players in one headshot + one bodyshot
 
 SWEP.ReloadTime = 4
-
-
-function SWEP:OnPostShoot()
-	self:SetVMSpeed(0.8)
-end
-
-if CLIENT then
-	return
-end
-
-local abs = math.abs
-
-function SWEP:OnEntityTakeDamage(victim, dmginfo)
-	if not victim:IsPlayer() then
-		dmginfo:ScaleDamage(4 / 3)
-
-		return
-	end
-
-	if not victim:OnGround() then
-		return
-	end
-
-	victim:SetGroundEntity(nil)
-
-	victim.was_pushed = {
-		att = dmginfo:GetAttacker(),
-		t = CurTime(),
-		wep = self:GetClass(),
-	}
-
-	local frc = dmginfo:GetDamageForce()
-	frc[3] = abs(frc[3])
-
-	dmginfo:SetDamageForce(frc)
-end

@@ -2,10 +2,10 @@ TTTWR.MakeSMG(SWEP,
 	"mp7",
 	"",
 	"weapons/smg1/smg1_fire1.wav",
-	13,
-	60 / 750,
+	12,
+	60 / 600,
 	0.03,
-	1.15,
+	1,
 	30,
 	-5.88, -6.8, 1.83,
 	0.9, 0.9, 0
@@ -16,7 +16,7 @@ SWEP.HoldType = "smg"
 
 SWEP.AutoSpawnable = false -- not spawnable for now, since it feels like it doesn't fit in
 
-SWEP.DeployTime = 0.5
+SWEP.DeployTime = 0.75
 
 SWEP.ViewModel = "models/weapons/c_smg1.mdl"
 SWEP.WorldModel = "models/weapons/w_smg1.mdl"

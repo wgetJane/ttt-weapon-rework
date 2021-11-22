@@ -2,15 +2,9 @@ TTTWR.MakeSniper(SWEP,
 	"sg",
 	"sg550",
 	"weapons/sg550/sg550-1.wav",
-	29,
-	60 / 200,
-	0.005,
+	30,
+	60 / 180,
+	0x1p-126,
 	3,
 	20
 )
-
-
-SWEP.HeadshotMultiplier = 2.5
-
-SWEP.ZoomFOV = 30
-SWEP.ZoomSensitivity = 0.345

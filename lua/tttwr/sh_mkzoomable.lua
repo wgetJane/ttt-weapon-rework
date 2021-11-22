@@ -1,30 +1,22 @@
-local SetZoom, SecondaryAttack, PreDrop, Holster, AdjustMouseSensitivity, DrawHUD
+local SWEP = {}
+
+SWEP.NoSights = false
+SWEP.IronSightsPos = Vector(5, -15, -2)
+SWEP.IronSightsAng = Vector(2.6, 1.37, 3.5)
+
+SWEP.Secondary = {
+	Sound = "Default.Zoom",
+}
 
 function TTTWR:MakeZoomable(fov, sens, dot)
-	self.Secondary.Sound = "Default.Zoom"
-
-	self.NoSights = nil
-	self.IronSightsPos = Vector(5, -15, -2)
-	self.IronSightsAng = Vector(2.6, 1.37, 3.5)
+	TTTWR.CopySWEP(self, SWEP)
 
 	self.ZoomFOV = fov or 20
 	self.ZoomSensitivity = sens or 0.2
 	self.ZoomRedDot = dot
-
-	self.SetZoom = SetZoom
-	self.SecondaryAttack = SecondaryAttack
-	self.PreDrop = PreDrop
-	self.Holster = Holster
-
-	if SERVER then
-		return
-	end
-
-	self.AdjustMouseSensitivity = AdjustMouseSensitivity
-	self.DrawHUD = DrawHUD
 end
 
-function SetZoom(self, b)
+function SWEP:SetZoom(b)
 	local owner = self:GetOwner()
 
 	if not (IsValid(owner) and owner:IsPlayer()) then
@@ -41,7 +33,7 @@ function SetZoom(self, b)
 	)
 end
 
-function SecondaryAttack(self)
+function SWEP:SecondaryAttack()
 	local curtime = CurTime()
 
 	if self:GetNextSecondaryFire() > curtime then
@@ -60,13 +52,13 @@ function SecondaryAttack(self)
 	self:SetNextSecondaryFire(CurTime() + 0.3)
 end
 
-function PreDrop(self)
+function SWEP:PreDrop()
 	self:SetZoom(false)
 
 	return self.BaseClass.PreDrop(self)
 end
 
-function Holster(self)
+function SWEP:Holster()
 	self:SetZoom(false)
 
 	return true
@@ -76,7 +68,7 @@ if SERVER then
 	return
 end
 
-function AdjustMouseSensitivity(self)
+function SWEP:AdjustMouseSensitivity()
 	return self:GetIronsights() and self.ZoomSensitivity or nil
 end
 
@@ -89,7 +81,7 @@ local SetDrawColor, DrawRect, DrawLine, SetTexture, SetMaterial, DrawTexturedRec
 	surface.SetDrawColor, surface.DrawRect, surface.DrawLine,
 	surface.SetTexture, surface.SetMaterial, surface.DrawTexturedRectRotated
 
-function DrawHUD(self)
+function SWEP:DrawHUD()
 	if not self:GetIronsights() then
 		return self.BaseClass.DrawHUD(self)
 	end

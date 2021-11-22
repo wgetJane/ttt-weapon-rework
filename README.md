@@ -28,6 +28,18 @@ Deagle ammo is renamed to "Magnum ammo", and its reserve size is still 36\
 
 information about new weapons is at the "new weapons" section below
 
+#### longer gunfights
+weapon damage has been tweaked so that players take a lot longer to kill
+
+reasons why are mostly because:\
+\- i think it's much less interesting if a gunfight is pretty much over just a second or two after it begins\
+\- reaction time matters too much with low ttk, which is problematic when there's big ping differences\
+\- giving players more opportunity to dodge shots and move around makes fights more fun\
+\- higher ttk makes it harder for a player to confidently win a 1v2, which i think makes more sense for ttt
+
+weapons also now have distance damage falloff (50% damage at 1024 units for most weapons)\
+this is to encourage players to have much more personal engagements at close range instead of just picking each other off from a distance
+
 #### interpolated recoil
 recoil is smoothed over 0.067 seconds instead of instantly teleporting your crosshair upwards
 
@@ -53,6 +65,8 @@ it's silly how a close-range shot can randomly deal 60 damage, or how a medium-r
 
 a fixed spread pattern gives shotguns a consistent reliable range, so it's no longer based on luck
 
+<!--
+
 #### shotguns no longer use hull traces
 all of a shotgun's pellets now use line traces
 
@@ -61,6 +75,8 @@ and instead of player hitboxes, they hit player bounding boxes (very big targets
 https://github.com/ValveSoftware/source-sdk-2013/blob/0d8dceea4310fde5706b3ce1c70609d72a38efdf/mp/src/game/shared/baseentity_shared.cpp#L1738
 
 this change means you'd actually have to hit your target with the pellets, instead of just the air around them
+
+-->
 
 #### tracers
 sniper rifles will always have a visible tracer for every shot instead of for every 4 shots\
@@ -105,32 +121,6 @@ and the main point of that point is to make it easier to cross sniper sightlines
 
 clients can choose to disable this by setting the cvar `ttt_magnetotrans` from 1 to 0
 
-#### deagle
-\- increased fire rate to 150 rpm from 100 rpm\
-\- accuracy and headshot damage become very low immediately after shooting, but eventually recover in 1.5 seconds\
-\- base damage: 33\
-\- minimum headshot damage (<0.83 secs): 50\
-\- headshot damage at >1.33 secs: 100\
-\- maximum headshot damage (>1.5 secs): 150
-
-the deagle is way too powerful for a handgun, and most wielders treat it like a primary weapon
-
-it outperforms primary weapons in most situations (other than the sniper rifle in long-range engagements)
-
-this is because of its ability to instakill with a headshot combined with its disproportionately fast fire rate for how much damage it can deal
-
-while aiming skill should be rewarded in fps games, ttt is not solely an fps game so rewarding aim this much gets problematic
-
-but the deagle's main identity is the one-hit-kill headshots, so i can't just remove that since it won't really be the deagle anymore
-
-lowering the fire rate can also be considered, but at that point, it's no longer a handgun but a sniper rifle without a scope
-
-so my solution is to make it feel like you're shooting a big pistol: massive accuracy loss after firing, like your aim is thrown off by the heavy recoil
-
-to prevent people from just spamming shots to get a lucky headshot, the headshot multiplier is also heavily reduced after firing
-
-these changes should hopefully still have it handle like a pistol without always having the power of a sniper rifle
-
 #### huge-249
 \- ammo capacity increased to 200 from 150\
 \- while ironsighted, accuracy and recoil is improved by sustained fire
@@ -145,7 +135,7 @@ to give the huge-249 a purpose, i've given it the ability to become like a light
 
 while ironsighted, the gun's accuracy and recoil improves through sustained fire\
 it starts with very poor accuracy and recoil on the 1st shot,\
-and eventually gets extremely accurate with little recoil on the 20th shot
+and eventually gets very accurate with little recoil on the 10th shot
 
 this gives it a role as a weapon for suppressive fire at the cost of mobility
 
@@ -306,129 +296,247 @@ since each gun has their own distinct sound and appearance\
 and this makes it more useful to note the killer's weapon identified on a corpse
 
 #### pistols
-these are supposed to be sidearms that are weaker than primary weapons, but can be deployed much faster
+these are supposed to be sidearms that are weaker than primary weapons, but can be deployed faster
 
-they typically have a deploy time of 0.4 seconds and a reload time of 2.5 seconds
+their damage drops off from 100% at 64 units to 50% at 1024 units
 
 Five-Seven\
-25 dmg, 60 hs dmg, 20-round clip, 200 rpm, average accuracy, average recoil, 2.75-sec reload time
+\- base dmg: 30, headshot dmg: 50, limb dmg: 20\
+\- clip size: 20\
+\- fire rate: 180 rpm\
+\- deploy time: 0.75 secs\
+\- reload time: 2.75 secs\
+\- kills an unarmoured player in two headshots at point-blank range
 
 Glock\
-20 dmg, 44 hs dmg, 20-round clip, 300 rpm, average accuracy, low recoil, 2.4-sec reload time
+\- base dmg: 24, headshot dmg: 33.6, limb dmg: 16\
+\- clip size: 20\
+\- fire rate: 250 rpm\
+\- deploy time: 0.75 secs\
+\- reload time: 2.4 secs\
+\- kills an unarmoured player in three headshots at point-blank range
 
 USP\
-26 dmg, 62.4 hs dmg, 16-round clip, 300 rpm, better accuracy, higher recoil
+\- base dmg: 32, headshot dmg: 53.33, limb dmg: 21.33\
+\- clip size: 16\
+\- fire rate: 180 rpm\
+\- deploy time: 0.75 secs\
+\- reload time: 2.5 secs\
+\- higher recoil, slightly more accurate\
+\- kills an unarmoured player in two headshots at close range
 
 228 Compact\
-30 dmg, 72 hs dmg, 12-round clip, 230 rpm, bad accuracy, high recoil
+\- base dmg: 32, headshot dmg: 53.33, limb dmg: 21.33\
+\- clip size: 12\
+\- fire rate: 200 rpm\
+\- deploy time: 0.75 secs\
+\- reload time: 2.5 secs\
+\- higher recoil, slightly less accurate\
+\- kills an unarmoured player in two headshots at close range
 
 Dual Elites\
-19 dmg, 38 hs dmg, 30-round clip, 360 rpm, bad accuracy, average recoil, 0.7-sec deploy time, 4-sec reload time
+\- base dmg: 16, headshot dmg: 24, limb dmg: 10.67\
+\- clip size: 30\
+\- fire rate: 360 rpm\
+\- deploy time: 1 secs\
+\- reload time: 4 secs\
+\- higher recoil, less accurate
 
 #### smgs
-these weapons have fast fire rates and low recoil, shredding targets at close-range, but they have low base damage and poor accuracy
+these weapons have fast fire rates and low recoil but poor accuracy, making them suited for close-range
 
-they have a headshot multiplier of 320% which quickly drops off to 170% from 150 units to 350 units
-
-they will deal up to 33.33% extra damage on bodyshots, dropping off from 150 units to 350 units
-
-they typically have a deploy time of 0.6 seconds and a reload time of 2.75 seconds
+their damage drops off from 100% at 64 units to 50% at 1024 units
 
 MAC-10\
-16 - 12 dmg, 38.4 - 20.4 hs dmg, 30-round clip, 900 rpm, average accuracy, average recoil, 0.5-sec deploy time
+\- base dmg: 12, headshot dmg: 16, limb dmg: 10\
+\- clip size: 30\
+\- fire rate: 600 rpm\
+\- deploy time: 0.75 secs\
+\- reload time: 2.75 secs
 
 MP5\
-16 - 12 dmg, 38.4 - 20.4 hs dmg, 30-round clip, 800 rpm, better accuracy, lower recoil
+\- base dmg: 12, headshot dmg: 16, limb dmg: 10\
+\- clip size: 30\
+\- fire rate: 570 rpm\
+\- deploy time: 0.875 secs\
+\- reload time: 2.75 secs\
+\- slightly better recoil and accuracy
 
 UMP\
-21.33 - 16 dmg, 51.2 - 27.2 hs dmg, 25-round clip, 640 rpm, better accuracy, higher recoil
+\- base dmg: 13, headshot dmg: 17.33, limb dmg: 10.83\
+\- clip size: 30\
+\- fire rate: 500 rpm\
+\- deploy time: 0.875 secs\
+\- reload time: 2.75 secs\
+\- distance damage falloff starts at 192 units instead of 64 units\
+\- slightly higher recoil and accuracy
 
 P90\
-13.33 - 10 dmg, 32 - 17 hs dmg, 50-round clip, 900 rpm, average accuracy, very low recoil, 3-sec reload time
+\- base dmg: 10, headshot dmg: 13.33, limb dmg: 8.33\
+\- clip size: 50\
+\- fire rate: 600 rpm\
+\- deploy time: 1 sec\
+\- reload time: 3 secs\
+\- very low recoil
 
 #### assault rifles
-these are supposed to be generally decent primary weapons for most ranges
+these are supposed to be generally decent primary weapons at mid range
 
-assault rifles are a lot less accurate when spraying, so it's best to fire in bursts
-
-they typically have a deploy time of 0.75 seconds and a reload time of 3 seconds
+their damage drops off from 100% at 384 units to 50% at 1280 units
 
 M16\
-23 dmg, 57.5 hs dmg, 30-round clip, 500 rpm, average accuracy, average recoil
+\- base dmg: 15, headshot dmg: 25, limb dmg: 7.5\
+\- clip size: 30\
+\- fire rate: 400 rpm\
+\- deploy time: 1 sec\
+\- reload time: 3 secs
 
 AK-47\
-25 dmg, 62.5 hs dmg, 30-round clip, 480 rpm, average accuracy, average recoil, 2.75-sec reload time
+\- base dmg: 16, headshot dmg: 26.67, limb dmg: 8\
+\- clip size: 30\
+\- fire rate: 400 rpm\
+\- deploy time: 1 sec\
+\- reload time: 3 secs\
+\- higher recoil, lower accuracy
 
 FAMAS\
-20 dmg, 50 hs dmg, 25-round clip, 525 rpm, lower accuracy, lower recoil, 3.25-sec reload time
+\- base dmg: 13, headshot dmg: 21.67, limb dmg: 6.5\
+\- clip size: 25\
+\- fire rate: 450 rpm\
+\- deploy time: 1 sec\
+\- reload time: 3.25 secs\
+\- lower recoil and accuracy
 
 Galil\
-22 dmg, 55 hs dmg, 35-round clip, 520 rpm, lower accuracy, higher recoil
+\- base dmg: 13, headshot dmg: 21.67, limb dmg: 6.5\
+\- clip size: 35\
+\- fire rate: 450 rpm\
+\- deploy time: 0.875 secs\
+\- reload time: 3 secs\
+\- slightly higher recoil, lower accuracy
 
 Aug\
-21 dmg, 52.5 hs dmg, 30-round clip, 512 rpm, average accuracy, average recoil, 3.25-sec reload time
+\- base dmg: 15, headshot dmg: 25, limb dmg: 7.5\
+\- clip size: 30\
+\- fire rate: 400 rpm\
+\- deploy time: 1 sec\
+\- reload time: 3.25 secs\
+\- slightly higher recoil, better accuracy
 
 Krieg\
-24 dmg, 60 hs dmg, 30-round clip, 500 rpm, better accuracy, higher recoil
+\- base dmg: 16, headshot dmg: 26.67, limb dmg: 8\
+\- clip size: 30\
+\- fire rate: 400 rpm\
+\- deploy time: 1 sec\
+\- reload time: 3 secs\
+\- much higher recoil, slightly better accuracy
 
 #### sniper rifles
-these are long-range scoped weapons with very high accuracy but slow fire rates
+these are scoped weapons with perfect accuracy but slow fire rates
 
-they all have a deploy time of 0.75 seconds
+they do not have distance damage falloff, making them the supreme weapons at long range
 
 Scout\
-50 dmg, 150 hs dmg, 10-round clip, 40 rpm, 3-sec reload time
+\- base dmg: 40, headshot dmg: 80, limb dmg: 20\
+\- clip size: 10\
+\- fire rate: 60 rpm\
+\- deploy time: 0.875 sec\
+\- reload time: 3 secs\
+\- kills an unarmoured player in 3 bodyshots or 1 headshot + 1 limb shot\
+\- kills an armoured player in 2 headshots
 
 AWP\
-75 dmg, 200 hs dmg, 5-round clip, 30 rpm, 4-sec reload time
+\- base dmg: 50, headshot dmg: 92.86, limb dmg: 25\
+\- clip size: 10\
+\- fire rate: 40 rpm\
+\- deploy time: 1 sec\
+\- reload time: 4 secs\
+\- kills an unarmoured player in 2 bodyshots\
+\- kills an armoured player in 1 headshot + 1 bodyshot
 
 G3\
-45 dmg, 90 hs dmg, 10-round clip, 120 rpm, 3.5-sec reload time
+\- base dmg: 32, headshot dmg: 70, limb dmg: 16\
+\- clip size: 10\
+\- fire rate: 100 rpm\
+\- deploy time: 1 sec\
+\- reload time: 3.5 secs\
+\- kills an unarmoured player in 1 headshot + 1 bodyshot
 
 SG 550\
-29 dmg, 72.5 hs dmg, 20-round clip, 200 rpm, 3.5-sec reload time
+\- base dmg: 30, headshot dmg: 60, limb dmg: 15\
+\- clip size: 20\
+\- fire rate: 180 rpm\
+\- deploy time: 1 sec\
+\- reload time: 3.5 secs\
+\- kills an unarmoured player in 2 headshots
 
 #### shotguns
-great burst damage at close-range, but becomes completely useless outside of close-range
-
-these have a headshot multiplier of 310% which rapidly drops off to 100% from 140 units to 402 units
+great burst damage at close range, but becomes extremely weak outside of close range
 
 it takes 0.5 seconds to begin reloading, 0.5 seconds to reload a shell, and 0.5 seconds to finish reloading\
 this means reloading 8 shells takes 5 seconds (0.5 + 0.5 * 8 + 0.5 = 5)
 
 all shotguns shoot 8 pellets in a fixed spread pattern
 
+their damage drops off from 100% at 64 units to 50% at 768 units
+
+headshot multiplier also drops off from 240% at 64 units to 100% at 192 units
+
 M3\
-1 pellet: 11 dmg, 34.1 max hs dmg\
-8 pellets: 88 dmg, 180.4 max hs dmg\
-67 rpm, 8-round clip, 0.75-sec deploy time
+\- base dmg: 7, headshot dmg: 16.8, limb dmg: 6.3\
+\- clip size: 8\
+\- fire rate: 72 rpm\
+\- deploy time: 1 sec\
+\- can kill an unarmoured player in one headshot at close range
 
 XM\
-1 pellet: 6 dmg, 18.6 max hs dmg\
-8 pellets: 48 dmg, 98.4 max hs dmg\
-250 rpm, 8-round clip, 0.75-sec deploy time
+\- base dmg: 4, headshot dmg: 9.6, limb dmg: 3.6\
+\- clip size: 8\
+\- fire rate: 250 rpm\
+\- deploy time: 1 sec
 
 SPAS-12\
-1 pellet: 9 dmg, 27.9 max hs dmg\
-8 pellets: 72 dmg, 147.6 max hs dmg\
-75 rpm, 6-round clip, 0.5-sec deploy time\
-takes 0.4 secs to reload a shell instead of 0.5 secs
+\- base dmg: 6, headshot dmg: 14.4, limb dmg: 5.4\
+\- clip size: 6\
+\- fire rate: 90 rpm\
+\- deploy time: 0.75 sec\
+\- takes 0.4 secs to reload a shell instead of 0.5 secs\
+\- can kill an unarmoured player in one headshot at point-blank range
 
 #### deagle and revolver
 the deagle is obviously not a new weapon, but a new weapon, the revolver, spawns with the same "weapon type" as the deagle
 
-the deagle and revolver have the same base damage, headshot damage, accuracy, and rate of fire:\
-33 dmg, 50 - 150 hs dmg, 150 rpm
+their damage drops off from 100% at 64 units to 50% at 1024 units
 
-their accuracy and headshot damage both significantly drop down after shooting, but the revolver recovers slightly faster:\
-deagle: 50 hs dmg until 0.83 secs, 100 hs dmg at 1.33 secs, 150 hs dmg after 1.5 secs\
-revolver: 50 hs dmg until 0.67 secs, 100 hs dmg at 1.17 sec, 150 hs dmg after 1.33 secs
+Deagle\
+\- base dmg: 35, headshot dmg: 85, limb dmg: 23.33\
+\- clip size: 8\
+\- fire rate: 120 rpm\
+\- deploy time: 0.875 sec\
+\- reload time: 2.5 secs\
+\- kills an unarmoured player in 1 headshot + 1 bodyshot at close range
 
-the deagle has an 8-round clip, 0.7-sec deploy time, and 2.5-sec reload time
+the deagle really needed to be nerfed, since it's way too powerful for a pistol
 
-the revolver has a 6-round clip, 0.5-sec deploy time, and reloads each round one by one\
-it takes 1.7 seconds to reload the first round, 0.7 seconds to reload each following round, and 0.4 seconds to finish reloading\
-this means reloading 6 rounds takes 5.6 seconds (1.7 + 0.7 * 5 + 0.4 = 5.6)
+in base ttt, it outperforms primary weapons in most situations (other than the sniper rifle in long range)
+
+being able to kill full-health players in one headshot is simply busted, especially on a weapon that can do it every 0.6 seconds\
+hand this weapon to a skilled player, and the game will just revolve around them, which ruins the non-shooting aspects of ttt
+
+despite the nerf, the deagle is still a relatively more powerful secondary weapon that rewards headshots
+
+Revolver\
+\- base dmg: 35, headshot dmg: 85, limb dmg: 23.33\
+\- clip size: 6\
+\- fire rate: 120 rpm\
+\- deploy time: 0.75 sec\
+\- reloads each round one by one\
+\- kills an unarmoured player in 1 headshot + 1 bodyshot at close range
+
+the revolver has the same damage and fire rate as the deagle, but reloads each round one by one
+
+it takes 1.5 seconds to reload the first round, 0.6 seconds to reload each following round, and 0.4 seconds to finish reloading\
+this means reloading 6 rounds takes 4.9 seconds (1.5 + 0.6 * 5 + 0.4 = 4.9)
 
 ## bug fixes
 
@@ -459,7 +567,7 @@ tttwr is intended for and balanced for a private mostly-vanilla server with ~8 p
 this mod doesn't overwrite any files, so it should be compatible with future gmod and ttt updates\
 though the ScalePlayerDamage, Move, and DoPlayerDeath gamemode functions are overwritten
 
-weapons from other mods will not have changes like interpolated recoil,  fixed spread pattern, sniper laser dot, etc
+weapons from other mods will not have changes like interpolated recoil, fixed spread pattern, sniper laser dot, etc
 
 the deagle, huge-249, decoy, knife, flaregun, newton launcher, silenced pistol, ump prototype, magneto-stick, and dna scanner have gotten some of their functions heavily modified
 

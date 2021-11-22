@@ -2,7 +2,7 @@ TTTWR.MakePistol(SWEP,
 	"elites",
 	"elite",
 	"weapons/elite/elite-1.wav",
-	19,
+	16,
 	60 / 360,
 	0.03,
 	2.4,
@@ -12,17 +12,16 @@ TTTWR.MakePistol(SWEP,
 
 SWEP.HoldType = "duel"
 
-SWEP.HeadshotMultiplier = 2
+SWEP.HeadshotMultiplier = 1.375
 
 SWEP.ReloadTime = 4
-SWEP.DeployTime = 0.7
+SWEP.DeployTime = 1
+SWEP.DeployAnimSpeed = 1.15
 
 SWEP.WorldModel_Dropped = "models/weapons/w_pist_elite_dropped.mdl"
 SWEP.WorldModel_Deployed = SWEP.WorldModel
 
 SWEP.WorldModel = SWEP.WorldModel_Dropped
-
-SWEP.StoreLastPrimaryFire = true
 
 
 function SWEP:PreSetupDataTables()
@@ -33,8 +32,6 @@ function SWEP:PreSetupDataTables()
 	self:NetworkVar("Bool", 1, "FiringLeft")
 end
 
--- idk why, but the shooting animation will randomly either look fine or look stupid
--- for some reason, there's a better chance of it looking fine when ping is higher
 function SWEP:OnPreShoot()
 	local clip = self:Clip1()
 
@@ -50,15 +47,8 @@ function SWEP:OnPreShoot()
 	return self:SetFiringLeft(firingleft)
 end
 
-local remap = TTTWR.RemapClamp
-
--- more accurate when tap-firing
-function SWEP:GetPrimaryCone()
-	return self.BaseClass.GetPrimaryCone(self) * remap(
-		CurTime() - self:GetLastPrimaryFire(),
-		0.2, 0.4,
-		1, 2 / 3
-	)
+function SWEP:OnPostShoot()
+	self:SetVMSpeed(0.6)
 end
 
 function SWEP:GetTracerOrigin()
@@ -174,10 +164,18 @@ function SWEP:FireAnimationEvent(pos, ang, event, options)
 	end
 
 	if event == 20 then
+		if self:GetOwnerViewModel() then
+			goto ret
+		end
+
 		local data = EffectData()
 		data:SetEntity(self)
 		data:SetFlags(90)
-		data:SetAttachment(4)
+
+		local att = self:GetAttachment(4)
+
+		data:SetOrigin(att and att.Pos or pos)
+		data:SetAngles(att and att.Ang or ang)
 
 		util.Effect("EjectBrass_9mm", data)
 	else

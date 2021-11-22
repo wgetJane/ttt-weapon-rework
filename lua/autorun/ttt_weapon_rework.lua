@@ -159,6 +159,19 @@ TTTWR.FrameTime = (function(ft)
 	return ft
 end)(engine.TickInterval())
 
+
+function TTTWR:CopySWEP(swep)
+	for k, v in pairs(swep) do
+		if istable(v) then
+			for k2, v2 in pairs(v) do
+				self[k][k2] = v2
+			end
+		else
+			self[k] = v
+		end
+	end
+end
+
 incl("mkweapon")
 
 incl("mkpistol")

@@ -2,9 +2,9 @@ TTTWR.MakeRifle(SWEP,
 	"aug",
 	"aug",
 	"weapons/aug/aug-1.wav",
-	21,
-	60 / 512,
-	0.017,
+	15,
+	60 / 400,
+	0.016,
 	2.3,
 	30
 )

@@ -1,30 +1,34 @@
-local PostSetupDataTables
+local SWEP = {}
+
+SWEP.AmmoEnt = "item_ammo_357_ttt"
+
+SWEP.Primary = {
+	ClipMax = 20,
+	Ammo = "357",
+}
+
+SWEP.HeadshotMultiplier = 2
+SWEP.LimbshotMultiplier = 0.5
+
+SWEP.FalloffMult = false
+SWEP.ConeResetMult = false
+
+SWEP.ReloadTime = 3.5
+
+SWEP.BulletDistance = 16384
+SWEP.BulletTracer = 1
 
 function TTTWR:MakeSniper(class, model, sound, dmg, ...)
 	TTTWR.MakeWeapon(self, class, sound, dmg, ...)
 
 	TTTWR.MakeZoomable(self)
 
-	self.Primary.ClipMax = 20
-	self.Primary.Ammo = "357"
-
-	self.AmmoEnt = "item_ammo_357_ttt"
-
-	self.HeadshotMultiplier = 3
-
-	self.ReloadTime = 3.5
-	self.DeployTime = 0.75
+	TTTWR.CopySWEP(self, SWEP)
 
 	self.BulletForce = dmg * 0.5
-	self.BulletDistance = 16384
-	self.BulletTracer = 1
 
 	self.ViewModel = "models/weapons/cstrike/c_snip_" .. model .. ".mdl"
 	self.WorldModel = "models/weapons/w_snip_" .. model .. ".mdl"
-
-	if CLIENT then
-		self.PostSetupDataTables = PostSetupDataTables
-	end
 end
 
 if SERVER then
@@ -163,7 +167,7 @@ local function OnIronsightsChanged(self, name, old, new)
 	end
 end
 
-function PostSetupDataTables(self)
+function SWEP:PostSetupDataTables()
 	return self:NetworkVarNotify("IronsightsPredicted", OnIronsightsChanged)
 end
 

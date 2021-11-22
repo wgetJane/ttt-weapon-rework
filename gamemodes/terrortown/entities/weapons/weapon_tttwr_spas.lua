@@ -2,10 +2,10 @@ TTTWR.MakeShotgun(SWEP,
 	"spas",
 	"",
 	"weapons/shotgun/shotgun_fire7.wav",
-	9,
-	60 / 75,
+	6,
+	60 / 90,
 	0.085,
-	7,
+	6,
 	6,
 	-8.08, -8, 2,
 	1, 1.03, 0.1
@@ -13,32 +13,44 @@ TTTWR.MakeShotgun(SWEP,
 
 
 SWEP.ReloadTimeConsecutive = 0.4
-SWEP.DeployTime = 0.5
-SWEP.DeployAnimSpeed = 1.5
-
-SWEP.PumpTime = 0.2
+SWEP.DeployTime = 0.75
 
 SWEP.PumpSound = "weapons/shotgun/shotgun_cock.wav"
 SWEP.ViewModel = "models/weapons/c_shotgun.mdl"
 SWEP.WorldModel = "models/weapons/w_shotgun.mdl"
 
--- pump animation can look fucky at really high ping, need to figure out why
+function SWEP:PreSetupDataTables()
+	self:NetworkVar("Float", 1, "PumpTime")
+end
+
 function SWEP:ShotgunThink()
-	if self:GetActivity() == ACT_VM_PRIMARYATTACK
-		and CurTime() > self:GetNextPrimaryFire() - self.Primary.Delay + self.PumpTime
+	local pumptime = self:GetPumpTime()
+
+	if pumptime == 0
+		or CurTime() <= pumptime
 	then
-		self:SendWeaponAnim(ACT_SHOTGUN_PUMP)
+		return
+	end
 
-		local ent = CLIENT and self:GetOwnerViewModel() or self
+	self:SetPumpTime(0)
 
-		if ent ~= self and not IsFirstTimePredicted() then
-			return
-		end
+	if self:GetActivity() ~= ACT_VM_PRIMARYATTACK then
+		return
+	end
 
+	self:SendWeaponAnim(ACT_SHOTGUN_PUMP)
+
+	local ent = CLIENT and self:GetOwnerViewModel() or self
+
+	if ent == self or IsFirstTimePredicted() then
 		ent:EmitSound(
 			self.PumpSound, 75, 100, 1, CHAN_AUTO
 		)
 	end
+end
+
+function SWEP:OnPostShoot()
+	self:SetPumpTime(CurTime() + 0.15)
 end
 
 if SERVER then

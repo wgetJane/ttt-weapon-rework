@@ -94,7 +94,7 @@ local tracedata = {
 	output = {},
 }
 
-local abs = math.abs
+local remap, abs = TTTWR.RemapClamp, math.abs
 
 function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 	if not IsValid(ply) then
@@ -104,8 +104,19 @@ function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 	local isbul = dmginfo:IsBulletDamage()
 
 	local wep = util.WeaponFromDamage(dmginfo)
-	if wep and not IsValid(wep) then
-		wep = nil
+	wep = IsValid(wep) and wep or nil
+
+	local attacker = dmginfo:GetAttacker()
+	attacker = IsValid(attacker) and attacker or nil
+
+	local dmgscale = 1 -- use a lua number for this for double-precision
+
+	if attacker and wep and wep.FalloffMult then
+		dmgscale = dmgscale * remap(
+			ply:GetPos():Distance(attacker:GetPos()),
+			wep.FalloffStart or 64, wep.FalloffEnd or 1024,
+			1, wep.FalloffMult
+		)
 	end
 
 	if isbul and ply:HasEquipmentItem(EQUIP_ARMOR) then
@@ -115,7 +126,7 @@ function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 			scale = scale + (1 - scale) * wep.ArmorPenetration
 		end
 
-		dmginfo:ScaleDamage(scale)
+		dmgscale = dmgscale * scale
 	end
 
 	local hastrace = isbul
@@ -177,7 +188,7 @@ function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 			local td = tracedata
 			td.start = start
 			td.filter[1] = ply
-			td.filter[2] = dmginfo:GetAttacker()
+			td.filter[2] = attacker
 
 			-- make sure there's nothing in the way
 			if not util.TraceLine(td).Hit then
@@ -242,11 +253,11 @@ function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 	if hitgroup == HITGROUP_HEAD then
 		ply.was_headshot = isbul
 
-		dmginfo:ScaleDamage(
+		dmgscale = dmgscale * (
 			wep and wep:GetHeadshotMultiplier(ply, dmginfo) or 2
 		)
 	elseif hitgroup > HITGROUP_STOMACH then
-		dmginfo:ScaleDamage(
+		dmgscale = dmgscale * (
 			wep and (
 				wep.GetLimbshotMultiplier
 				and wep:GetLimbshotMultiplier(ply, dmginfo)
@@ -254,7 +265,7 @@ function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 			) or 0.55
 		)
 	elseif wep and wep.GetBodyshotMultiplier then
-		dmginfo:ScaleDamage(
+		dmgscale = dmgscale * (
 			wep:GetBodyshotMultiplier(ply, dmginfo) or 1
 		)
 	end
@@ -262,7 +273,11 @@ function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 	if dmginfo:IsDamageType(
 		DMG_DIRECT + DMG_BLAST + DMG_FALL + DMG_PHYSGUN
 	) then
-		dmginfo:ScaleDamage(2)
+		dmgscale = dmgscale * 2
+	end
+
+	if dmgscale ~= 1 then
+		dmginfo:ScaleDamage(dmgscale)
 	end
 end
 

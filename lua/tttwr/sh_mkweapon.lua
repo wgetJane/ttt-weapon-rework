@@ -1,10 +1,45 @@
-local SetupDataTables, PrimaryAttack, ShootBullet, GetRandomFloat, DryFire, CanDyingShot, DyingShot, GetOwnerViewModel, SetVMSpeed, Reload, Think, Deploy
+local SWEP = {}
+
+SWEP.Base = "weapon_tttbase"
+
+SWEP.AutoSpawnable = true -- side-effect: this makes grenades spawn less often
+
+SWEP.HoldType = "ar2"
+
+SWEP.HeadshotMultiplier = 5 / 3
+SWEP.LimbshotMultiplier = 2 / 3
+
+SWEP.FalloffStart = 64
+SWEP.FalloffEnd = 1024
+SWEP.FalloffMult = 0.5
+
+SWEP.ConeResetStart = 0.2
+SWEP.ConeResetEnd = 0.5
+SWEP.ConeResetMult = 0x1p-126
+
+SWEP.ReloadTime = 3
+SWEP.DeployTime = 1
+SWEP.DeployAnimSpeed = 1
+SWEP.DeploySpeed = 12 -- will get changed on the first deploy
+
+if SERVER then
+	SWEP.NoLuckyHeadshots = true
+	SWEP.ShootThroughLimbs = true
+else
+	SWEP.Slot = 2
+
+	SWEP.UseHands = true
+	SWEP.ViewModelFlip = false
+	SWEP.ViewModelFOV = 54
+end
 
 function TTTWR:MakeWeapon(
 	class, snd,
 	dmg, delay, cone, recoil, clip,
 	x, y, z, a, b, c
 )
+	TTTWR.CopySWEP(self, SWEP)
+
 	local pr = self.Primary
 
 	pr.Damage = dmg
@@ -44,54 +79,16 @@ function TTTWR:MakeWeapon(
 		sound = ")" .. sndfile,
 	})
 
-	TTTWR.sounds[pr.Sound] = true
-
-	self.Base = "weapon_tttbase"
-
-	self.AutoSpawnable = true -- side-effect: this makes grenades spawn less often
-
-	self.HoldType = "ar2"
-
 	self.Kind = WEAPON_HEAVY
 
-	self.ReloadTime = 3
-	self.DeployTime = 0.75
-	-- the deploy animation playing too fast looks too weird and distracting
-	-- it's not really an issue if weapons deploy faster than they appear
-	self.DeployAnimSpeed = 1.25
-
-	self.SetupDataTables = SetupDataTables
-	self.PrimaryAttack = PrimaryAttack
-	self.ShootBullet = ShootBullet
-	self.GetRandomFloat = GetRandomFloat
-	self.DryFire = DryFire
-	self.CanDyingShot = CanDyingShot
-	self.DyingShot = DyingShot
-	self.GetOwnerViewModel = GetOwnerViewModel
-	self.SetVMSpeed = SetVMSpeed
-	self.Reload = Reload
-	self.Think = Think
-	self.Deploy = Deploy
-
-	if SERVER then
-		self.NoLuckyHeadshots = true
-		self.ShootThroughLimbs = true
-
-		return
-	end
-
-	self.Slot = 2
+	TTTWR.sounds[pr.Sound] = true
 
 	self.PrintName = "tttwr_" .. class .. "_name"
-
-	self.UseHands = true
-	self.ViewModelFlip = false
-	self.ViewModelFOV = 54
 
 	self.Icon = "!tttwr_icons/" .. class
 end
 
-function SetupDataTables(self)
+function SWEP:SetupDataTables()
 	if not (
 		self.PreSetupDataTables
 		and self:PreSetupDataTables() == true
@@ -102,7 +99,7 @@ function SetupDataTables(self)
 		self:NetworkVar("Float", 0, "Reloading")
 		self:NetworkVar("Bool", 0, "Inserting")
 
-		if self.StoreLastPrimaryFire then
+		if self.StoreLastPrimaryFire or self.ConeResetMult then
 			self:NetworkVar("Float", 1, "LastPrimaryFire")
 		end
 	end
@@ -123,7 +120,7 @@ local frametime = TTTWR.FrameTime
 
 local floor = math.floor
 
-function PrimaryAttack(self, worldsnd)
+function SWEP:PrimaryAttack(worldsnd)
 	if self.OnTryShoot and self:OnTryShoot() == false then
 		return
 	end
@@ -223,7 +220,7 @@ function PrimaryAttack(self, worldsnd)
 	if owner and owner.ViewPunch then
 		local ang = ang
 
-		ang[1] = recoil * -0.15
+		ang[1] = recoil * -0.1
 
 		owner:ViewPunch(ang)
 	end
@@ -246,7 +243,7 @@ local bullet = {
 }
 TTTWR.SharedBullet = bullet
 
-function ShootBullet(self, dmg, recoil, numbul, cone)
+function SWEP:ShootBullet(dmg, recoil, numbul, cone)
 	local owner = self:GetOwner()
 
 	if not IsValid(owner) then
@@ -293,9 +290,25 @@ function ShootBullet(self, dmg, recoil, numbul, cone)
 	return owner:FireBullets(bul)
 end
 
+local remap = TTTWR.RemapClamp
+
+function SWEP:GetPrimaryCone()
+	local cone = self.BaseClass.GetPrimaryCone(self)
+
+	if self.ConeResetMult then
+		cone = cone * remap(
+			CurTime() - self:GetLastPrimaryFire(),
+			self.ConeResetStart, self.ConeResetEnd,
+			1, self.ConeResetMult
+		)
+	end
+
+	return cone
+end
+
 local sharedrand = util.SharedRandom
 
-function GetRandomFloat(self, x, y, seed)
+function SWEP:GetRandomFloat(x, y, seed)
 	return sharedrand(
 		self.ClassName,
 		x or 0, y or 1,
@@ -305,7 +318,7 @@ end
 
 local clamp = math.Clamp
 
-function DryFire(self, setnext)
+function SWEP:DryFire(setnext)
 	if self:Reload() ~= false then
 		return
 	end
@@ -328,7 +341,7 @@ function DryFire(self, setnext)
 	)
 end
 
-function CanDyingShot(self, curtime)
+function SWEP:CanDyingShot(curtime)
 	if self:GetNextPrimaryFire() > (curtime or CurTime()) then
 		return false
 	end
@@ -344,7 +357,7 @@ function CanDyingShot(self, curtime)
 		or false
 end
 
-function DyingShot(self)
+function SWEP:DyingShot()
 	self.ForceTracer = true
 
 	local data = EffectData()
@@ -358,7 +371,7 @@ function DyingShot(self)
 	return true
 end
 
-function GetOwnerViewModel(self, owner)
+function SWEP:GetOwnerViewModel(owner)
 	if not owner then
 		owner = self:GetOwner()
 
@@ -374,11 +387,7 @@ function GetOwnerViewModel(self, owner)
 	end
 end
 
-function SetVMSpeed(self, speed, owner)
-	if speed == 1 then
-		return
-	end
-
+function SWEP:SetVMSpeed(speed, owner)
 	local vm = self:GetOwnerViewModel(owner)
 
 	if vm then
@@ -387,7 +396,7 @@ function SetVMSpeed(self, speed, owner)
 end
 
 -- reload function is rewritten here so i can change reload times
-function Reload(self)
+function SWEP:Reload()
 	if self:Clip1() == self.Primary.ClipSize then
 		return
 	end
@@ -460,7 +469,7 @@ end
 
 local min = math.min
 
-function Think(self)
+function SWEP:Think()
 	self.BaseClass.Think(self)
 
 	if self.OnThink
@@ -527,7 +536,7 @@ end
 -- deploy speed needs to be set when the deploy animation duration can be accessed
 -- since css weapons have weirdly different deploy times
 -- (why does the mac10 take 3 seconds to deploy???)
-function Deploy(self)
+function SWEP:Deploy()
 	if self.OnDeploy then
 		self:OnDeploy()
 	end
@@ -562,7 +571,13 @@ function Deploy(self)
 		if speed ~= self.DeploySpeed then
 			self.DeploySpeed = speed
 
-			self:SetDeploySpeed(speed, owner)
+			self:SetDeploySpeed(speed)
+
+			local nextfire = CurTime() + self.DeployTime
+
+			if self:GetNextPrimaryFire() < nextfire then
+				self:SetNextPrimaryFire(nextfire)
+			end
 		end
 	end
 
@@ -574,8 +589,6 @@ function Deploy(self)
 
 	return self.BaseClass.Deploy(self)
 end
-
-local remap = TTTWR.RemapClamp
 
 if SERVER then
 	function TTTWR.SendRecoil(ply, recoil, time, axis)

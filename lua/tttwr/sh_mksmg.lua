@@ -1,53 +1,23 @@
-local GetHeadshotMultiplier, GetBodyshotMultiplier
+local SWEP = {}
+
+SWEP.AmmoEnt = "item_ammo_pistol_ttt"
+
+SWEP.Primary = {
+	ClipMax = 120,
+	Ammo = "Pistol",
+}
+
+SWEP.HeadshotMultiplier = 4 / 3
+SWEP.LimbshotMultiplier = 5 / 6
+
+SWEP.ReloadTime = 2.75
+SWEP.DeployTime = 0.875
 
 function TTTWR:MakeSMG(class, model, ...)
 	TTTWR.MakeWeapon(self, class, ...)
 
-	self.Primary.ClipMax = 120
-	self.Primary.Ammo = "Pistol"
-
-	self.AmmoEnt = "item_ammo_pistol_ttt"
-
-	if SERVER then
-		self.GetHeadshotMultiplier = GetHeadshotMultiplier
-		self.GetBodyshotMultiplier = GetBodyshotMultiplier
-	end
-
-	self.ReloadTime = 2.75
-	self.DeployTime = 0.6
+	TTTWR.CopySWEP(self, SWEP)
 
 	self.ViewModel = "models/weapons/cstrike/c_smg_" .. model .. ".mdl"
 	self.WorldModel = "models/weapons/w_smg_" .. model .. ".mdl"
-end
-
-if CLIENT then
-	return
-end
-
-local max = math.max
-
-function GetHeadshotMultiplier(self, victim, dmginfo)
-	local att = dmginfo:GetAttacker()
-	if not IsValid(att) then
-		return 2
-	end
-
-	return 1.7 + max(0,
-		1.5 - 0.002 * max(0,
-			victim:GetPos():Distance(att:GetPos()) - 150
-		) ^ 1.25
-	)
-end
-
-function GetBodyshotMultiplier(self, victim, dmginfo)
-	local att = dmginfo:GetAttacker()
-	if not IsValid(att) then
-		return 1
-	end
-
-	return 1 + max(0,
-		(1 / 3) - 0.002 * max(0,
-			victim:GetPos():Distance(att:GetPos()) - 150
-		) ^ 1.25
-	)
 end

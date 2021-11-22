@@ -33,7 +33,7 @@ local function RenderOverride(self, f)
 		if _RenderOverride then
 			_RenderOverride(self, f)
 		else
-			self:DrawModel()
+			self:DrawModel(f)
 		end
 
 		SetMaterial(mat)

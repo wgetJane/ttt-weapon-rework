@@ -16,8 +16,13 @@ SWEP.HoldType = "shotgun"
 
 SWEP.Primary.ClipMax = 200
 
+SWEP.FalloffStart = 384
+SWEP.FalloffEnd = 1280
+
+SWEP.ConeResetMult = false
+
 SWEP.ReloadTime = 5
-SWEP.DeployTime = 0.75
+SWEP.DeployTime = 1
 
 SWEP.StoreLastPrimaryFire = true
 
@@ -39,7 +44,7 @@ end
 
 function SWEP:OnPostShoot()
 	return self:SetInaccuracy(
-		clamp(getacc(self) + 100, 0, 2000)
+		clamp(getacc(self) + 200, 0, 2000)
 	)
 end
 
@@ -51,14 +56,14 @@ function SWEP:GetPrimaryCone()
 	end
 
 	return self.BaseClass.GetPrimaryCone(self) * remap(
-		getacc(self), 0, 2000, 1, 0.05
+		getacc(self), 0, 2000, 1, 0.2
 	) * (1 / 0.85)
 end
 
 function SWEP:GetRecoilScale(sights)
 	if sights then
 		return remap(
-			getacc(self), 0, 2000, 1, 0.125
+			getacc(self), 0, 2000, 1, 0.1
 		)
 	end
 end

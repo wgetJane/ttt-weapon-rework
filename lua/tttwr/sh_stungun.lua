@@ -9,7 +9,7 @@ TTTWR.MakeSMG(SWEP,
 	9,
 	60 / 600,
 	0.02,
-	1.2,
+	1,
 	30,
 	-6.8, -9, 2.66,
 	0, 0.25, 0
@@ -21,7 +21,7 @@ TTTWR.MakeEquipment(SWEP)
 SWEP.IsSilent = true
 
 SWEP.GetHeadshotMultiplier = GetHeadshotMultiplier
-SWEP.HeadshotMultiplier = 4.5
+SWEP.HeadshotMultiplier = 2
 
 SWEP.ShootSequence = 3
 

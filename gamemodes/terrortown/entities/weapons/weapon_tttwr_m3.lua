@@ -2,8 +2,8 @@ TTTWR.MakeShotgun(SWEP,
 	"m3",
 	"m3super90",
 	"weapons/xm1014/xm1014-1.wav",
-	11,
-	0.9,
+	7,
+	60 / 72,
 	0.085,
 	7,
 	8,
@@ -14,6 +14,7 @@ TTTWR.MakeShotgun(SWEP,
 
 SWEP.ShootSequence = 2
 SWEP.ReloadAnimSpeedConsecutive = 1.2
+SWEP.DeployAnimSpeed = 0.95
 
 SWEP.PumpSound = "weapons/m3/m3_pump.wav"
 

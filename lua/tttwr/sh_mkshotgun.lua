@@ -1,46 +1,50 @@
-local OnThink, PreFireBullet, OnEntityTakeDamage, GetHeadshotMultiplier
+local SWEP = {}
+
+SWEP.HoldType = "shotgun"
+
+SWEP.Primary = {
+	ClipMax = 24,
+	Ammo = "Buckshot",
+}
+
+SWEP.AmmoEnt = "item_box_buckshot_ttt"
+
+SWEP.NoSetInsertingOnReload = true
+
+SWEP.NoLuckyHeadshots = false
+
+SWEP.HeadshotMultiplier = 2.4
+SWEP.LimbshotMultiplier = 0.9
+
+SWEP.FalloffEnd = 768
+
+SWEP.ConeResetMult = false
+
+SWEP.BulletDistance = 4096
+
+SWEP.ShotgunNumShots = 8
+SWEP.ShotgunSpread = 0.001
+
+SWEP.ReloadTime = 0.5
+SWEP.ReloadTimeConsecutive = 0.5
+SWEP.ReloadTimeFinish = 0.5
+
+SWEP.ReloadAnim = ACT_SHOTGUN_RELOAD_START
+
+SWEP.DryFireSound = "weapons/shotgun/shotgun_empty.wav"
+
+SWEP.DoNotStoreLastPrimaryFire = true
 
 function TTTWR:MakeShotgun(class, model, ...)
 	TTTWR.MakeWeapon(self, class, ...)
 
-	self.HoldType = "shotgun"
-
-	self.Primary.ClipMax = 24
-	self.Primary.Ammo = "Buckshot"
-
-	self.AmmoEnt = "item_box_buckshot_ttt"
-
-	self.OnThink = OnThink
-	self.PreFireBullet = PreFireBullet
-
-	self.NoSetInsertingOnReload = true
-
-	if SERVER then
-		self.NoLuckyHeadshots = false
-
-		self.OnEntityTakeDamage = OnEntityTakeDamage
-		self.GetHeadshotMultiplier = GetHeadshotMultiplier
-	end
-
-	self.BulletDistance = 4096
-
-	self.ShotgunNumShots = 8
-	self.ShotgunSpread = 0.01
-
-	self.ReloadTime = 0.5
-	self.ReloadTimeConsecutive = 0.5
-	self.ReloadTimeFinish = 0.5
-	self.DeployTime = 0.75
-
-	self.ReloadAnim = ACT_SHOTGUN_RELOAD_START
-
-	self.DryFireSound = "weapons/shotgun/shotgun_empty.wav"
+	TTTWR.CopySWEP(self, SWEP)
 
 	self.ViewModel = "models/weapons/cstrike/c_shot_" .. model .. ".mdl"
 	self.WorldModel = "models/weapons/w_shot_" .. model .. ".mdl"
 end
 
-function OnThink(self)
+function SWEP:OnThink()
 	if self.ShotgunThink then
 		self:ShotgunThink()
 	end
@@ -211,9 +215,9 @@ local function bulletCallback(attacker, trace, dmginfo)
 	end
 end
 
-local hsents, multidmg, multiforce
+local multidmg, multiforce
 
-function PreFireBullet(self, owner, bul)
+function SWEP:PreFireBullet(owner, bul)
 	local d = dirs
 
 	d[1], d[2], d[3] = bul.Dir[1], bul.Dir[2], bul.Dir[3]
@@ -240,9 +244,6 @@ function PreFireBullet(self, owner, bul)
 	end
 
 	if SERVER then
-		for k in pairs(hsents) do
-			hsents[k] = nil
-		end
 		for k in pairs(multidmg) do
 			multidmg[k] = nil
 		end
@@ -256,14 +257,13 @@ if CLIENT then
 	return
 end
 
-hsents, multidmg, multiforce =
-	setmetatable({}, TTTWR.weakkeys),
+multidmg, multiforce =
 	setmetatable({}, TTTWR.weakkeys),
 	setmetatable({}, TTTWR.weakkeys)
 
 local abs = math.abs
 
-function OnEntityTakeDamage(self, victim, dmginfo)
+function SWEP:OnEntityTakeDamage(victim, dmginfo)
 	local hent = hitents[victim]
 
 	if not hent then
@@ -289,7 +289,6 @@ function OnEntityTakeDamage(self, victim, dmginfo)
 	end
 
 	hitents[victim] = nil
-	hsents[victim] = nil
 
 	if mdmg then
 		dmginfo:AddDamage(mdmg)
@@ -332,25 +331,17 @@ function OnEntityTakeDamage(self, victim, dmginfo)
 	end
 end
 
-local max = math.max
+local remap = TTTWR.RemapClamp
 
-function GetHeadshotMultiplier(self, victim, dmginfo)
-	local hsent = hsents[victim]
-
-	if hsent and hsent >= 4 then -- don't deal headshot damage more than 4 times
-		return 1
-	end
-
-	hsents[victim] = (hsent or 0) + 1
-
+function SWEP:GetHeadshotMultiplier(victim, dmginfo)
 	local att = dmginfo:GetAttacker()
+
 	if not IsValid(att) then
-		return 3
+		return 2
 	end
 
-	return 1 + max(0,
-		2.1 - 0.002 * max(0,
-			victim:GetPos():Distance(att:GetPos()) - 140
-		) ^ 1.25
+	return remap(
+		victim:GetPos():Distance(att:GetPos()),
+		64, 256, self.HeadshotMultiplier, 1
 	)
 end

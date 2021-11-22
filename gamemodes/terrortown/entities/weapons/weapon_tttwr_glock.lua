@@ -2,17 +2,17 @@ TTTWR.MakePistol(SWEP,
 	"glock",
 	"glock18",
 	"weapons/glock/glock18-1.wav",
-	20,
-	60 / 300,
+	24,
+	60 / 250,
 	0.02,
-	1.2,
+	1.25,
 	20,
 	-5.79, -3.9982, 2.8289,
 	0, 0, 0
 )
 
 
-SWEP.HeadshotMultiplier = 2.2
+SWEP.HeadshotMultiplier = 1.4
 
 SWEP.ReloadTime = 2.4
 

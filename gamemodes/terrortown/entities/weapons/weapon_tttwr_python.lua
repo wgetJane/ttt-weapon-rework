@@ -2,10 +2,10 @@ TTTWR.MakePistol(SWEP,
 	"python",
 	"",
 	{"weapons/357/357_fire3.wav", 90, 90},
-	33,
-	60 / 150,
-	0.015,
-	5.5,
+	35,
+	60 / 120,
+	0.02,
+	5,
 	6,
 	-4.7, -4.2, 1.5,
 	0, -0.25, 0
@@ -14,14 +14,18 @@ TTTWR.MakePistol(SWEP,
 
 SWEP.AutoSpawnable = false -- already spawns by replacing half of deagles (see sv_replace.lua)
 
-SWEP.ReloadTime = 1.7
-SWEP.ReloadTimeConsecutive = 0.7
-SWEP.ReloadTimeFinish = 0.4
-SWEP.DeployTime = 0.5
-SWEP.DeployAnimSpeed = 1.5
+SWEP.HeadshotMultiplier = 17 / 7
 
-SWEP.ReloadAnimSpeed = 1
-SWEP.ReloadAnimLoopSpeed = 1.4125
+SWEP.ConeResetStart = 2 / 3
+
+SWEP.ReloadTime = 1.5
+SWEP.ReloadTimeConsecutive = 0.6
+SWEP.ReloadTimeFinish = 0.4
+SWEP.DeployTime = 0.75
+SWEP.DeployAnimSpeed = 1.15
+
+SWEP.ReloadAnimSpeed = 1.1375
+SWEP.ReloadAnimLoopSpeed = 1.65
 SWEP.ReloadAnimEndSpeed = 0.95
 SWEP.ReloadSequence = 8
 SWEP.ReloadLoopSequence = 9
@@ -35,8 +39,6 @@ SWEP.Primary.Ammo = "AlyxGun"
 SWEP.AmmoEnt = "item_ammo_revolver_ttt"
 
 SWEP.NoSetInsertingOnReload = false
-
-SWEP.StoreLastPrimaryFire = true
 
 SWEP.ViewModel = "models/weapons/c_357.mdl"
 SWEP.WorldModel = "models/weapons/w_357.mdl"
@@ -152,44 +154,11 @@ function SWEP:TranslateActivity(act)
 	return self.BaseClass.TranslateActivity(self, act)
 end
 
-local remap, clamp, ease = TTTWR.RemapClamp, math.Clamp, math.EaseInOut
-
-function SWEP:GetPrimaryCone()
-	local lastshoot = CurTime() - self:GetLastPrimaryFire()
-
-	local scale = 1
-
-	if lastshoot < 4 / 3 then
-		scale = remap(ease(lastshoot * (3 / 4), 0.1, 0), 1, 0, 1, 4)
-
-		if lastshoot < 0.2 then
-			scale = scale / (2 - clamp(lastshoot * 5, 0, 1))
-		end
-	end
-
-	return self.BaseClass.GetPrimaryCone(self) * scale
-end
-
 if SERVER then
-
-function SWEP:GetHeadshotMultiplier()
-	local lastshoot = CurTime() - self:GetLastPrimaryFire()
-
-	local inmin, inmax, outmin, outmax = 2 / 3, 7 / 6, 1 / 0.66, 1 / 0.33
-
-	if lastshoot > inmax then
-		inmin, inmax, outmin, outmax = inmax, 4 / 3, outmax, 1 / 0.22
-	end
-
-	return remap(
-		lastshoot,
-		inmin, inmax,
-		outmin, outmax
-	)
-end
-
 	return
 end
+
+local remap = TTTWR.RemapClamp
 
 -- this makes the recoil animation look less exaggerated
 function SWEP:GetViewModelPosition(pos, ang)
