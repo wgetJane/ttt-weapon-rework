@@ -44,8 +44,8 @@ function TTTWR:MakeWeapon(
 
 	pr.Damage = dmg
 	pr.Delay = delay
-	pr.Cone = cone
-	pr.Recoil = recoil
+	pr.Cone = cone == 0 and 0x1p-126 or cone
+	pr.Recoil = recoil == 0 and 0x1p-126 or recoil
 	pr.ClipSize = clip
 	pr.DefaultClip = clip
 
