@@ -4,8 +4,8 @@ TTTWR.MakeSniper(SWEP,
 	"weapons/scout/scout_fire-1.wav",
 	40,
 	60 / 60,
-	0x1p-126,
-	5,
+	0,
+	3,
 	10
 )
 

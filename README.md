@@ -455,17 +455,17 @@ AWP\
 \- kills an armoured player in 1 headshot + 1 bodyshot
 
 G3\
-\- base dmg: 32, headshot dmg: 70, limb dmg: 16\
-\- clip size: 10\
-\- fire rate: 100 rpm\
-\- deploy time: 1 sec\
-\- reload time: 3.5 secs\
-\- kills an unarmoured player in 1 headshot + 1 bodyshot
-
-SG 550\
-\- base dmg: 30, headshot dmg: 60, limb dmg: 15\
+\- base dmg: 25, headshot dmg: 50, limb dmg: 12.5\
 \- clip size: 20\
 \- fire rate: 180 rpm\
+\- deploy time: 1 sec\
+\- reload time: 3.5 secs\
+\- kills an unarmoured player in 2 headshots
+
+SG 550\
+\- base dmg: 32, headshot dmg: 64, limb dmg: 16\
+\- clip size: 20\
+\- fire rate: 160 rpm\
 \- deploy time: 1 sec\
 \- reload time: 3.5 secs\
 \- kills an unarmoured player in 2 headshots
