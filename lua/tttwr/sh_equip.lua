@@ -1,12 +1,23 @@
-local TraitorEquipmentItems = EquipmentItems[ROLE_TRAITOR]
+local cvs = {
+	[EQUIP_ARMOR] = CreateConVar("ttt_buycost_armor", "2", FCVAR_NOTIFY + FCVAR_REPLICATED),
+	[EQUIP_RADAR] = CreateConVar("ttt_buycost_radar", "2", FCVAR_NOTIFY + FCVAR_REPLICATED),
+	[EQUIP_DISGUISE] = CreateConVar("ttt_buycost_disguise", "1", FCVAR_NOTIFY + FCVAR_REPLICATED),
+}
 
-for _, v in ipairs(TraitorEquipmentItems) do
-	if v.id == EQUIP_ARMOR
-		or v.id == EQUIP_RADAR
-	then
-		v.buycost = 2
+local function buycostcb()
+	for _, v in ipairs(EquipmentItems[ROLE_TRAITOR]) do
+		local cv = cvs[v.id or 0]
+
+		if cv then
+			v.buycost = cv:GetInt()
+		end
 	end
 end
+buycostcb()
+
+cvars.AddChangeCallback("ttt_buycost_armor", buycostcb, "tttwr")
+cvars.AddChangeCallback("ttt_buycost_radar", buycostcb, "tttwr")
+cvars.AddChangeCallback("ttt_buycost_disguise", buycostcb, "tttwr")
 
 local function getcost(ply, id, is_item)
 	if is_item then

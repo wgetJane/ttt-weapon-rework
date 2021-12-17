@@ -151,6 +151,8 @@ body armour gives traitors an effective health of 142.86, which is a huge advant
 i believe that traitors shouldn't be able to easily win a head-on 1v1 fight,\
 since they're supposed to use stealth, surprise, teamwork, and deception to take out innocents
 
+the cost of armour and radar can be changed with the cvars `ttt_buycost_armor` and `ttt_buycost_radar`
+
 #### decoy
 \- you receive 8 decoys instead of 1\
 \- decoy positions will always be visible to the owner, even without a radar\
