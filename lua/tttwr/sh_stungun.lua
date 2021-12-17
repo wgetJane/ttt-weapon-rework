@@ -6,7 +6,7 @@ TTTWR.MakeSMG(SWEP,
 	"tmp",
 	"tmp",
 	{"weapons/tmp/tmp-1.wav", 70, 90},
-	9,
+	5,
 	60 / 600,
 	0.02,
 	1,
@@ -22,6 +22,7 @@ SWEP.IsSilent = true
 
 SWEP.GetHeadshotMultiplier = GetHeadshotMultiplier
 SWEP.HeadshotMultiplier = 2
+SWEP.LimbshotMultiplier = 0.2
 
 SWEP.ShootSequence = 3
 
