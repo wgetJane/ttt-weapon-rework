@@ -18,6 +18,26 @@ local maxplayers_bits = TTTWR.maxplayers_bits
 
 if CLIENT then
 
+CreateConVar("ttt_volume_guns_self", 1, FCVAR_ARCHIVE, "Adjusts sound volume of your own gunshots", 0, 1)
+CreateConVar("ttt_volume_guns_other", 1, FCVAR_ARCHIVE, "Adjusts sound volume of other players' gunshots", 0, 1)
+
+local function volumecb(name)
+	local k = name == "ttt_volume_guns_self" and "name_cl" or "name_sv"
+	local vol = GetConVar(name):GetFloat()
+
+	for _, v in pairs(TTTWR.sounds) do
+		v.name = v[k]
+		v.volume = v.vol_x1 * vol
+		sound.Add(v)
+	end
+end
+
+volumecb("ttt_volume_guns_self")
+volumecb("ttt_volume_guns_other")
+
+cvars.AddChangeCallback("ttt_volume_guns_self", volumecb, "tttwr")
+cvars.AddChangeCallback("ttt_volume_guns_other", volumecb, "tttwr")
+
 local silence = {
 	["Weapon_Shotgun.NPC_Reload"] = true,
 	["Weapon_Shotgun.Special1"] = true,

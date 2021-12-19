@@ -273,6 +273,12 @@ the five-seven is silent after ~1200 units (???)\
 the scout is silent after ~600 units (??????)\
 the crowbar is silent after ~2400 units (?????????)
 
+#### adjustable gunshot sound volume
+i've added client-side options to adjust the sound volume of gunshot sounds so you can protect your hearing
+
+the cvar `ttt_volume_guns_self` adjusts the sound volume of your own gunshots (default value is 0.5)\
+the cvar `ttt_volume_guns_other` adjusts the sound volume of other players' gunshots (default value is 1.0)
+
 #### dying shot
 the experimental [dying shot](https://www.troubleinterroristtown.com/config/settings/#other-gameplay-settings) mechanic that's disabled by default is fixed and reworked
 

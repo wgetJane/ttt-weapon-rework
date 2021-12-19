@@ -70,18 +70,28 @@ function TTTWR:MakeWeapon(
 	pr.Sound = "tttwr_" .. class .. ".Single"
 	pr.SoundLevel = lvl
 
-	sound.Add({
+	local script = {
 		name = pr.Sound,
 		channel = CHAN_WEAPON,
 		level = lvl,
 		pitch = pit,
 		volume = vol,
 		sound = ")" .. sndfile,
-	})
+	}
+
+	if CLIENT then
+		pr.Sound_CL = "tttwr_" .. class .. ".Single_CL"
+
+		script.name_sv = pr.Sound
+		script.name_cl = pr.Sound_CL
+		script.vol_x1 = vol
+	else
+		sound.Add(script)
+	end
+
+	TTTWR.sounds[pr.Sound] = CLIENT and script or true
 
 	self.Kind = WEAPON_HEAVY
-
-	TTTWR.sounds[pr.Sound] = true
 
 	self.PrintName = "tttwr_" .. class .. "_name"
 
@@ -142,7 +152,11 @@ function SWEP:PrimaryAttack(worldsnd)
 
 	local pri = self.Primary
 
-	if owner and SERVER then
+	local localowned = CLIENT and owner == LocalPlayer()
+
+	if localowned then
+		self:EmitSound(pri.Sound_CL)
+	elseif owner then
 		TTTWR.PlaySound(owner, pri.Sound, worldsnd)
 	else
 		self:EmitSound(pri.Sound)
@@ -225,7 +239,7 @@ function SWEP:PrimaryAttack(worldsnd)
 		owner:ViewPunch(ang)
 	end
 
-	if CLIENT and IsFirstTimePredicted() and owner == LocalPlayer() then
+	if localowned and IsFirstTimePredicted() then
 		receiverecoil(recoil, self.RecoilTime)
 	end
 
