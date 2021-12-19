@@ -3,18 +3,16 @@ local SWEP = weapons.GetStored("weapon_zm_sledge")
 TTTWR.MakeWeapon(SWEP,
 	"huge",
 	"weapons/m249/m249-1.wav",
-	7,
-	60 / 1000,
+	11,
+	0.09,
 	0.1,
-	2,
-	200,
+	3,
+	150,
 	-5.95, -5.119, 2.349,
 	0, 0, 0
 )
 
 SWEP.HoldType = "shotgun"
-
-SWEP.Primary.ClipMax = 200
 
 SWEP.FalloffStart = 384
 SWEP.FalloffEnd = 1280
@@ -36,7 +34,7 @@ local function getacc(self)
 	return clamp(
 		self:GetInaccuracy() - remapclamp(
 			CurTime() - self:GetLastPrimaryFire(),
-			0.12, 0.6, 0, 2000
+			0.2, 0.6, 0, 2000
 		),
 		0, 2000
 	)

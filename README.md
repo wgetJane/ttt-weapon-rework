@@ -122,7 +122,8 @@ and the main point of that point is to make it easier to cross sniper sightlines
 clients can choose to disable this by setting the cvar `ttt_magnetotrans` from 1 to 0
 
 #### huge-249
-\- ammo capacity increased to 200 from 150\
+\- damage increased from 7 to 11\
+\- rate of fire decreased from 1000 rpm to 666 rpm\
 \- while ironsighted, accuracy and recoil is improved by sustained fire
 
 the huge-249 is an absurdly bad weapon\
