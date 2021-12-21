@@ -9,7 +9,7 @@ for k, v in pairs({
 	fn57 = "Five-Seven",
 	glock = "Glock",
 	usp = "USP",
-	p228 = "228 Compact",
+	p228 = "P228",
 	elites = "Dual Elites",
 
 	mac10 = "MAC-10",
@@ -23,15 +23,15 @@ for k, v in pairs({
 	famas = "FAMAS",
 	galil = "Galil",
 	aug = "AUG",
-	krieg = "Krieg",
+	sg = "SG 552",
 
 	scout = "Scout",
 	awp = "AWP",
 	g3 = "G3",
-	sg = "SG 550",
+	krieg = "Krieg",
 
 	m3 = "M3",
-	xm = "XM", --"M4",
+	xm = "XM",
 	spas = "SPAS-12",
 
 	deagle = "Deagle",
@@ -94,8 +94,8 @@ local matdata = {
 for y, v in ipairs({
 	{"fn57", "glock", "usp", "p228", "elites", "deagle", "python",},
 	{"mac10", "mp5", "ump", "p90", "tmp", "mp7",},
-	{"m16", "ak47", "famas", "galil", "aug", "krieg", "sim16",},
-	{"scout", "awp", "g3", "sg", "m3", "xm", "spas",},
+	{"m16", "ak47", "famas", "galil", "aug", "sg", "sim16",},
+	{"scout", "awp", "g3", "krieg", "m3", "xm", "spas",},
 }) do
 	for x, v in ipairs(v) do
 		matdata["$basetexturetransform"] = (

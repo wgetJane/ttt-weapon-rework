@@ -2,8 +2,6 @@
  - make pistols and grenades spawn more often
  - consistent weapon spawns for all rounds until map change (this rewards players for memorisation)
  - better sampling algorithm (reservoir sampling?) instead of shuffling tables over and over
- - reduce total deagle spawns, since mappers love to spam tons of deagles all over their maps
- - unswap m16 and mac10 spawn locations
 ]]
 
 local totttwr = {
@@ -30,14 +28,14 @@ local totttwr = {
 		"weapon_tttwr_famas",
 		"weapon_tttwr_galil",
 		"weapon_tttwr_aug",
-		"weapon_tttwr_krieg",
+		"weapon_tttwr_sg",
 	},
 	weapon_zm_rifle = {
 		ammo = "item_ammo_357_ttt",
 		"weapon_tttwr_scout",
 		"weapon_tttwr_awp",
 		"weapon_tttwr_g3",
-		"weapon_tttwr_sg",
+		"weapon_tttwr_krieg",
 	},
 	weapon_zm_shotgun = {
 		ammo = "item_box_buckshot_ttt",

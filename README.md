@@ -432,7 +432,7 @@ Aug\
 \- reload time: 3.25 secs\
 \- slightly higher recoil, better accuracy
 
-Krieg\
+SG 552\
 \- base dmg: 16, headshot dmg: 26.67, limb dmg: 8\
 \- clip size: 30\
 \- fire rate: 400 rpm\
@@ -471,7 +471,7 @@ G3\
 \- reload time: 3.5 secs\
 \- kills an unarmoured player in 2 headshots
 
-SG 550\
+Krieg\
 \- base dmg: 32, headshot dmg: 64, limb dmg: 16\
 \- clip size: 20\
 \- fire rate: 160 rpm\

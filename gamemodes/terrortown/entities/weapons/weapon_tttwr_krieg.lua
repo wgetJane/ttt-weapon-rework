@@ -1,12 +1,10 @@
-TTTWR.MakeRifle(SWEP,
+TTTWR.MakeSniper(SWEP,
 	"krieg",
-	"sg552",
-	"weapons/sg552/sg552-1.wav",
-	16,
-	60 / 400,
-	0.017,
-	2.7,
-	30
+	"sg550",
+	"weapons/sg550/sg550-1.wav",
+	32,
+	60 / 160,
+	0,
+	4.5,
+	20
 )
-
-TTTWR.MakeZoomable(SWEP, 40, 0.491)
