@@ -1,6 +1,6 @@
 local cvs = {
 	[EQUIP_ARMOR] = CreateConVar("ttt_buycost_armor", "2", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED),
-	[EQUIP_RADAR] = CreateConVar("ttt_buycost_radar", "2", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED),
+	[EQUIP_RADAR] = CreateConVar("ttt_buycost_radar", "1", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED),
 	[EQUIP_DISGUISE] = CreateConVar("ttt_buycost_disguise", "1", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED),
 }
 
