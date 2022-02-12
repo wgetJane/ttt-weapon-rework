@@ -1,7 +1,5 @@
 local SWEP = weapons.GetStored("weapon_ttt_stungun")
 
-local GetHeadshotMultiplier = TTTWR.getfn(SWEP, "GetHeadshotMultiplier")
-
 TTTWR.MakeSMG(SWEP,
 	"tmp",
 	"tmp",
@@ -20,8 +18,7 @@ TTTWR.MakeEquipment(SWEP)
 
 SWEP.IsSilent = true
 
-SWEP.GetHeadshotMultiplier = GetHeadshotMultiplier
-SWEP.HeadshotMultiplier = 2
+SWEP.HeadshotMultiplier = 3
 SWEP.LimbshotMultiplier = 0.2
 
 SWEP.ShootSequence = 3
@@ -29,7 +26,7 @@ SWEP.ShootSequence = 3
 
 function SWEP:OnThink()
 	-- the tmp's deploy animation ends with a weird angle
-	if self:GetActivity() == ACT_VM_DRAW then
+	if self:GetActivity() == ACT_VM_DRAW and self:GetNextPrimaryFire() < CurTime() then
 		self:SendWeaponAnim(ACT_VM_IDLE)
 	end
 end
