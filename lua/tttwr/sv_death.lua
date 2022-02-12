@@ -1,4 +1,4 @@
-local ttt_prioritytargets = CreateConVar("ttt_prioritytargets", "2", FCVAR_NOTIFY + FCVAR_REPLICATED)
+local ttt_prioritytargets = CreateConVar("ttt_prioritytargets", "2", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED)
 
 util.AddNetworkString("tttwr_priotargs")
 
