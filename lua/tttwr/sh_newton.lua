@@ -1,60 +1,58 @@
 local SWEP = weapons.GetStored("weapon_ttt_push")
 
+SWEP.Primary.Automatic = true
+SWEP.Secondary.Automatic = true
+
 function SWEP:PrimaryAttack()
-	local nxt = CurTime() + self.Primary.Delay
-
-	self:SetNextPrimaryFire(nxt)
-	self:SetNextSecondaryFire(nxt)
-
-	self:EmitSound(self.Primary.Sound, self.Primary.SoundLevel)
-
-	self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
-
-	local owner = self:GetOwner()
-
-	if IsValid(owner) then
-		owner:SetAnimation(PLAYER_ATTACK1)
-	end
-
-	self:FirePulse(false)
+	self.IsCharging = 1
 end
 
 function SWEP:SecondaryAttack()
-	local nxt = CurTime() + self.Primary.Delay
+	self.IsCharging = -1
+end
 
-	self:SetNextPrimaryFire(nxt)
-	self:SetNextSecondaryFire(nxt)
+function SWEP:ChargedAttack()
+	local force = self.IsCharging
 
-	self:EmitSound(self.Primary.Sound, self.Primary.SoundLevel)
+	self.IsCharging = false
 
-	self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+	local charge = math.Clamp(self:GetCharge(), 0, 1)
 
-	local owner = self:GetOwner()
+	self:SetCharge(0)
 
-	if IsValid(owner) then
-		owner:SetAnimation(PLAYER_ATTACK1)
+	if charge ~= 0 then
+		self:FirePulse(force * (charge + 1))
 	end
-
-	self:FirePulse(true)
 end
 
 local bullet = TTTWR.SharedBullet
 
-local bulletCallback, pull
+local bulletCallback, pforce
 
-function SWEP:FirePulse(p)
+function SWEP:FirePulse(force)
 	local owner = self:GetOwner()
 
 	if not IsValid(owner) then
 		return
 	end
 
+	local nxt = CurTime() + self.Primary.Delay
+
+	self:SetNextPrimaryFire(nxt)
+	self:SetNextSecondaryFire(nxt)
+
+	self:EmitSound(self.Primary.Sound, self.Primary.SoundLevel)
+
+	self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+
+	owner:SetAnimation(PLAYER_ATTACK1)
+
 	local bul = bullet
 
 	bul.Attacker = owner
 
-	bul.Damage = 1
-	bul.Force = 60
+	bul.Damage = 0.01
+	bul.Force = 60 * math.abs(force)
 
 	bul.Distance = 8192
 	bul.HullSize = nil
@@ -73,7 +71,7 @@ function SWEP:FirePulse(p)
 
 	bul.IgnoreEntity = nil
 
-	pull = p
+	pforce = force
 
 	bul.Callback = bulletCallback
 
@@ -81,29 +79,40 @@ function SWEP:FirePulse(p)
 end
 
 function SWEP:Think()
+	self.BaseClass.Think(self)
+
+	local owner = self:GetOwner()
+
+	if not IsValid(owner) then
+		return
+	end
+
 	if self:GetActivity() ~= ACT_VM_IDLE then
-		local owner = self:GetOwner()
+		local vm = owner:GetViewModel()
 
-		if IsValid(owner) then
-			local vm = owner:GetViewModel()
-
-			if IsValid(vm) and vm:IsSequenceFinished() then
-				self:SendWeaponAnim(ACT_VM_IDLE)
-			end
+		if IsValid(vm) and vm:IsSequenceFinished() then
+			self:SendWeaponAnim(ACT_VM_IDLE)
 		end
 	end
 
-	return self.BaseClass.Think(self)
+	if not (self.IsCharging and owner:IsTerror()) then
+		return
+	end
+
+	if not (owner:KeyDown(IN_ATTACK) or owner:KeyDown(IN_ATTACK2)) then
+		self:ChargedAttack()
+
+		return
+	end
+
+	local charge = self:GetCharge()
+
+	if charge == 1 then
+		return
+	end
+
+	self:SetCharge(math.Clamp(charge + 0.5 * FrameTime(), 0, 1))
 end
-
-SWEP.SetupDataTables = nil
-SWEP.ChargedAttack = nil
-SWEP.PreDrop = nil
-SWEP.OnRemove = nil
-SWEP.Deploy = nil
-SWEP.Holster = nil
-
-local max = math.max
 
 if CLIENT then
 
@@ -115,53 +124,22 @@ function SWEP:Initialize()
 	return Initialize(self)
 end
 
-local localply
-
-local SetDrawColor, DrawLine = surface.SetDrawColor, surface.DrawLine
+local DrawHUD = TTTWR.getfn(SWEP, "DrawHUD")
 
 function SWEP:DrawHUD()
 	if self.HUDHelp then
 		self:DrawHelp()
 	end
 
-	local ply = localply
-
-	if not IsValid(ply) then
-		ply = LocalPlayer()
-		localply = ply
-	end
-
-	if IsValid(ply) and ply.IsTraitor and ply:IsTraitor() then
-		SetDrawColor(255, 0, 0, 255)
-	else
-		SetDrawColor(0, 255, 0, 255)
-	end
-
-	local x, y = ScrW() * 0.5, ScrH() * 0.5
-
-	DrawLine(x - 10, y, x - 5, y)
-	DrawLine(x + 10, y, x + 5, y)
-	DrawLine(x, y - 10, x, y - 5)
-	DrawLine(x, y + 10, x, y + 5)
-
-	local curtime = CurTime()
-
-	local nxt = self:GetNextPrimaryFire()
-
-	if nxt < curtime then
-		return
-	end
-
-	local w, h = 30, 20 * max(0, nxt - curtime) / self.Primary.Delay
-
-	DrawLine(x + w, y - h, x + w, y + h)
-	DrawLine(x - w, y - h, x - w, y + h)
+	return DrawHUD(self)
 end
 
 	return
 end
 
 local vec = Vector()
+
+local max = math.max
 
 function bulletCallback(attacker, trace)
 	local victim = trace.Entity
@@ -176,7 +154,7 @@ function bulletCallback(attacker, trace)
 
 	local vec = vec
 	for i = 1, 3 do
-		vec[i] = trace.Normal[i] * (pull and -100 or 90)
+		vec[i] = trace.Normal[i] * 100 * pforce
 	end
 
 	local curtime = CurTime()
@@ -185,13 +163,17 @@ function bulletCallback(attacker, trace)
 	local same = waspushed and victim.was_pushed.t == curtime
 
 	if same and waspushed.wasonground then
-		vec[3] = max(vec[3], pull and 40 or 50)
+		vec[3] = max(vec[3], 50)
 	end
 
 	local onground = victim:OnGround()
 
 	if onground then
 		victim:SetGroundEntity(nil)
+	end
+
+	if not same then
+		victim:SetLocalVelocity(vector_origin) -- cancel out current velocity
 	end
 
 	local vel = victim:GetAbsVelocity()
@@ -218,7 +200,7 @@ function SWEP:OnEntityTakeDamage(victim, dmginfo)
 		return
 	end
 
-	if pull then
+	if pforce < 0 then
 		local force = dmginfo:GetDamageForce()
 
 		force:Mul(-1 / 3)
