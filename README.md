@@ -140,19 +140,19 @@ and eventually gets very accurate with little recoil on the 10th shot
 
 this gives it a role as a weapon for suppressive fire at the cost of mobility
 
-#### radar + body armor
+#### body armor
 now costs 2 credits for traitors
 
-in vanilla servers, traitors often just spend their first 2 credits on radar + body armour
+in vanilla servers, traitors often just spend their first 2 credits on radar + armour
 
-by doubling their price, other traitor weapons become more attractive options so traitors don't just buy the same stuff every round
+by doubling the price of armour, other traitor weapons become more attractive options so traitors don't just buy the same stuff every round
 
 body armour gives traitors an effective health of 142.86, which is a huge advantage to be sold for just 1 credit
 
 i believe that traitors shouldn't be able to easily win a head-on 1v1 fight,\
 since they're supposed to use stealth, surprise, teamwork, and deception to take out innocents
 
-the cost of armour and radar can be changed with the cvars `ttt_buycost_armor` and `ttt_buycost_radar`
+the cost of armour, radar, and disguise can be changed with the cvars `ttt_buycost_armor`, `ttt_buycost_radar`, `ttt_buycost_disguise`
 
 #### decoy
 \- you receive 8 decoys instead of 1\
@@ -201,19 +201,26 @@ since it looks like a generic pistol from a distance
 
 #### newton launcher
 \- alt-fire now pulls players\
+\- both primary and alt-fire can be charged up to 2 secs for up to 2 times force\
+\- target's velocity is overriden\
 \- will now properly credit prop-kills
 
-the newton launcher's previous alt-fire is pretty pointless, since the primary fire is powerful enough
-
-charging it up makes an already slow attack even slower, and just for barely any benefit
-
-at the least amount of charge, the alt-fire had half the power of the primary fire\
-while at the most amount of charge, it's only mildly and unnoticeably more powerful than the primary fire
-
-instead of charging up a push attack, using alt-fire will now pull players towards you
+the newton launcher's alt-fire will now pull players towards you
 
 this gives the newton launcher another angle to use it from\
 for example, it can be used to pull players off of ledges
+
+both push and pull attacks can be held down to be charged\
+and it now takes 2 seconds to gradually charge up to 200% force
+
+it previously took 1.25 secs to fully charge but this was inconsistent based on server tick rate\
+it took 1.5 secs to charge on 66.67 tickrate or 3.125 secs to charge on 16 tickrate\
+
+also previously, charging only increased force by up to 116.67% at full charge,\
+so it was never worth even it to use the alt-fire
+
+hitting someone with the newton launcher now overrides their former velocity,\
+since it was silly that the push force can be entirely cancelled out by simply walking in the opposite direction
 
 #### silenced pistol
 \- now uses USP stats (see "new weapons" section), but has less recoil, better accuracy, and higher damage\
@@ -446,7 +453,7 @@ these are scoped weapons with perfect accuracy but slow fire rates
 they do not have distance damage falloff, making them the supreme weapons at long range
 
 Scout\
-\- base dmg: 40, headshot dmg: 80, limb dmg: 20\
+\- base dmg: 45, headshot dmg: 90, limb dmg: 22.5\
 \- clip size: 10\
 \- fire rate: 60 rpm\
 \- deploy time: 0.875 sec\
@@ -455,7 +462,7 @@ Scout\
 \- kills an armoured player in 2 headshots
 
 AWP\
-\- base dmg: 50, headshot dmg: 92.86, limb dmg: 25\
+\- base dmg: 60, headshot dmg: 99, limb dmg: 30\
 \- clip size: 10\
 \- fire rate: 40 rpm\
 \- deploy time: 1 sec\
@@ -472,7 +479,7 @@ G3\
 \- kills an unarmoured player in 2 headshots
 
 Krieg\
-\- base dmg: 32, headshot dmg: 64, limb dmg: 16\
+\- base dmg: 33, headshot dmg: 66, limb dmg: 16.5\
 \- clip size: 20\
 \- fire rate: 160 rpm\
 \- deploy time: 1 sec\
@@ -492,11 +499,11 @@ their damage drops off from 100% at 64 units to 50% at 768 units
 headshot multiplier also drops off from 240% at 64 units to 100% at 192 units
 
 M3\
-\- base dmg: 7, headshot dmg: 16.8, limb dmg: 6.3\
+\- base dmg: 10, headshot dmg: 24, limb dmg: 9\
 \- clip size: 8\
-\- fire rate: 72 rpm\
+\- fire rate: 64 rpm\
 \- deploy time: 1 sec\
-\- can kill an unarmoured player in one headshot at close range
+\- can kill an armoured player in one headshot at close range
 
 XM\
 \- base dmg: 4, headshot dmg: 9.6, limb dmg: 3.6\
@@ -505,12 +512,12 @@ XM\
 \- deploy time: 1 sec
 
 SPAS-12\
-\- base dmg: 6, headshot dmg: 14.4, limb dmg: 5.4\
+\- base dmg: 7, headshot dmg: 16.8, limb dmg: 6.3\
 \- clip size: 6\
 \- fire rate: 90 rpm\
 \- deploy time: 0.75 sec\
 \- takes 0.4 secs to reload a shell instead of 0.5 secs\
-\- can kill an unarmoured player in one headshot at point-blank range
+\- can kill an unarmoured player in one headshot at close range
 
 #### deagle and revolver
 the deagle is obviously not a new weapon, but a new weapon, the revolver, spawns with the same "weapon type" as the deagle
