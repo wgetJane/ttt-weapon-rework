@@ -214,10 +214,10 @@ both push and pull attacks can be held down to be charged\
 and it now takes 2 seconds to gradually charge up to 200% force
 
 it previously took 1.25 secs to fully charge but this was inconsistent based on server tick rate\
-it took 1.5 secs to charge on 66.67 tickrate or 3.125 secs to charge on 16 tickrate\
+it took 1.5 secs to charge on 66.67 tickrate or 3.125 secs to charge on 16 tickrate
 
 also previously, charging only increased force by up to 116.67% at full charge,\
-so it was never worth even it to use the alt-fire
+so it was never even worth it to use the alt-fire
 
 hitting someone with the newton launcher now overrides their former velocity,\
 since it was silly that the push force can be entirely cancelled out by simply walking in the opposite direction
@@ -300,6 +300,10 @@ also, the shot is no longer very inaccurate
 
 the dying shot mechanic is still disabled by default\
 you can enable it by setting the cvar `ttt_dyingshot_enabled` to 1
+
+#### stomp damage
+the cvar `ttt_stomp_mult` adjusts the damage received by the victim (default value is 1.0)\
+the cvar `ttt_stomp_cushion` adjusts the damage received by the attacker (default value is 0.33)
 
 ## new weapons
 

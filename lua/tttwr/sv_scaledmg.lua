@@ -305,3 +305,74 @@ function GAMEMODE:ScaleNPCDamage(npc, hitgroup, dmginfo)
 		)
 	end
 end
+
+local ttt_stomp_mult = CreateConVar("ttt_stomp_mult", "1", FCVAR_ARCHIVE + FCVAR_NOTIFY)
+local ttt_stomp_cushion = CreateConVar("ttt_stomp_cushion", "0.33", FCVAR_ARCHIVE + FCVAR_NOTIFY)
+
+local fallsounds = {
+	"player/damage1.wav",
+	"player/damage2.wav",
+	"player/damage3.wav",
+}
+
+function GAMEMODE:OnPlayerHitGround(ply, water, floater, speed)
+	if water or speed < 450 or not IsValid(ply) then
+		return
+	end
+
+	local dmg = (0.05 * (speed - 420)) ^ 1.75
+
+	if floater then
+		dmg = dmg * 0.5
+	end
+
+	local ground = ply:GetGroundEntity()
+
+	local stompdmg = 0
+
+	if IsValid(ground) and ground:IsPlayer() then
+		stompdmg = dmg * ttt_stomp_mult:GetFloat()
+		dmg = dmg * ttt_stomp_cushion:GetFloat()
+	end
+
+	if stompdmg >= 1 then
+		local dmginfo, att, infl, push = DamageInfo(), ply, ply, ply.was_pushed
+
+		if push and math.max(push.t or 0, push.hurt or 0) > CurTime() - 4 then
+			att = push.att
+
+			dmginfo:SetDamageType(DMG_CRUSH)
+		else
+			dmginfo:SetDamageType(DMG_CRUSH + DMG_PHYSGUN)
+		end
+
+		dmginfo:SetAttacker(att)
+		dmginfo:SetInflictor(infl)
+		dmginfo:SetDamageForce(Vector(0,0,-1))
+		dmginfo:SetDamage(stompdmg)
+
+		ground:TakeDamageInfo(dmginfo)
+	end
+
+	if dmg < 1 then
+		return
+	end
+
+	local dmginfo, world = DamageInfo(), game.GetWorld()
+
+	dmginfo:SetDamageType(DMG_FALL)
+	dmginfo:SetAttacker(world)
+	dmginfo:SetInflictor(world)
+	dmginfo:SetDamageForce(Vector(0,0,1))
+	dmginfo:SetDamage(dmg)
+
+	ply:TakeDamageInfo(dmginfo)
+
+	if dmg > 5 then
+		sound.Play(
+			fallsounds[math.random(#fallsounds)],
+			ply:GetShootPos(),
+			55 + math.Clamp(dmg, 0, 50), 100
+		)
+	end
+end
