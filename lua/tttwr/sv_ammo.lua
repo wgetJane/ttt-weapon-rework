@@ -1,6 +1,28 @@
+local ENT = scripted_ents.GetStored("base_ammo_ttt").t
+
+function ENT:OnTakeDamage(d)
+	return self:TakePhysicsDamage(d)
+end
+
+function ENT:Initialize()
+	self:SetModel(self.Model)
+
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:AddSolidFlags(FSOLID_TRIGGER)
+
+	self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+
+	self:UseTriggerBounds(true, 24)
+
+	self.tickRemoval = false
+
+	self.AmmoEntMax = self.AmmoAmount
+end
+
 local min = math.min
 
-scripted_ents.GetStored("base_ammo_ttt").t.Touch = function(self, ent)
+function ENT:Touch(ent)
 	if not (
 		not self.tickRemoval
 		and IsValid(ent)
