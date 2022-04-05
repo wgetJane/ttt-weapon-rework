@@ -2,7 +2,7 @@ TTTWR.MakeSniper(SWEP,
 	"awp",
 	"awp",
 	{"weapons/awp/awp1.wav", 95},
-	60,
+	50,
 	60 / 40,
 	0,
 	7,
@@ -10,6 +10,8 @@ TTTWR.MakeSniper(SWEP,
 )
 
 
-SWEP.HeadshotMultiplier = 1.65
+TTTWR.MakeChargeableSniper(SWEP, 1.5)
+
+SWEP.HeadshotMultiplier = 1.5
 
 SWEP.ReloadTime = 4

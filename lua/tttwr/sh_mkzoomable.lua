@@ -55,11 +55,19 @@ end
 function SWEP:PreDrop()
 	self:SetZoom(false)
 
+	if self.ZoomablePreDrop then
+		self:ZoomablePreDrop()
+	end
+
 	return self.BaseClass.PreDrop(self)
 end
 
 function SWEP:Holster()
 	self:SetZoom(false)
+
+	if self.ZoomableHolster then
+		return self:ZoomableHolster()
+	end
 
 	return true
 end
@@ -83,6 +91,10 @@ local SetDrawColor, DrawRect, DrawLine, SetTexture, SetMaterial, DrawTexturedRec
 
 function SWEP:DrawHUD()
 	if not self:GetIronsights() then
+		if self.ZoomableDrawHUD then
+			self:ZoomableDrawHUD()
+		end
+
 		return self.BaseClass.DrawHUD(self)
 	end
 
@@ -127,4 +139,8 @@ function SWEP:DrawHUD()
 
 	scrh = scrh + 2
 	DrawTexturedRectRotated(x, y, scrh, scrh, 0)
+
+	if self.ZoomableDrawHUD then
+		self:ZoomableDrawHUD()
+	end
 end

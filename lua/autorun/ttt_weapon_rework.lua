@@ -181,6 +181,7 @@ incl("mksniper")
 incl("mkshotgun")
 
 incl("mkzoomable")
+incl("mklasersniper")
 incl("mkequip")
 
 if GAMEMODE then

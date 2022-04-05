@@ -130,7 +130,11 @@ local frametime = TTTWR.FrameTime
 
 local floor = math.floor
 
-function SWEP:PrimaryAttack(worldsnd)
+function SWEP:PrimaryAttack()
+	return self:PrimaryFire()
+end
+
+function SWEP:PrimaryFire(worldsnd)
 	if self.OnTryShoot and self:OnTryShoot() == false then
 		return
 	end
@@ -226,7 +230,8 @@ function SWEP:PrimaryAttack(worldsnd)
 		)
 
 	self:ShootBullet(
-		pri.Damage, recoil, pri.NumShots, self:GetPrimaryCone()
+		pri.Damage * (self.BulletDamageMultiplier or 1),
+		recoil, pri.NumShots, self:GetPrimaryCone()
 	)
 
 	self:TakePrimaryAmmo(1)
@@ -380,7 +385,7 @@ function SWEP:DyingShot()
 
 	util.Effect("MuzzleFlash", data)
 
-	self:PrimaryAttack(true)
+	self:PrimaryFire(true)
 
 	return true
 end

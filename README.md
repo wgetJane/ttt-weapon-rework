@@ -82,12 +82,16 @@ this change means you'd actually have to hit your target with the pellets, inste
 sniper rifles will always have a visible tracer for every shot instead of for every 4 shots\
 silenced weapons will no longer fire visible tracers
 
+<!--
+
 #### sniper laser dot
 while zoomed in, sniper rifles will cast a laser dot on where they're pointing at
 
 this is similar to how tf2's sniper rifle casts a laser dot
 
 the purpose of this change is to make snipers easier to avoid and react to
+
+-->
 
 #### accurate fire rates
 guns now have accurate fire rates, which means that they will shoot as fast as they should
@@ -456,23 +460,42 @@ these are scoped weapons with perfect accuracy but slow fire rates
 
 they do not have distance damage falloff, making them the supreme weapons at long range
 
+the scout and awp can be charged by holding down primary fire to deal a lot more damage,\
+but a laser beam will be visible while charging which gives away the user's position
+
+the auto-snipers cannot be charged, but can be fired automatically with a much faster rate of fire
+
 Scout\
-\- base dmg: 45, headshot dmg: 90, limb dmg: 22.5\
+\- base dmg: 36, headshot dmg: 72, limb dmg: 18\
+\- charged dmg: 54, headshot dmg: 108, limb dmg: 27\
 \- clip size: 10\
 \- fire rate: 60 rpm\
-\- deploy time: 0.875 sec\
+\- deploy time: 0.875 secs\
 \- reload time: 3 secs\
-\- kills an unarmoured player in 3 bodyshots or 1 headshot + 1 limb shot\
-\- kills an armoured player in 2 headshots
+\- charge time: 1 sec\
+\- kills an unarmored player in:\
+&nbsp; &nbsp; &nbsp; &nbsp; \- 1 charged headshot\
+&nbsp; &nbsp; &nbsp; &nbsp; \- 1 uncharged headshot + 1 uncharged bodyshot\
+&nbsp; &nbsp; &nbsp; &nbsp; \- 2 charged bodyshots\
+\- kills an armored player in:\
+&nbsp; &nbsp; &nbsp; &nbsp; \- 2 uncharged headshots\
+&nbsp; &nbsp; &nbsp; &nbsp; \- 1 charged headshot + 1 uncharged bodyshot
 
 AWP\
-\- base dmg: 60, headshot dmg: 99, limb dmg: 30\
+\- base dmg: 50, headshot dmg: 75, limb dmg: 25\
+\- charged dmg: 75, headshot dmg: 112.5, limb dmg: 37.5\
 \- clip size: 10\
 \- fire rate: 40 rpm\
 \- deploy time: 1 sec\
 \- reload time: 4 secs\
-\- kills an unarmoured player in 2 bodyshots\
-\- kills an armoured player in 1 headshot + 1 bodyshot
+\- charge time: 1.5 secs\
+\- kills an unarmored player in:\
+&nbsp; &nbsp; &nbsp; &nbsp; \- 1 charged headshot\
+&nbsp; &nbsp; &nbsp; &nbsp; \- 2 uncharged bodyshots\
+\- kills an armored player in:\
+&nbsp; &nbsp; &nbsp; &nbsp; \- 2 uncharged headshots\
+&nbsp; &nbsp; &nbsp; &nbsp; \- 1 uncharged headshot + 1 charged bodyshot\
+&nbsp; &nbsp; &nbsp; &nbsp; \- 2 charged bodyshots
 
 G3\
 \- base dmg: 25, headshot dmg: 50, limb dmg: 12.5\
