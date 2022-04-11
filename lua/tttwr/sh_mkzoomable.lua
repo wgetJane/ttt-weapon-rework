@@ -8,11 +8,10 @@ SWEP.Secondary = {
 	Sound = "Default.Zoom",
 }
 
-function TTTWR:MakeZoomable(fov, sens, dot)
+function TTTWR:MakeZoomable(fov, dot)
 	TTTWR.CopySWEP(self, SWEP)
 
 	self.ZoomFOV = fov or 20
-	self.ZoomSensitivity = sens or 0.2
 	self.ZoomRedDot = dot
 end
 
@@ -76,8 +75,22 @@ if SERVER then
 	return
 end
 
+local default_fov = GetConVar("default_fov")
+
+local tan = math.tan
+
 function SWEP:AdjustMouseSensitivity()
-	return self:GetIronsights() and self.ZoomSensitivity or nil
+	local owner = self:GetOwner()
+
+	if not IsValid(owner) then
+		return
+	end
+
+	local lfov, dfov = owner:GetFOV(), default_fov:GetInt()
+
+	if lfov ~= dfov then
+		return tan(lfov * 87266462599716e-16) / tan(dfov * 87266462599716e-16)
+	end
 end
 
 local scope = Material("sprites/scope")
