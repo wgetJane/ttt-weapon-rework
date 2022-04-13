@@ -214,12 +214,18 @@ function ENT:Draw()
 		return
 	end
 
-	local startpos, endpos
+	local tr, startpos, endpos
 
-	if wep:IsCarriedByLocalPlayer() and not ply:ShouldDrawLocalPlayer() then
-		local tr = GetTrace(ply)
+	local islocalply = wep:IsCarriedByLocalPlayer()
+
+	if islocalply then
+		tr = GetTrace(ply)
 
 		endpos = tr.HitPos
+	end
+
+	if islocalply and not ply:ShouldDrawLocalPlayer() then
+		tr = tr or GetTrace(ply)
 
 		local vm = not wep:GetIronsights() and ply:GetViewModel()
 		local att = vm and IsValid(vm) and vm:GetAttachment(1)
