@@ -162,7 +162,7 @@ end)(engine.TickInterval())
 
 function TTTWR:CopySWEP(swep)
 	for k, v in pairs(swep) do
-		if istable(v) then
+		if istable(v) and istable(self[k]) then
 			for k2, v2 in pairs(v) do
 				self[k][k2] = v2
 			end

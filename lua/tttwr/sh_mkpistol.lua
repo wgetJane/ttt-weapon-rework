@@ -20,6 +20,15 @@ if CLIENT then
 	SWEP.Slot = 1
 end
 
+SWEP.ActivityRemapIronsighted = {
+	[ACT_MP_STAND_IDLE] = ACT_HL2MP_IDLE_REVOLVER,
+	[ACT_MP_RUN] = ACT_HL2MP_RUN_REVOLVER,
+	[ACT_MP_WALK] = ACT_HL2MP_WALK_REVOLVER,
+	[ACT_MP_JUMP] = ACT_HL2MP_JUMP_REVOLVER,
+	[ACT_MP_SWIM] = ACT_HL2MP_SWIM_REVOLVER,
+	[ACT_MP_SWIM_IDLE] = ACT_HL2MP_SWIM_IDLE_REVOLVER,
+}
+
 function TTTWR:MakePistol(class, model, ...)
 	TTTWR.MakeWeapon(self, class, ...)
 
@@ -29,14 +38,4 @@ function TTTWR:MakePistol(class, model, ...)
 
 	self.ViewModel = "models/weapons/cstrike/c_pist_" .. model .. ".mdl"
 	self.WorldModel = "models/weapons/w_pist_" .. model .. ".mdl"
-end
-
-local function OnIronsightsChanged(self, name, old, new)
-	return self:SetHoldType(new and "revolver" or "pistol")
-end
-
-function SWEP:PostSetupDataTables()
-	if not self.NoSights then
-		return self:NetworkVarNotify("IronsightsPredicted", OnIronsightsChanged)
-	end
 end

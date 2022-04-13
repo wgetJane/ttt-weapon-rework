@@ -13,6 +13,9 @@ SWEP.FalloffStart = 64
 SWEP.FalloffEnd = 1024
 SWEP.FalloffMult = 0.5
 
+SWEP.IronsightsRecoilScale = 0.6
+SWEP.IronsightsConeScale = 0.85
+
 SWEP.ConeResetStart = 0.2
 SWEP.ConeResetEnd = 0.5
 SWEP.ConeResetMult = 0x1p-126
@@ -121,6 +124,20 @@ function SWEP:SetupDataTables()
 	end
 end
 
+function SWEP:TranslateActivity(act)
+	local trans = self.ActivityRemapIronsighted
+		and self:GetIronsights()
+		and self.ActivityRemapIronsighted[act]
+		or self.ActivityRemap
+		and self.ActivityRemap[act]
+
+	if trans then
+		return trans
+	end
+
+	return self.BaseClass.TranslateActivity(self, act)
+end
+
 local ang = Angle()
 TTTWR.SharedAngle = ang
 
@@ -223,9 +240,7 @@ function SWEP:PrimaryFire(worldsnd)
 			self.GetRecoilScale
 			and self:GetRecoilScale(sights)
 			or (
-				sights and (
-					self.IronsightsRecoilScale or 0.6
-				) or 1
+				sights and self.IronsightsRecoilScale or 1
 			)
 		)
 
@@ -284,7 +299,7 @@ function SWEP:ShootBullet(dmg, recoil, numbul, cone)
 	bul.Src = owner:GetShootPos()
 	bul.Dir = owner:GetAimVector()
 
-	cone = cone * (self:GetIronsights() and 0.85 or 1)
+	cone = cone * (self:GetIronsights() and self.IronsightsConeScale or 1)
 	bul.Spread[1], bul.Spread[2] = cone, cone
 
 	bul.Tracer = self.BulletTracer or (self.IsSilent and 0) or 4

@@ -43,6 +43,10 @@ SWEP.NoSetInsertingOnReload = false
 SWEP.ViewModel = "models/weapons/c_357.mdl"
 SWEP.WorldModel = "models/weapons/w_357.mdl"
 
+SWEP.ActivityRemap = {
+	[ACT_MP_RELOAD_STAND] = ACT_HL2MP_GESTURE_RELOAD_REVOLVER,
+	[ACT_MP_RELOAD_CROUCH] = ACT_HL2MP_GESTURE_RELOAD_REVOLVER,
+}
 
 function SWEP:OnThink()
 	local reloading = self:GetReloading()
@@ -144,14 +148,6 @@ function SWEP:OnThink()
 	self:SetInserting(true)
 
 	return true
-end
-
-function SWEP:TranslateActivity(act)
-	if act == ACT_MP_RELOAD_STAND or act == ACT_MP_RELOAD_CROUCH then
-		return ACT_HL2MP_GESTURE_RELOAD_REVOLVER
-	end
-
-	return self.BaseClass.TranslateActivity(self, act)
 end
 
 if SERVER then
