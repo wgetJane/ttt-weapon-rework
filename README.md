@@ -126,7 +126,7 @@ and the main point of that point is to make it easier to cross sniper sightlines
 clients can choose to disable this by setting the cvar `ttt_magnetotrans` from 1 to 0
 
 #### huge-249
-\- damage increased from 7 to 11\
+\- damage increased from 7 to 13\
 \- rate of fire decreased from 1000 rpm to 666 rpm\
 \- while ironsighted, accuracy and recoil is improved by sustained fire
 
@@ -371,20 +371,21 @@ these weapons have fast fire rates and low recoil but poor accuracy, making them
 
 their damage drops off from 100% at 64 units to 50% at 1024 units
 
-MAC-10\
-\- base dmg: 12, headshot dmg: 16, limb dmg: 10\
-\- clip size: 30\
-\- fire rate: 600 rpm\
-\- deploy time: 0.75 secs\
-\- reload time: 2.75 secs
-
 MP5\
 \- base dmg: 12, headshot dmg: 16, limb dmg: 10\
 \- clip size: 30\
-\- fire rate: 570 rpm\
+\- fire rate: 600 rpm\
 \- deploy time: 0.875 secs\
+\- reload time: 2.75 secs
+
+MAC-10\
+\- base dmg: 12, headshot dmg: 16, limb dmg: 10\
+\- clip size: 30\
+\- fire rate: 800 rpm\
+\- deploy time: 0.75 secs\
 \- reload time: 2.75 secs\
-\- slightly better recoil and accuracy
+\- distance damage falloff ends at 512 units instead of 1024 units\
+\- slightly higher recoil, very poor accuracy
 
 UMP\
 \- base dmg: 13, headshot dmg: 17.33, limb dmg: 10.83\
@@ -398,15 +399,20 @@ UMP\
 P90\
 \- base dmg: 10, headshot dmg: 13.33, limb dmg: 8.33\
 \- clip size: 50\
-\- fire rate: 600 rpm\
+\- fire rate: 666 rpm\
 \- deploy time: 1 sec\
 \- reload time: 3 secs\
-\- very low recoil
+\- very low recoil\
+\- recoil multiplier while sighted is 20% instead of 60%\
+\- inaccuracy multiplier while sighted is 33% instead of 85%
 
 #### assault rifles
 these are supposed to be generally decent primary weapons at mid range
 
 their damage drops off from 100% at 384 units to 50% at 1280 units
+
+their recoil multiplier while sighted is 40% instead of 60%\
+and inaccuracy multiplier while sighted is 75% instead of 85%
 
 M16\
 \- base dmg: 15, headshot dmg: 25, limb dmg: 7.5\
@@ -420,7 +426,7 @@ AK-47\
 \- clip size: 30\
 \- fire rate: 400 rpm\
 \- deploy time: 1 sec\
-\- reload time: 3 secs\
+\- reload time: 2.75 secs\
 \- higher recoil, lower accuracy
 
 FAMAS\
@@ -442,18 +448,22 @@ Galil\
 Aug\
 \- base dmg: 15, headshot dmg: 25, limb dmg: 7.5\
 \- clip size: 30\
-\- fire rate: 400 rpm\
+\- fire rate: 375 rpm\
 \- deploy time: 1 sec\
 \- reload time: 3.25 secs\
-\- slightly higher recoil, better accuracy
+\- higher recoil, poor accuracy\
+\- recoil multiplier while sighted is 20% instead of 40%\
+\- inaccuracy multiplier while sighted is 40% instead of 75%
 
 SG 552\
 \- base dmg: 16, headshot dmg: 26.67, limb dmg: 8\
 \- clip size: 30\
-\- fire rate: 400 rpm\
+\- fire rate: 375 rpm\
 \- deploy time: 1 sec\
 \- reload time: 3 secs\
-\- much higher recoil, slightly better accuracy
+\- much higher recoil, poor accuracy\
+\- recoil multiplier while sighted is 20% instead of 40%\
+\- inaccuracy multiplier while sighted is 40% instead of 75%
 
 #### sniper rifles
 these are scoped weapons with perfect accuracy but slow fire rates
@@ -500,7 +510,7 @@ AWP\
 G3\
 \- base dmg: 25, headshot dmg: 50, limb dmg: 12.5\
 \- clip size: 20\
-\- fire rate: 180 rpm\
+\- fire rate: 200 rpm\
 \- deploy time: 1 sec\
 \- reload time: 3.5 secs\
 \- kills an unarmoured player in 2 headshots
@@ -508,7 +518,7 @@ G3\
 Krieg\
 \- base dmg: 33, headshot dmg: 66, limb dmg: 16.5\
 \- clip size: 20\
-\- fire rate: 160 rpm\
+\- fire rate: 166 rpm\
 \- deploy time: 1 sec\
 \- reload time: 3.5 secs\
 \- kills an unarmoured player in 2 headshots

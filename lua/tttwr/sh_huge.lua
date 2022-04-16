@@ -3,9 +3,9 @@ local SWEP = weapons.GetStored("weapon_zm_sledge")
 TTTWR.MakeWeapon(SWEP,
 	"huge",
 	"weapons/m249/m249-1.wav",
-	11,
-	0.09,
-	0.1,
+	13,
+	0.09, -- 666 rpm
+	0.15,
 	3,
 	150,
 	-5.95, -5.119, 2.349,
@@ -65,8 +65,8 @@ function SWEP:GetPrimaryCone()
 	end
 
 	return self.BaseClass.GetPrimaryCone(self) * remap(
-		getacc(self), 0, 2000, 1, 0.2
-	) * (1 / 0.85)
+		getacc(self), 0, 2000, 1, 0.15
+	)
 end
 
 function SWEP:GetRecoilScale(sights)

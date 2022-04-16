@@ -12,6 +12,9 @@ SWEP.LimbshotMultiplier = 0.5
 SWEP.FalloffStart = 384
 SWEP.FalloffEnd = 1280
 
+SWEP.IronsightsRecoilScale = 0.4
+SWEP.IronsightsConeScale = 0.75
+
 SWEP.ReloadTime = 3
 
 SWEP.ActivityRemapIronsighted = {
