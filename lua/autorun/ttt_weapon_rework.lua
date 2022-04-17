@@ -64,6 +64,8 @@ local function PostGamemodeLoaded()
 
 	incl("priotargs", true)
 
+	incl("magneto", true)
+
 	local ammpist = scripted_ents.GetStored("item_ammo_pistol_ttt").t
 	ammpist.AmmoAmount = 60
 	ammpist.AmmoMax = 120
@@ -99,8 +101,6 @@ local function PostGamemodeLoaded()
 
 	incl("stungun")
 
-	incl("magneto")
-
 	incl("equip")
 
 	incl("movement")
@@ -112,6 +112,8 @@ local function PostGamemodeLoaded()
 	end
 
 	resource.AddSingleFile("materials/tttwr/tttwr_icons.png")
+
+	incl("magneto", false)
 
 	incl("decoy", false)
 

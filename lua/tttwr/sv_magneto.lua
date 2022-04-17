@@ -29,6 +29,8 @@ function SWEP:AllowPickup(target)
 	return AllowPickup(self, target)
 end
 
+local ttt_magneto_lagcomp = CreateConVar("ttt_magneto_lagcomp", 1, FCVAR_ARCHIVE)
+
 local Pickup = TTTWR.getfn(SWEP, "Pickup")
 
 function SWEP:Pickup()
@@ -57,12 +59,35 @@ function SWEP:Pickup()
 	if ent.MagnetoPickUpMass then
 		ent:GetPhysicsObject():SetMass(ent.MagnetoPickUpMass)
 	end
+
+	if ttt_magneto_lagcomp:GetBool() and not ent:IsLagCompensated() then
+		local tname = "tttwr_magneto_lagcomp " .. ent:EntIndex()
+
+		self.HoldingLagCompensated = tname
+
+		timer.Remove(tname)
+
+		ent:SetLagCompensated(true)
+	end
 end
 
 local Reset = TTTWR.getfn(SWEP, "Reset")
 
 function SWEP:Reset()
 	local ent = self.EntHolding
+
+	local tname = self.HoldingLagCompensated
+
+	if tname and IsValid(ent) then
+		timer.Create(tname, 10, 1, function()
+			if IsValid(ent) then
+				ent:SetLagCompensated(false)
+			end
+
+			timer.Remove(tname)
+		end)
+	end
+
 	local phys = IsValid(ent)
 		and ent:GetPhysicsObject()
 		or nil
