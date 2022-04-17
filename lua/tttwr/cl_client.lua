@@ -43,6 +43,7 @@ for k, v in pairs({
 
 	sipist = "Silenced USP",
 	tmp = "TMP Prototype",
+	penetrator = "The Penetrator",
 }) do
 	add("tttwr_" .. k .. "_name", v)
 end
@@ -61,6 +62,13 @@ Uses assault rifle ammo.
 Victims will not scream when killed.]])
 
 add("ump_desc", get("ump_desc"):gsub("SMG ammo", "pistol ammo"))
+
+add("penetrator_desc", [[
+Deagle that can shoot through walls.
+The perfect weapon for dealing with
+particularly cowardly traitors.
+
+Uses standard magnum ammo.]])
 
 add("newton_desc", get("newton_desc"):gsub("Push people", "Push and pull people", 1))
 add("newton_help_pri", "{primaryfire} to push")
@@ -92,7 +100,7 @@ local matdata = {
 }
 
 for y, v in ipairs({
-	{"fn57", "glock", "usp", "p228", "elites", "deagle", "python",},
+	{"fn57", "glock", "usp", "p228", "elites", "deagle", "python", "penetrator",},
 	{"mac10", "mp5", "ump", "p90", "tmp", "mp7",},
 	{"m16", "ak47", "famas", "galil", "aug", "sg", "sim16",},
 	{"scout", "awp", "g3", "krieg", "m3", "xm", "spas",},
