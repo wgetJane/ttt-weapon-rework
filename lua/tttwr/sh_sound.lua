@@ -18,7 +18,7 @@ local maxplayers_bits = TTTWR.maxplayers_bits
 
 if CLIENT then
 
-CreateConVar("ttt_volume_guns_self", 1, FCVAR_ARCHIVE, "Adjusts sound volume of your own gunshots", 0, 1)
+CreateConVar("ttt_volume_guns_self", 0.5, FCVAR_ARCHIVE, "Adjusts sound volume of your own gunshots", 0, 1)
 CreateConVar("ttt_volume_guns_other", 1, FCVAR_ARCHIVE, "Adjusts sound volume of other players' gunshots", 0, 1)
 
 local function volumecb(name)
