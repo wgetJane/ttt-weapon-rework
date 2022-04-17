@@ -78,6 +78,13 @@ this change means you'd actually have to hit your target with the pellets, inste
 
 -->
 
+#### sighting is visible in third-person
+you can now tell if another player is using their weapon's sights
+
+pistols will be held with both hands, rifles will be held up to the shoulder, etc
+
+this is particularly important for knowing if a sniper is scoped in or not
+
 #### tracers
 sniper rifles will always have a visible tracer for every shot instead of for every 4 shots\
 silenced weapons will no longer fire visible tracers
@@ -124,6 +131,9 @@ the main point of this change is to make it easier to use props to block bullets
 and the main point of that point is to make it easier to cross sniper sightlines when you know where the sniper is shooting from
 
 clients can choose to disable this by setting the cvar `ttt_magnetotrans` from 1 to 0
+
+also, props carried by the magneto-stick are now lag-compensated\
+set the cvar `ttt_magneto_lagcomp` from 1 to 0 if you want to disable this for some reason
 
 #### huge-249
 \- damage increased from 7 to 13\
@@ -240,6 +250,11 @@ since it was silly that the push force can be entirely cancelled out by simply w
 
 #### health station
 detectives can now carry health stations with the magneto-stick
+
+the cvar `ttt_magneto_hpstation` controls who can carry health stations\
+0 means that nobody can carry them\
+1 means that only detectives can carry them (default)\
+2 means that everybody can carry them
 
 ## other changes
 
