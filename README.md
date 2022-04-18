@@ -645,5 +645,9 @@ so this might interfere with mods that use the EntityTakeDamage hook incorrectly
 the EntityTakeDamage hook is for modifying or blocking damage events,\
 while the [PostEntityTakeDamage](https://wiki.facepunch.com/gmod/GM:PostEntityTakeDamage) hook is for when damage events are successful
 
-probably not compatible with [ttt2](https://github.com/TTT-2/TTT2/)\
-tttwr *can* be made fully-compatible with ttt2, but i don't see why i should work on that right now, since i'm making this mod for a non-ttt2 server
+tttwr is compatible with [ttt2](https://github.com/TTT-2/TTT2/)\
+however, a few features will be unavailable:\
+\- decoy buff\
+\- detectives receiving credit rewards only when identifying traitor corpses\
+\- priority targets for traitors\
+\- buycost cvars for traitor shop (ttt2 already has a shop editor)

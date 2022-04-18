@@ -2,12 +2,12 @@ local SWEP = {}
 
 SWEP.HoldType = "shotgun"
 
+SWEP.AmmoEnt = "item_box_buckshot_ttt"
+
 SWEP.Primary = {
 	ClipMax = 24,
 	Ammo = "Buckshot",
 }
-
-SWEP.AmmoEnt = "item_box_buckshot_ttt"
 
 SWEP.NoSetInsertingOnReload = true
 
@@ -39,6 +39,8 @@ function TTTWR:MakeShotgun(class, model, ...)
 	TTTWR.MakeWeapon(self, class, ...)
 
 	TTTWR.CopySWEP(self, SWEP)
+
+	self.spawnType = WEAPON_TYPE_SHOTGUN
 
 	self.ViewModel = "models/weapons/cstrike/c_shot_" .. model .. ".mdl"
 	self.WorldModel = "models/weapons/w_shot_" .. model .. ".mdl"

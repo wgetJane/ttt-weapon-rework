@@ -57,6 +57,10 @@ hook.Add("PlayerPostThink", "tttwr_PlayerPostThink", function(ply)
 	ply:SetCurrentViewOffset(offset)
 end)
 
+if TTT2 then
+	return
+end
+
 local min = math.min
 
 function GAMEMODE:Move(ply, mv)

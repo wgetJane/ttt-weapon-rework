@@ -2,6 +2,10 @@ hook.Add("OnDamagedByExplosion", "tttwr_OnDamagedByExplosion", function()
 	return true
 end)
 
+hook.Add("PreCleanupMap", "tttwr_PreCleanupMap", function()
+	GAMEMODE.LastCleanupTime = CurTime()
+end)
+
 local wepfromdmg = util.WeaponFromDamage
 
 hook.Add("EntityTakeDamage", "tttwr_EntityTakeDamage", function(victim, dmginfo)

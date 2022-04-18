@@ -66,6 +66,13 @@ for k, v in pairs(totttwr) do
 	function SWEP:Initialize()
 		self.BaseClass.Initialize(self)
 
+		if TTT2
+			and entspawnscript.ShouldUseCustomSpawns()
+			and GAMEMODE.LastCleanupTime == CurTime()
+		then
+			return
+		end
+
 		if (v.checkactive and GetRoundState() == ROUND_ACTIVE)
 			or not IsValid(self)
 		then

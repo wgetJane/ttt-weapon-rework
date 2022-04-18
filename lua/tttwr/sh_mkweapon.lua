@@ -224,7 +224,8 @@ function SWEP:PrimaryFire(worldsnd)
 	self:SetNextSecondaryFire(
 		curatt + (
 			sights and delay > 0.1 and 0.1 or delay
-		)
+		),
+		TTT2
 	)
 
 	self:SetNextPrimaryFire(curatt + delay)

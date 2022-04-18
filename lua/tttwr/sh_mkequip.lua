@@ -5,6 +5,8 @@ function TTTWR:MakeEquipment(canbuy, cost)
 
 	self.Kind = WEAPON_EQUIP
 
+	self.spawnType = WEAPON_TYPE_SPECIAL
+
 	self.WasBought = WasBought
 
 	if canbuy then

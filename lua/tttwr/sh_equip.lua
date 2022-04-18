@@ -1,3 +1,7 @@
+if TTT2 then
+	return
+end
+
 local cvs = {
 	[EQUIP_ARMOR] = CreateConVar("ttt_buycost_armor", "2", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED),
 	[EQUIP_RADAR] = CreateConVar("ttt_buycost_radar", "1", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED),

@@ -101,6 +101,14 @@ function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 		return
 	end
 
+	if TTT2
+		and ply:IsPlayer()
+		and dmginfo:GetAttacker():IsPlayer()
+		and GetRoundState() == 2
+	then
+		dmginfo:ScaleDamage(0)
+	end
+
 	local isbul = dmginfo:IsBulletDamage()
 
 	local wep = util.WeaponFromDamage(dmginfo)
@@ -119,7 +127,7 @@ function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 		)
 	end
 
-	if isbul and ply:HasEquipmentItem(EQUIP_ARMOR) then
+	if isbul and not TTT2 and ply:HasEquipmentItem(EQUIP_ARMOR) then
 		local scale = ply.ArmorScale or 0.7
 
 		if wep and wep.ArmorPenetration then

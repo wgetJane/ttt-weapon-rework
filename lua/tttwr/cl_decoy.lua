@@ -1,3 +1,7 @@
+if TTT2 then
+	return
+end
+
 local SWEP = weapons.GetStored("weapon_ttt_decoy")
 
 SWEP.Primary.Damage = -1

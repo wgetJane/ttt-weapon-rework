@@ -39,6 +39,8 @@ function TTTWR:MakeSniper(class, model, sound, dmg, ...)
 
 	TTTWR.CopySWEP(self, SWEP)
 
+	self.spawnType = WEAPON_TYPE_SNIPER
+
 	self.BulletForce = dmg * 0.5
 
 	self.ViewModel = "models/weapons/cstrike/c_snip_" .. model .. ".mdl"

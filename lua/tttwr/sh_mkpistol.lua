@@ -36,6 +36,8 @@ function TTTWR:MakePistol(class, model, ...)
 
 	self.Kind = WEAPON_PISTOL
 
+	self.spawnType = WEAPON_TYPE_PISTOL
+
 	self.ViewModel = "models/weapons/cstrike/c_pist_" .. model .. ".mdl"
 	self.WorldModel = "models/weapons/w_pist_" .. model .. ".mdl"
 end

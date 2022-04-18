@@ -1,3 +1,7 @@
+if TTT2 then
+	return
+end
+
 local SWEP = weapons.GetStored("weapon_ttt_decoy")
 local ENT = scripted_ents.GetStored("ttt_decoy").t
 

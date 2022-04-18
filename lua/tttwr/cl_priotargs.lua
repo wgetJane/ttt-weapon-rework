@@ -1,3 +1,7 @@
+if TTT2 then
+	return
+end
+
 local ttt_prioritytargets = CreateConVar("ttt_prioritytargets", "2", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED)
 
 local yellow = Color(255, 255, 0)

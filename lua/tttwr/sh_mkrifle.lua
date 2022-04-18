@@ -31,6 +31,8 @@ function TTTWR:MakeRifle(class, model, ...)
 
 	TTTWR.CopySWEP(self, SWEP)
 
+	self.spawnType = WEAPON_TYPE_HEAVY
+
 	self.ViewModel = "models/weapons/cstrike/c_rif_" .. model .. ".mdl"
 	self.WorldModel = "models/weapons/w_rif_" .. model .. ".mdl"
 end

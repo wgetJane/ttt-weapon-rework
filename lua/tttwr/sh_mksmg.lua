@@ -27,6 +27,8 @@ function TTTWR:MakeSMG(class, model, ...)
 
 	TTTWR.CopySWEP(self, SWEP)
 
+	self.spawnType = WEAPON_TYPE_HEAVY
+
 	self.ViewModel = "models/weapons/cstrike/c_smg_" .. model .. ".mdl"
 	self.WorldModel = "models/weapons/w_smg_" .. model .. ".mdl"
 end

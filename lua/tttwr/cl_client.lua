@@ -1,8 +1,10 @@
+local en = TTT2 and "en" or "english"
+
 local function add(k, v)
-	return LANG.AddToLanguage("english", k, v)
+	return LANG.AddToLanguage(en, k, v)
 end
 local function get(k)
-	return LANG.GetTranslationFromLanguage(k, "english")
+	return LANG.GetTranslationFromLanguage(k, en)
 end
 
 for k, v in pairs({
@@ -112,4 +114,15 @@ for y, v in ipairs({
 
 		CreateMaterial("tttwr_icons/" .. v, "UnlitGeneric", matdata)
 	end
+end
+
+for k, v in pairs({
+	weapon_zm_pistol = "Pistol (old)",
+	weapon_ttt_glock = "Glock (old)",
+	weapon_ttt_m16 = "M16 (old)",
+	weapon_zm_mac10 = "MAC10 (old)",
+	weapon_zm_rifle = "Rifle (old)",
+	weapon_zm_shotgun = "Shotgun (old)",
+}) do
+	weapons.GetStored(k).PrintName = v
 end

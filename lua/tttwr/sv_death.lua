@@ -1,67 +1,4 @@
-local ttt_prioritytargets = CreateConVar("ttt_prioritytargets", "2", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED)
-
-util.AddNetworkString("tttwr_priotargs")
-
-local maxplayers_bits = TTTWR.maxplayers_bits
-
-hook.Add("TTTBeginRound", "tttwr_TTTBeginRound", function()
-	local targcount = ttt_prioritytargets:GetInt()
-
-	if targcount < 1 then
-		return
-	end
-
-	local players = player.GetAll()
-
-	local innocents, traitors = {}, {}
-
-	for i = 1, #players do
-		local ply = players[i]
-
-		ply.PriorityTargets = nil
-
-		if ply:IsTerror() and ply:Alive() then
-			if ply:GetTraitor() then
-				traitors[#traitors + 1] = ply
-			elseif not ply:GetDetective() then
-				innocents[#innocents + 1] = ply
-			end
-		end
-	end
-
-	if #innocents == 0 then
-		return
-	end
-
-	local n = 0
-
-	for i = 1, #traitors do
-		local ply = traitors[i]
-
-		local targs = setmetatable({}, TTTWR.weakkeys)
-
-		net.Start("tttwr_priotargs")
-
-		for _ = 1, targcount do
-			if n < 1 then
-				table.Shuffle(innocents)
-
-				n = #innocents
-			end
-
-			local targ = innocents[n]
-			n = n - 1
-
-			targs[targ:AccountID()] = true
-
-			net.WriteUInt(targ:EntIndex() - 1, maxplayers_bits)
-		end
-
-		ply.PriorityTargets = targs
-
-		net.Send(ply)
-	end
-end)
+local ttt_prioritytargets
 
 local ttt_credits_award_pct = GetConVar("ttt_credits_award_pct")
 local ttt_credits_award_size = GetConVar("ttt_credits_award_size")
@@ -72,32 +9,6 @@ local ttt_det_credits_traitordead = GetConVar("ttt_det_credits_traitordead")
 
 local ttt_dyingshot = GetConVar("ttt_dyingshot")
 local ttt_dyingshot_enabled = CreateConVar("ttt_dyingshot_enabled", "0", FCVAR_ARCHIVE + FCVAR_NOTIFY)
-
-hook.Add("TTTBodyFound", "tttwr_TTTBodyFound", function(ply, deadply, rag)
-	if not (IsValid(rag) and rag.was_role == ROLE_TRAITOR) then
-		return
-	end
-
-	local creds = ttt_det_credits_traitordead:GetInt()
-
-	if creds <= 0 then
-		return
-	end
-
-	local params = {num = creds}
-
-	local players = player.GetAll()
-
-	for i = 1, #players do
-		local ply = players[i]
-
-		if ply:IsActiveDetective() then
-			ply:AddCredits(creds)
-
-			LANG.Msg(ply, "credit_det_all", params)
-		end
-	end
-end)
 
 TTTWR.deathsounds = {
 --[[ way too quiet
@@ -144,7 +55,11 @@ function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 	end
 
 	if GetRoundState() == ROUND_ACTIVE then
-		SCORE:HandleKill(ply, attacker, dmginfo)
+		if TTT2 then
+			events.Trigger(EVENT_KILL, ply, attacker, dmginfo)
+		else
+			SCORE:HandleKill(ply, attacker, dmginfo)
+		end
 
 		if IsValid(attacker) and attacker:IsPlayer() then
 			attacker:RecordKill(ply)
@@ -305,7 +220,8 @@ function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 		end
 	end
 
-	if ttt_prioritytargets:GetInt() > 0 then
+	if TTT2 then
+	elseif ttt_prioritytargets:GetInt() > 0 then
 		CheckPriorityKill(ply, attacker)
 	else
 		CheckCreditAward(ply, attacker)
@@ -337,6 +253,12 @@ function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 		sound.Play(deathsounds[i], ply:GetShootPos(), 90, 100)
 	end
 
+	if TTT2 then
+		credits.HandleKillCreditsAward(ply, attacker)
+
+		return
+	end
+
 	if IsValid(attacker) and attacker:IsPlayer() then
 		local reward =
 			attacker:IsActiveTraitor()
@@ -361,6 +283,101 @@ function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 		end
 	end
 end
+
+if TTT2 then
+	return
+end
+
+ttt_prioritytargets = CreateConVar("ttt_prioritytargets", "2", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED)
+
+util.AddNetworkString("tttwr_priotargs")
+
+local maxplayers_bits = TTTWR.maxplayers_bits
+
+hook.Add("TTTBeginRound", "tttwr_TTTBeginRound", function()
+	local targcount = ttt_prioritytargets:GetInt()
+
+	if targcount < 1 then
+		return
+	end
+
+	local players = player.GetAll()
+
+	local innocents, traitors = {}, {}
+
+	for i = 1, #players do
+		local ply = players[i]
+
+		ply.PriorityTargets = nil
+
+		if ply:IsTerror() and ply:Alive() then
+			if ply:GetTraitor() then
+				traitors[#traitors + 1] = ply
+			elseif not ply:GetDetective() then
+				innocents[#innocents + 1] = ply
+			end
+		end
+	end
+
+	if #innocents == 0 then
+		return
+	end
+
+	local n = 0
+
+	for i = 1, #traitors do
+		local ply = traitors[i]
+
+		local targs = setmetatable({}, TTTWR.weakkeys)
+
+		net.Start("tttwr_priotargs")
+
+		for _ = 1, targcount do
+			if n < 1 then
+				table.Shuffle(innocents)
+
+				n = #innocents
+			end
+
+			local targ = innocents[n]
+			n = n - 1
+
+			targs[targ:AccountID()] = true
+
+			net.WriteUInt(targ:EntIndex() - 1, maxplayers_bits)
+		end
+
+		ply.PriorityTargets = targs
+
+		net.Send(ply)
+	end
+end)
+
+hook.Add("TTTBodyFound", "tttwr_TTTBodyFound", function(ply, deadply, rag)
+	if not (IsValid(rag) and rag.was_role == ROLE_TRAITOR) then
+		return
+	end
+
+	local creds = ttt_det_credits_traitordead:GetInt()
+
+	if creds <= 0 then
+		return
+	end
+
+	local params = {num = creds}
+
+	local players = player.GetAll()
+
+	for i = 1, #players do
+		local ply = players[i]
+
+		if ply:IsActiveDetective() then
+			ply:AddCredits(creds)
+
+			LANG.Msg(ply, "credit_det_all", params)
+		end
+	end
+end)
 
 function CheckPriorityKill(victim, attacker)
 	if GetRoundState() ~= ROUND_ACTIVE
