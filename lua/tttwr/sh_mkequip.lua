@@ -15,6 +15,10 @@ function TTTWR:MakeEquipment(canbuy, cost)
 
 	if cost then
 		self.BuyCost = cost
+
+		if TTT2 then
+			self.credits = cost
+		end
 	end
 
 	if SERVER then
