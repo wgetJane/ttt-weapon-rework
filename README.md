@@ -531,12 +531,12 @@ G3\
 \- kills an unarmoured player in 2 headshots
 
 Krieg\
-\- base dmg: 33, headshot dmg: 66, limb dmg: 16.5\
+\- base dmg: 40, headshot dmg: 50, limb dmg: 30\
 \- clip size: 20\
-\- fire rate: 166 rpm\
+\- fire rate: 133 rpm\
 \- deploy time: 1 sec\
 \- reload time: 3.5 secs\
-\- kills an unarmoured player in 2 headshots
+\- kills an unarmoured player in 1 bodyshot + 2 limbshots
 
 #### shotguns
 great burst damage at close range, but becomes extremely weak outside of close range
