@@ -11,7 +11,6 @@ local totttwr = {
 		"weapon_tttwr_glock",
 		"weapon_tttwr_usp",
 		"weapon_tttwr_p228",
-		"weapon_tttwr_elites",
 	},
 	weapon_ttt_m16 = {--weapon_zm_mac10 = {
 		ammo = "item_ammo_pistol_ttt",

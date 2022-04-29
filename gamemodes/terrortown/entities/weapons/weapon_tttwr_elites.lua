@@ -2,27 +2,45 @@ TTTWR.MakePistol(SWEP,
 	"elites",
 	"elite",
 	"weapons/elite/elite-1.wav",
-	16,
+	15,
 	60 / 360,
 	0.03,
-	2.4,
+	2,
 	30
 )
 
 
+TTTWR.MakeEquipment(SWEP,
+	CreateConVar(
+		"ttt_buyable_elites", "0", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED, "server needs a map change to apply new value"
+	):GetBool() and {ROLE_TRAITOR} or nil
+)
+
+SWEP.FakeDefaultEquipment = true
+
 SWEP.HoldType = "duel"
 
-SWEP.HeadshotMultiplier = 1.375
+SWEP.Secondary.Automatic = true
+
+SWEP.HeadshotMultiplier = 1
 
 SWEP.ReloadTime = 4
 SWEP.DeployTime = 1
 SWEP.DeployAnimSpeed = 1.15
+
+SWEP.BulletTracer = 1
 
 SWEP.WorldModel_Dropped = "models/weapons/w_pist_elite_dropped.mdl"
 SWEP.WorldModel_Deployed = SWEP.WorldModel
 
 SWEP.WorldModel = SWEP.WorldModel_Dropped
 
+if CLIENT then
+	SWEP.EquipMenuData = {
+		type = "item_weapon",
+		desc = "elites_desc",
+	}
+end
 
 function SWEP:PreSetupDataTables()
 	-- hacky workaround: ghost pistol entity for 3rd-person muzzleflash effect
@@ -30,6 +48,112 @@ function SWEP:PreSetupDataTables()
 	--  because the effect doesn't work on clientside entities
 	self:NetworkVar("Entity", 0, "GhostPistol")
 	self:NetworkVar("Bool", 1, "FiringLeft")
+end
+
+function SWEP:PrimaryAttack()
+	self.DisableEliteAutoAim = nil
+
+	return self:PrimaryFire()
+end
+
+function SWEP:SecondaryAttack()
+	if CurTime() < self:GetNextPrimaryFire() then
+		return
+	end
+
+	self.DisableEliteAutoAim = true
+
+	return self:PrimaryFire()
+end
+
+local tracedata = {
+	mask = MASK_SHOT,
+	output = {},
+}
+
+function SWEP:PreFireBullet(owner, bul)
+	if self.DisableEliteAutoAim then
+		return
+	end
+
+	local players = player.GetAll()
+
+	local td = tracedata
+
+	td.start = bul.Src
+	td.filter = owner
+
+	local lastvic = CurTime() - self:GetLastPrimaryFire() < 0.4
+		and self.LastAutoAimVictim
+		and Entity(self.LastAutoAimVictim)
+	local lastvic_pos
+
+	local nearest_dp, nearest_ply, nearest_pos = 0.92387953251129 -- 45 degree cone
+
+	for i = 1, #players do
+		local ply = players[i]
+
+		if ply == owner
+			or not ply:IsTerror()
+			or owner:IsActiveTraitor() and ply:GetTraitor()
+			or owner:IsActiveDetective() and ply:GetDetective()
+			or ply:IsDormant()
+			or SERVER and not ply:TestPVS(ply:GetPos())
+		then
+			goto cont
+		end
+
+		local bone = ply:LookupBone("ValveBiped.Bip01_Spine2")
+
+		local pos = bone
+			and ply:GetBoneMatrix(bone):GetTranslation()
+			or ply:WorldSpaceCenter()
+
+		local vec = pos - bul.Src
+		vec:Normalize()
+
+		local dp = bul.Dir:Dot(vec)
+
+		if dp < nearest_dp and ply ~= lastvic then
+			goto cont
+		end
+
+		td.endpos = pos
+
+		if util.TraceLine(td).Entity ~= ply then
+			goto cont
+		end
+
+		if ply == lastvic then
+			lastvic_pos = pos
+
+			goto cont
+		end
+
+		nearest_ply = ply
+		nearest_pos = pos
+		nearest_dp = dp
+
+		::cont::
+	end
+
+	if lastvic_pos and not nearest_pos then
+		nearest_ply = lastvic
+		nearest_pos = lastvic_pos
+	end
+
+	if nearest_pos then
+		if IsValid(lastvic) and nearest_ply ~= lastvic then
+			bul.Damage = bul.Damage * 2
+		end
+
+		self.LastAutoAimVictim = nearest_ply:EntIndex()
+
+		nearest_pos:Sub(bul.Src)
+		nearest_pos:Normalize()
+
+		bul.Dir = nearest_pos
+	end
 end
 
 function SWEP:OnPreShoot()
@@ -88,6 +212,12 @@ if SERVER then
 	end
 
 	return
+end
+
+function SWEP:Initialize()
+	self:AddHUDHelp("elites_help_pri", "elites_help_sec", true)
+
+	return self.BaseClass.Initialize(self)
 end
 
 function SWEP:DrawWorldModel(draw)
@@ -196,4 +326,24 @@ function SWEP:FireAnimationEvent(pos, ang, event, options)
 
 	::ret::
 	return self.BaseClass.FireAnimationEvent(self, pos, ang, event, options)
+end
+
+function SWEP:DrawHUD()
+	local owner = self:GetOwner()
+
+	if not IsValid(owner) then
+		return
+	end
+
+	local x, y = ScrW() * 0.5, ScrH() * 0.5
+
+	local r, g = 0, 255
+
+	if owner:GetTraitor() then
+		r, g = g, r
+	end
+
+	surface.DrawCircle(x, y, 45 / owner:GetFOV() * y, r, g, 0, 128)
+
+	return self.BaseClass.DrawHUD(self)
 end

@@ -12,7 +12,6 @@ for k, v in pairs({
 	glock = "Glock",
 	usp = "USP",
 	p228 = "P228",
-	elites = "Dual Elites",
 
 	mac10 = "MAC-10",
 	mp5 = "MP5",
@@ -41,8 +40,8 @@ for k, v in pairs({
 
 	huge = "H.U.G.E-249",
 
+	elites = "Dual Elites",
 	sim16 = "Silenced M16",
-
 	sipist = "Silenced USP",
 	tmp = "TMP Prototype",
 	penetrator = "The Penetrator",
@@ -55,6 +54,15 @@ add("ammo_smg1", "Rifle ammo")
 add("ammo_357", "Sniper ammo")
 add("ammo_alyxgun", "Magnum ammo")
 add("ammo_airboatgun", "LMG ammo")
+
+add("elites_desc", [[
+Has very generous auto-aim. Deals
+double damage when attacking two
+targets simultaneously.
+
+Uses standard pistol ammo.]])
+add("elites_help_pri", "{primaryfire} to shoot with auto-aim")
+add("elites_help_sec", "{secondaryfire} to shoot with manual aim")
 
 add("sim16_desc", [[
 M16 with a suppressor and slightly
