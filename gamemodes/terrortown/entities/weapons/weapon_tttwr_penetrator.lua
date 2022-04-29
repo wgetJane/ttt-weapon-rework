@@ -13,8 +13,9 @@ TTTWR.MakePistol(SWEP,
 
 
 TTTWR.MakeEquipment(SWEP,
-	CreateConVar("ttt_buyable_penetrator", "0", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED)
-	:GetBool() and {ROLE_DETECTIVE} or nil
+	CreateConVar(
+		"ttt_buyable_penetrator", "0", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED, "server needs a map change to apply new value"
+	):GetBool() and {ROLE_DETECTIVE} or nil
 )
 
 SWEP.FakeDefaultEquipment = true

@@ -12,7 +12,12 @@ TTTWR.MakeRifle(SWEP,
 )
 
 
-TTTWR.MakeEquipment(SWEP, {ROLE_TRAITOR}, 2)
+TTTWR.MakeEquipment(SWEP,
+	CreateConVar(
+		"ttt_buyable_sim16", "1", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED, "server needs a map change to apply new value"
+	):GetBool() and {ROLE_TRAITOR} or nil,
+	2
+)
 
 SWEP.FakeDefaultEquipment = true
 
