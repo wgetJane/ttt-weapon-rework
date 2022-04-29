@@ -340,20 +340,21 @@ these are supposed to be sidearms that are weaker than primary weapons, but can 
 their damage drops off from 100% at 64 units to 50% at 1024 units
 
 Five-Seven\
-\- base dmg: 30, headshot dmg: 50, limb dmg: 20\
+\- base dmg: 25, headshot dmg: 35, limb dmg: 16.67\
 \- clip size: 20\
-\- fire rate: 180 rpm\
+\- fire rate: 240 rpm\
 \- deploy time: 0.75 secs\
 \- reload time: 2.75 secs\
-\- kills an unarmoured player in two headshots at point-blank range
+\- kills an unarmoured player in three headshots at close range
 
 Glock\
-\- base dmg: 24, headshot dmg: 33.6, limb dmg: 16\
+\- base dmg: 20, headshot dmg: 27, limb dmg: 13.33\
 \- clip size: 20\
-\- fire rate: 250 rpm\
+\- fire rate: 300 rpm\
 \- deploy time: 0.75 secs\
 \- reload time: 2.4 secs\
-\- kills an unarmoured player in three headshots at point-blank range
+\- lower recoil\
+\- kills an unarmoured player in four headshots at close range
 
 USP\
 \- base dmg: 32, headshot dmg: 53.33, limb dmg: 21.33\
@@ -372,14 +373,6 @@ USP\
 \- reload time: 2.5 secs\
 \- higher recoil, slightly less accurate\
 \- kills an unarmoured player in two headshots at close range
-
-Dual Elites\
-\- base dmg: 16, headshot dmg: 24, limb dmg: 10.67\
-\- clip size: 30\
-\- fire rate: 360 rpm\
-\- deploy time: 1 secs\
-\- reload time: 4 secs\
-\- higher recoil, less accurate
 
 #### smgs
 these weapons have fast fire rates and low recoil but poor accuracy, making them suited for close-range
@@ -605,6 +598,48 @@ the revolver has the same damage and fire rate as the deagle, but reloads each r
 
 it takes 1.5 seconds to reload the first round, 0.6 seconds to reload each following round, and 0.4 seconds to finish reloading\
 this means reloading 6 rounds takes 4.9 seconds (1.5 + 0.6 * 5 + 0.4 = 4.9)
+
+#### buy menu weapons
+
+the Silenced M16 is a traitor weapon that costs 2 credits\
+it is basically an assault rifle alternative to the silenced pistol
+
+enabled by default, set the cvar `ttt_buyable_sim16` from 1 to 0 to disable
+
+Silenced M16\
+\- base dmg: 16, headshot dmg: 28.33, limb dmg: 8.5\
+\- clip size: 30\
+\- fire rate: 400 rpm\
+\- deploy time: 1 sec\
+\- reload time: 2.75 secs\
+\- better recoil and accuracy
+
+the Dual Elites is a traitor weapon that costs 1 credit\
+it has very generous auto-aim (45 degree cone) and can attack two players simultaneously\
+damage output is doubled when attacking two targets
+
+disabled by default, set the cvar `ttt_buyable_elites` from 0 to 1 to enable
+
+Dual Elites\
+\- base dmg: 15, headshot dmg: 15, limb dmg: 10\
+\- clip size: 30\
+\- fire rate: 360 rpm\
+\- deploy time: 1 secs\
+\- reload time: 4 secs
+
+the Penetrator is a detective weapon that costs 1 credit\
+it's a version of the deagle that can shoot through walls\
+this is meant to keep traitors from just camping inside traitor rooms (an annoying feature in many maps)
+
+disabled by default, set the cvar `ttt_buyable_penetrator` from 0 to 1 to enable
+
+The Penetrator\
+\- base dmg: 35, headshot dmg: 85, limb dmg: 23.33\
+\- clip size: 8\
+\- fire rate: 150 rpm\
+\- deploy time: 0.75 sec\
+\- reload time: 2.5 secs\
+\- kills an unarmoured player in 1 headshot + 1 bodyshot at close range
 
 ## bug fixes
 
