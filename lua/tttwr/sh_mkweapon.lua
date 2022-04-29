@@ -224,11 +224,10 @@ function SWEP:PrimaryFire(worldsnd)
 	self:SetNextSecondaryFire(
 		curatt + (
 			sights and delay > 0.1 and 0.1 or delay
-		),
-		TTT2
+		)
 	)
 
-	self:SetNextPrimaryFire(curatt + delay)
+	self:SetNextPrimaryFire(curatt + delay, TTT2)
 
 	if owner then
 		-- prevent players from skipping slow attack delays by switching to a new weapon
