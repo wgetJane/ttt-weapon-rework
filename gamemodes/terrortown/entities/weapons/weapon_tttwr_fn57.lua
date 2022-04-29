@@ -2,8 +2,8 @@ TTTWR.MakePistol(SWEP,
 	"fn57",
 	"fiveseven",
 	"weapons/fiveseven/fiveseven-1.wav",
-	30,
-	60 / 180,
+	25,
+	60 / 240,
 	0.02,
 	1.5,
 	20,
@@ -11,6 +11,8 @@ TTTWR.MakePistol(SWEP,
 	0, 0, 0
 )
 
+
+SWEP.HeadshotMultiplier = 1.4
 
 SWEP.ReloadTime = 2.75
 
