@@ -265,20 +265,6 @@ this makes it significantly easier to transfer ammo to another weapon
 
 a new console command `ttt_dropclip` is added for when you do want to drop ammo from your clip
 
-#### crouch view offset
-raised to 36 units from 28 units
-
-the default crouch view offset is too low, since it's positioned at around the player's waist\
-you'd often be completely unaware that your head and upper torso are sticking out from cover
-
-i've considered also raising the player's bounding box height while crouching to better fit the player's model,\
-but that might cause issues in places in maps with very low ceilings like vents
-
-mappers shouldn't be making places with ridiculously low ceilings anyway:\
-https://cdn.discordapp.com/attachments/538431794786336798/826401713295458304/unknown.png \
-https://cdn.discordapp.com/attachments/538431794786336798/826398116063215656/unknown.png \
-https://cdn.discordapp.com/attachments/538431794786336798/826399524447584286/unknown.png
-
 #### detective credit rewards
 detectives will only receive their credit reward for traitor deaths when the traitor's body is identified
 
@@ -323,6 +309,25 @@ you can enable it by setting the cvar `ttt_dyingshot_enabled` to 1
 #### stomp damage
 the cvar `ttt_stomp_mult` adjusts the damage received by the victim (default value is 1.0)\
 the cvar `ttt_stomp_cushion` adjusts the damage received by the attacker (default value is 0.33)
+
+#### crouch view offset
+raised to 36 units from 28 units
+
+the default crouch view offset is too low, since it's positioned at around the player's waist\
+you'd often be completely unaware that your head and upper torso are sticking out from cover
+
+i've considered also raising the player's bounding box height while crouching to better fit the player's model,\
+but that might cause issues in places in maps with very low ceilings like vents
+
+mappers shouldn't be making places with ridiculously low ceilings anyway:\
+https://cdn.discordapp.com/attachments/538431794786336798/826401713295458304/unknown.png \
+https://cdn.discordapp.com/attachments/538431794786336798/826398116063215656/unknown.png \
+https://cdn.discordapp.com/attachments/538431794786336798/826399524447584286/unknown.png
+
+#### tweaked jump animations
+player jump animations have been made less erratic so it's easier to hit players that are jumping around
+
+this can be disabled by setting the cvar `ttt_jumpanimtweak` from 1 to 0
 
 ## new weapons
 
@@ -631,7 +636,7 @@ the Penetrator is a detective weapon that costs 1 credit\
 it's a version of the deagle that can shoot through walls\
 this is meant to keep traitors from just camping inside traitor rooms (an annoying feature in many maps)
 
-disabled by default, set the cvar `ttt_buyable_penetrator` from 0 to 1 to enable
+experimental, disabled by default, set the cvar `ttt_buyable_penetrator` from 0 to 1 to enable
 
 The Penetrator\
 \- base dmg: 35, headshot dmg: 85, limb dmg: 23.33\
