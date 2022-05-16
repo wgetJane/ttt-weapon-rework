@@ -233,8 +233,8 @@ function GAMEMODE:DoPlayerDeath(ply, attacker, dmginfo)
 
 	if not (
 		ply.was_headshot
-		or dmginfo:IsDamageType(DMG_SLASH)
 		or (IsValid(killwep) and killwep.IsSilent)
+		or (dmginfo:IsDamageType(DMG_SLASH) and IsValid(attacker) and attacker:IsPlayer())
 	) then
 		local deathsounds = TTTWR.deathsounds
 
