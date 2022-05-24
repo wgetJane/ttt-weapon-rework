@@ -111,6 +111,34 @@ local function ignite(ent, duration, radius, attacker, infl)
 	end
 end
 
+local head
+
+local function burncorpse(ent)
+	if not head then
+		timer.Start("tttwr_flaregun")
+	end
+
+	local burntime = 6
+
+--[[
+	local burnprog = ent._tttwr_flaregun_burnprogress
+
+	if burnprog then
+		burntime = burntime - burntime * burnprog
+	end
+--]]
+
+	local curtime = CurTime()
+
+	head = {
+		nxt = head,
+		ent = ent,
+		death = curtime + burntime,
+		--birth = curtime,
+		--lastprog = burnprog,
+	}
+end
+
 local tracedata = {
 	filter = {NULL, NULL},
 	mask = MASK_SHOT,
@@ -120,10 +148,6 @@ local tracedata = {
 }
 
 local min, remap = math.min, TTTWR.RemapClamp
-
-local physobjs = {}
-
-local head
 
 function bulletCallback(attacker, trace, dmginfo)
 	local victim = trace.Entity
@@ -186,59 +210,9 @@ function bulletCallback(attacker, trace, dmginfo)
 
 	ignite(victim, victim:IsPlayer() and 6 or 10, 100, attacker, infl)
 
-	if victim:GetClass() ~= "prop_ragdoll" then
-		return
+	if victim:GetClass() == "prop_ragdoll" then
+		return burncorpse(victim)
 	end
-
-	net.Start("TTT_FlareScorch")
-	net.WriteEntity(victim)
-
-	local physobjs = physobjs
-	local n = 0
-
-	for i = 0, victim:GetPhysicsObjectCount() - 1 do
-		local phys = victim:GetPhysicsObjectNum(i)
-
-		if IsValid(phys) then
-			n = n + 1
-
-			physobjs[n] = phys:GetPos()
-		end
-	end
-
-	net.WriteUInt(n, 8)
-
-	for i = n, 1, -1 do
-		net.WriteVector(physobjs[i])
-
-		physobjs[i] = nil
-	end
-
-	net.Broadcast()
-
-	if not head then
-		timer.Start("tttwr_flaregun")
-	end
-
-	local burntime = 6
-
---[[
-	local burnprog = victim._tttwr_flaregun_burnprogress
-
-	if burnprog then
-		burntime = burntime - burntime * burnprog
-	end
---]]
-
-	local curtime = CurTime()
-
-	head = {
-		nxt = head,
-		ent = victim,
-		death = curtime + burntime,
-		--birth = curtime,
-		--lastprog = burnprog,
-	}
 end
 
 --local ragcol = Color(0, 0, 0)
@@ -264,6 +238,32 @@ timer.Create("tttwr_flaregun", 0.1, 0, function()
 	elseif ent:WaterLevel() > 0 then
 		ent:Extinguish()
 	elseif curtime >= rag.death then
+		net.Start("TTT_FlareScorch")
+		net.WriteEntity(ent)
+
+		local n, physobjs = 0, {}
+
+		for i = 0, ent:GetPhysicsObjectCount() - 1 do
+			local phys = ent:GetPhysicsObjectNum(i)
+
+			if IsValid(phys) then
+				n = n + 1
+
+				physobjs[n] = phys:GetPos()
+			end
+		end
+
+		net.WriteUInt(n, 8)
+
+		for i = n, 1, -1 do
+			net.WriteVector(physobjs[i])
+
+			physobjs[i] = nil
+		end
+
+		net.Broadcast()
+
+
 		ent:SetNotSolid(true)
 		ent:Remove()
 	else
@@ -307,3 +307,15 @@ timer.Create("tttwr_flaregun", 0.1, 0, function()
 	end
 end)
 timer.Stop("tttwr_flaregun")
+
+hook.Add("TTTOnCorpseCreated", "tttwr_flaregun_TTTOnCorpseCreated", function(rag, ply)
+	if GetRoundState() == ROUND_ACTIVE
+		and IsValid(rag)
+		and IsValid(ply)
+		and ply:IsOnFire()
+		and ply.ignite_info
+	then
+		ignite(rag, 10, 100, ply.ignite_info.att, ply.ignite_info.infl)
+		burncorpse(rag)
+	end
+end)

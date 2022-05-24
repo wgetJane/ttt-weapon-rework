@@ -203,12 +203,16 @@ also, i've improved how the game looks for where to stick the knife in a ragdoll
 so you're gonna see a lot less floating knives in the air
 
 #### flare gun
-\- will now ignite players in a small radius\
+\- ignites players in a small radius\
+\- corpses will automatically be ignited when players die while ignited\
 \- model is now coloured red
 
 the flare gun now ignites players within a small radius, so you can use it to cause a bit of chaos\
 the burn duration drops off from 6 to 3 seconds based on the distance from where the shot landed\
 and obviously, the shooter cannot be self-ignited
+
+when a player dies while on fire from the flare gun, their corpse will now be automatically ignited\
+this allows the flare gun to be used as an offensive tool for finishing people off or igniting them before killing them
 
 the model is now coloured red so it's more obvious when someone is holding a flare gun,\
 since it looks like a generic pistol from a distance
