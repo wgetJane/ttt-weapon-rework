@@ -17,7 +17,7 @@ SWEP.HoldType = "shotgun"
 SWEP.FalloffStart = 384
 SWEP.FalloffEnd = 1280
 
-SWEP.ConeResetMult = false
+SWEP.ConeResetStart = false
 
 SWEP.ReloadTime = 5
 SWEP.DeployTime = 1

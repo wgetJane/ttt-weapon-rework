@@ -18,7 +18,6 @@ SWEP.IronsightsConeScale = 0.85
 
 SWEP.ConeResetStart = 0.2
 SWEP.ConeResetEnd = 0.5
-SWEP.ConeResetMult = 0x1p-126
 
 SWEP.ReloadTime = 3
 SWEP.DeployTime = 1
@@ -112,7 +111,7 @@ function SWEP:SetupDataTables()
 		self:NetworkVar("Float", 0, "Reloading")
 		self:NetworkVar("Bool", 0, "Inserting")
 
-		if self.StoreLastPrimaryFire or self.ConeResetMult then
+		if self.StoreLastPrimaryFire or self.ConeResetStart then
 			self:NetworkVar("Float", 1, "LastPrimaryFire")
 		end
 	end
@@ -329,11 +328,11 @@ local remap = TTTWR.RemapClamp
 function SWEP:GetPrimaryCone()
 	local cone = self.BaseClass.GetPrimaryCone(self)
 
-	if self.ConeResetMult then
+	if self.ConeResetStart then
 		cone = cone * remap(
 			CurTime() - self:GetLastPrimaryFire(),
 			self.ConeResetStart, self.ConeResetEnd,
-			1, self.ConeResetMult
+			1, 0x1p-126
 		)
 	end
 

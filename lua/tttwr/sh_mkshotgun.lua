@@ -18,7 +18,7 @@ SWEP.LimbshotMultiplier = 0.9
 
 SWEP.FalloffEnd = 768
 
-SWEP.ConeResetMult = false
+SWEP.ConeResetStart = false
 
 SWEP.BulletDistance = 4096
 

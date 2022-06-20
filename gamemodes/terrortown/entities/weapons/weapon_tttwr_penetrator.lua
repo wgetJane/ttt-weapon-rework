@@ -24,7 +24,7 @@ SWEP.ExtraAmmoOnBuy = 24
 
 SWEP.HeadshotMultiplier = 17 / 7
 
-SWEP.ConeResetMult = false
+SWEP.ConeResetStart = false
 
 SWEP.ReloadTime = 2.5
 SWEP.DeployTime = 0.75

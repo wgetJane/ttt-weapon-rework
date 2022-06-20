@@ -11,7 +11,7 @@ SWEP.HeadshotMultiplier = 2
 SWEP.LimbshotMultiplier = 0.5
 
 SWEP.FalloffMult = false
-SWEP.ConeResetMult = false
+SWEP.ConeResetStart = false
 
 SWEP.ReloadTime = 3.5
 
