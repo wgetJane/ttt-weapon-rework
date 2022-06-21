@@ -527,7 +527,7 @@ AWP\
 G3\
 \- base dmg: 25, headshot dmg: 50, limb dmg: 12.5\
 \- clip size: 20\
-\- fire rate: 200 rpm\
+\- fire rate: 240 rpm\
 \- deploy time: 1 sec\
 \- reload time: 3.5 secs\
 \- kills an unarmoured player in 2 headshots
@@ -563,14 +563,15 @@ XM\
 \- base dmg: 4, headshot dmg: 9.6, limb dmg: 3.6\
 \- clip size: 8\
 \- fire rate: 250 rpm\
-\- deploy time: 1 sec
+\- deploy time: 1 sec\
+\- takes 0.4 secs to reload a shell instead of 0.5 secs
 
 SPAS-12\
 \- base dmg: 7, headshot dmg: 16.8, limb dmg: 6.3\
 \- clip size: 6\
 \- fire rate: 90 rpm\
 \- deploy time: 0.75 sec\
-\- takes 0.4 secs to reload a shell instead of 0.5 secs\
+\- takes 0.3 secs to reload a shell instead of 0.5 secs\
 \- can kill an unarmoured player in one headshot at close range
 
 #### deagle and revolver

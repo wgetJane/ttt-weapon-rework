@@ -12,7 +12,7 @@ TTTWR.MakeShotgun(SWEP,
 )
 
 
-SWEP.ReloadTimeConsecutive = 0.4
+SWEP.ReloadTimeConsecutive = 0.3
 SWEP.DeployTime = 0.75
 
 SWEP.PumpSound = "weapons/shotgun/shotgun_cock.wav"
