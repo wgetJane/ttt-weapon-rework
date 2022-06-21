@@ -69,7 +69,7 @@ function TTTWR:MakeWeapon(
 		vol = snd[4] or vol
 	end
 
-	pr.Sound = "tttwr_" .. class .. ".Single"
+	pr.Sound = Sound("tttwr_" .. class .. ".Single")
 	pr.SoundLevel = lvl
 
 	local script = {
@@ -82,7 +82,7 @@ function TTTWR:MakeWeapon(
 	}
 
 	if CLIENT then
-		pr.Sound_CL = "tttwr_" .. class .. ".Single_CL"
+		pr.Sound_CL = Sound("tttwr_" .. class .. ".Single_CL")
 
 		script.name_sv = pr.Sound
 		script.name_cl = pr.Sound_CL
