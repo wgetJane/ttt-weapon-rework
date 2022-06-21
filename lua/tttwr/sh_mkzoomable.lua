@@ -4,6 +4,8 @@ SWEP.NoSights = false
 SWEP.IronSightsPos = Vector(5, -15, -2)
 SWEP.IronSightsAng = Vector(2.6, 1.37, 3.5)
 
+SWEP.IsCurrentlyZoomedIn = false
+
 SWEP.Secondary = {
 	Sound = "Default.Zoom",
 }
@@ -16,13 +18,15 @@ function TTTWR:MakeZoomable(fov, dot)
 end
 
 function SWEP:SetZoom(b)
-	local owner = self:GetOwner()
-
-	if not (IsValid(owner) and owner:IsPlayer()) then
+	if b == self.IsCurrentlyZoomedIn and IsFirstTimePredicted() then
 		return
 	end
 
-	if b == self:GetIronsights() then
+	self.IsCurrentlyZoomedIn = b
+
+	local owner = self:GetOwner()
+
+	if not (IsValid(owner) and owner:IsPlayer()) then
 		return
 	end
 
