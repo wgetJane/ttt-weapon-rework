@@ -262,7 +262,9 @@ function GAMEMODE:ScalePlayerDamage(ply, hitgroup, dmginfo)
 		ply.was_headshot = isbul
 
 		dmgscale = dmgscale * (
-			wep and wep:GetHeadshotMultiplier(ply, dmginfo) or 2
+			wep and wep.GetHeadshotMultiplier
+				and wep:GetHeadshotMultiplier(ply, dmginfo)
+				or 2
 		)
 	elseif hitgroup > HITGROUP_STOMACH then
 		dmgscale = dmgscale * (
@@ -297,7 +299,9 @@ function GAMEMODE:ScaleNPCDamage(npc, hitgroup, dmginfo)
 
 	if hitgroup == HITGROUP_HEAD then
 		dmginfo:ScaleDamage(
-			wep and wep:GetHeadshotMultiplier(npc, dmginfo) or 2
+			wep and wep.GetHeadshotMultiplier
+				and wep:GetHeadshotMultiplier(npc, dmginfo)
+				or 2
 		)
 	elseif hitgroup > HITGROUP_STOMACH then
 		dmginfo:ScaleDamage(
