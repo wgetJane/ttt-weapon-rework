@@ -1,3 +1,9 @@
+if TTTWR_DISABLED then
+	ENT.TTTWR_DISABLED = true
+
+	return
+end
+
 AddCSLuaFile()
 
 ENT.Type = "anim"

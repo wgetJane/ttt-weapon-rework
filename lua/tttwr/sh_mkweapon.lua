@@ -40,6 +40,12 @@ function TTTWR:MakeWeapon(
 	dmg, delay, cone, recoil, clip,
 	x, y, z, a, b, c
 )
+	if TTTWR_DISABLED then
+		self.TTTWR_DISABLED = true
+
+		return
+	end
+
 	TTTWR.CopySWEP(self, SWEP)
 
 	local pr = self.Primary

@@ -1,6 +1,15 @@
-if TTTWR == false then
+if engine.ActiveGamemode() ~= "terrortown" or TTTWR == false then
 	return
 end
+
+local function noreg(data)
+	if data.TTTWR_DISABLED then
+		return false
+	end
+end
+
+hook.Add("PreRegisterSENT", "tttwr_PreRegisterSENT", noreg)
+hook.Add("PreRegisterSWEP", "tttwr_PreRegisterSWEP", noreg)
 
 TTTWR = {
 	fns = TTTWR and TTTWR.fns or {},
@@ -33,8 +42,7 @@ local function PostGamemodeLoaded()
 	PostGamemodeLoaded = nil
 	hook.Remove("PostGamemodeLoaded", "tttwr_PostGamemodeLoaded")
 
-	-- kind of a messy way to make sure this only runs in ttt
-	if GAMEMODE_NAME ~= "terrortown" then
+	if GAMEMODE_NAME ~= "terrortown" or TTTWR_DISABLED then
 		TTTWR = false
 
 		incl, included = nil, nil
