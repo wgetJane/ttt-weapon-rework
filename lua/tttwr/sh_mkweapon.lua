@@ -177,7 +177,7 @@ function SWEP:PrimaryFire(worldsnd)
 	if localowned then
 		self:EmitSound(pri.Sound_CL)
 	elseif owner then
-		TTTWR.PlaySound(owner, pri.Sound, worldsnd)
+		TTTWR.PlaySound(self, owner, pri.Sound, worldsnd)
 	else
 		self:EmitSound(pri.Sound)
 	end

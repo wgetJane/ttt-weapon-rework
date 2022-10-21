@@ -107,10 +107,18 @@ local writevec = (function(floor)
 	end
 end)(math.floor)
 
-function TTTWR.PlaySound(owner, snd, worldsnd)
+function TTTWR:PlaySound(owner, snd, worldsnd)
+	if worldsnd then
+		worldsnd = owner:GetShootPos()
+
+		sound.Play(snd, worldsnd, 75, 100, 1)
+	else
+		self:EmitSound(snd)
+	end
+
 	local sndid = soundmap[snd]
 
-	if not (sndid and IsValid(owner)) then
+	if not sndid then
 		return
 	end
 
@@ -118,9 +126,14 @@ function TTTWR.PlaySound(owner, snd, worldsnd)
 
 	local entid = owner:EntIndex() - 1
 
-	local x, y, z
+	local x, y, z = owner:GetPos()
 
-	local players = player.GetHumans()
+	local players = RecipientFilter()
+
+	players:AddAllPlayers()
+	players:RemovePAS(x)
+
+	players = players:GetPlayers()
 
 	local i = #players + 1
 
@@ -145,9 +158,9 @@ function TTTWR.PlaySound(owner, snd, worldsnd)
 	net.WriteBool(worldsnd)
 
 	if worldsnd then
-		writevec(owner:GetShootPos():Unpack())
+		writevec(worldsnd:Unpack())
 
-		return net.Broadcast()
+		return net.Send(players)
 	end
 
 	net.WriteUInt(entid, maxplayers_bits)
@@ -157,8 +170,8 @@ function TTTWR.PlaySound(owner, snd, worldsnd)
 	else
 		net.WriteBool(true)
 
-		if not x then
-			x, y, z = owner:GetPos():Unpack()
+		if not y then
+			x, y, z = x:Unpack()
 		end
 
 		writevec(x, y, z)
