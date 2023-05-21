@@ -1,3 +1,5 @@
+local ttt_backstab_knife = CreateConVar("ttt_backstab_knife", 1, FCVAR_ARCHIVE + FCVAR_NOTIFY)
+
 local SWEP = weapons.GetStored("weapon_ttt_knife")
 local ENT = scripted_ents.GetStored("ttt_knife_proj").t
 
@@ -12,6 +14,10 @@ ENT.KillPlayer = nil
 local vec, vec2 = Vector(), Vector()
 
 function SWEP:CanBackstabTarget(owner, victim, opos, aimvec)
+	// if we have backstabbing disabled, its always an insta kill :D
+	if !ttt_backstab_knife:GetBool() then
+		return true
+	end
 	opos = opos or owner:GetShootPos()
 	local vpos = victim:GetShootPos()
 
